@@ -3,7 +3,7 @@
 **Versión:** 2.0  
 **Estado:** v2.0 aprobado documentalmente por el usuario, incluidos los contratos DOC-001..DOC-009  
 **Base:** arquitectura integral v2.0 aprobada por el usuario; SPEC/PLAN/TASKS v1.0 como baseline histórico.  
-**Código/Bootstrap:** requieren autorización explícita de los IDs BOOT-* correspondientes; la aprobación documental no autoriza su ejecución.  
+**Autorización de ejecución:** BOOT-001..BOOT-007 autorizadas explícitamente por el usuario. Las épicas funcionales posteriores requieren autorización independiente.  
 **Perfil:** laboratorio ISO 8583:1987; no certificado ni compatible por defecto con Link/Prisma.
 
 ## 1. Objetivo
@@ -187,4 +187,4 @@ El laboratorio no se declara PCI DSS ni PCI PIN compliant. MongoDB no es un HSM 
 - La semántica de durabilidad, idempotencia y MongoDB se detalla en DOC-006..DOC-008.
 - Gate técnico pendiente: comprobar durante Bootstrap que el stack TLS elegido soporta CRL/revocación de certificados conforme DOC-009; si no, detenerse y solicitar decisión.
 - Gate pendiente de Bootstrap: fijar versiones exactas de dependencias, Quality Gate y umbrales en BOOT-001/BOOT-004.
-- Aprobación documental de SPEC/PLAN/TASKS y contratos DOC-001..DOC-009 recibida. Antes de ejecutar Bootstrap, verificar CRL en el stack TLS y obtener autorización explícita para los IDs BOOT-* concretos.
+- Aprobación documental de SPEC/PLAN/TASKS y contratos DOC-001..DOC-009 recibida. BOOT-001..BOOT-007 están autorizadas explícitamente y no requieren nueva autorización. Durante Bootstrap, verificar CRL en el stack TLS real con política fail-closed; si no está soportado o no puede demostrarse, detener la tarea afectada y solicitar decisión. No sustituir CRL por OCSP, soft-fail u otra política sin aprobación.

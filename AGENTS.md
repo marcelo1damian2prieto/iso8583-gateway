@@ -4,9 +4,11 @@
 
 - Arquitectura integral v2.0 aprobada como dirección arquitectónica.
 - DOC-001..DOC-009, SPEC v2.0, PLAN v2.0 y TASKS v2.0 fueron aprobados documentalmente por el usuario.
-- La aprobación documental no equivale a autorización de ejecución. Bootstrap e implementación requieren autorización explícita por IDs/rango BOOT-*.
-- La aprobación de DOC-001..DOC-009 no permite por sí sola crear código, scaffolding, builds, Docker Compose ni ejecutar BOOT-*.
-- Ejecutar únicamente IDs/rangos expresamente autorizados por el usuario; respetar dependencias y gates.
+- La aprobación documental no equivale por sí sola a autorización de ejecución.
+- El usuario autorizó explícitamente BOOT-001..BOOT-007. Esta autorización está vigente y cubre únicamente esas tareas, sus dependencias ya declaradas y las verificaciones necesarias para satisfacer sus criterios de salida.
+- La autorización de Bootstrap no habilita las épicas funcionales E2 en adelante ni ninguna otra tarea no enumerada en BOOT-001..BOOT-007.
+- Ejecutar únicamente IDs/rangos expresamente autorizados por el usuario; respetar dependencias y gates. No solicitar nuevamente autorización para BOOT-001..BOOT-007.
+- Gate CRL: verificar el soporte efectivo de revocación CRL en el stack TLS elegido y aplicar fail-closed. Si no puede demostrarse, detener la tarea afectada, documentar evidencia y alternativas, y solicitar decisión. No sustituir CRL por OCSP, soft-fail ni otra política sin aprobación.
 
 ## Metodología obligatoria
 

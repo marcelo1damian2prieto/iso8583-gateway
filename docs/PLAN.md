@@ -1,8 +1,8 @@
 # PLAN — ISO8583 Gateway Lab
 
 **Versión:** 2.0  
-**Estado:** borrador para validación de diseño  
-**Código/Bootstrap:** requieren autorización explícita para los IDs BOOT-* concretos; la aprobación documental no habilita ejecución.  
+**Estado:** v2.0 aprobado documentalmente por el usuario  
+**Autorización de ejecución:** BOOT-001..BOOT-007 autorizadas explícitamente por el usuario. La autorización se limita a esas tareas; las épicas funcionales posteriores requieren autorización independiente.  
 **Arquitectura base:** `architecture-review-gateway-v2.0-integral.md` aprobada por el usuario.
 
 ## 1. Objetivo del plan
@@ -181,12 +181,12 @@ Logs estructurados con `operationId`/`messageId` enmascarados o IDs internos no 
 | 7. Observabilidad y endurecimiento | métricas, trazas, backups, quality gate final | evidencia de VERIFY |
 | 8. Azure (posterior) | despliegue cloud | nueva aprobación de alcance |
 
-## 12. Gates restantes antes de Bootstrap
+## 12. Gates y verificaciones durante Bootstrap
 
 Los gates de perfil, correlación/reverso, contratos backend/crypto/HSM, durabilidad, timeouts/retención, MongoDB y exclusiones fueron definidos documentalmente en DOC-001..DOC-009. No son evidencia de implementación ni pruebas ejecutadas.
 
-La revisión y aprobación formal de SPEC/PLAN/TASKS y contratos DOC-001..DOC-009 fue recibida. Antes de declarar listo el canal mTLS debe verificarse la compatibilidad de revocación CRL en el stack TLS elegido; si no se soporta, detenerse y solicitar decisión. Las versiones exactas se fijan en BOOT-001 y las herramientas/umbrales del Quality Gate en BOOT-004. La ejecución de cada BOOT-* requiere autorización explícita por ID o rango. `0420/0430` y DE52 permanecen excluidos.
+La revisión y aprobación formal de SPEC/PLAN/TASKS y contratos DOC-001..DOC-009 fue recibida. El usuario autorizó explícitamente BOOT-001..BOOT-007; no se requiere una nueva autorización para ejecutarlas. Antes de declarar listo el canal mTLS debe verificarse la compatibilidad de revocación CRL en el stack TLS elegido; si no se soporta o no puede demostrarse el comportamiento fail-closed, detener la tarea afectada y solicitar decisión. Las versiones exactas se fijan en BOOT-001 y las herramientas/umbrales del Quality Gate en BOOT-004. `0420/0430` y DE52 permanecen excluidos.
 
 ## 13. Restricciones de ejecución
 
-No implementar, crear código de producción, generar scaffolding ni iniciar Bootstrap hasta aprobación explícita de SPEC/PLAN/TASKS y autorización explícita de tareas concretas. Una aprobación documental posterior tampoco equivale a autorización general para implementar todo el backlog.
+Ejecutar ahora únicamente BOOT-001..BOOT-007, conforme a sus dependencias, criterios de salida y gates. No iniciar épicas funcionales ni tareas fuera de ese rango. La autorización de Bootstrap no equivale a autorización general para implementar el backlog.

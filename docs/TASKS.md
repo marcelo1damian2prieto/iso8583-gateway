@@ -2,7 +2,7 @@
 
 **Versión:** 2.0  
 **Estado:** backlog v2.0 y contratos DOC-001..DOC-009 aprobados documentalmente por el usuario  
-**Autorización vigente:** DOC-001..DOC-009 aprobadas documentalmente. BOOT-* e implementación requieren autorización explícita por IDs/rango.  
+**Autorización vigente:** DOC-001..DOC-009 aprobadas documentalmente. BOOT-001..BOOT-007 autorizadas explícitamente por el usuario. Las épicas funcionales posteriores requieren autorización independiente.  
 **Regla:** ninguna tarea se ejecuta sin autorización explícita del usuario; respetar dependencias y gates.
 
 ## Convenciones
@@ -26,17 +26,17 @@
 | DOC-008 | P0 | M | Validar índices, agregados, transacciones y recuperación Mongo | DOC-001 | Modelo Mongo y pruebas de concurrencia propuestos  | Aprobado documentalmente |
 | DOC-009 | P0 | S | Documentar exclusiones `0420/0430`, DE52 y PCI | DOC-001 | Límites y gates externos explícitos  | Aprobado documentalmente |
 
-## Épica E1 — Bootstrap técnico (solo tras aprobación y autorización)
+## Épica E1 — Bootstrap técnico (BOOT-001..BOOT-007 autorizado)
 
-| ID | Pri. | Tamaño | Tarea | Dependencias | Criterio de salida |
-|---|---|---:|---|---|---|
-| BOOT-001 | P0 | S | Verificar versiones compatibles Java 21/Spring Boot 3/Maven/Netty/jPOS/Mongo | DOC-001..DOC-009 | Matriz versionada sin dependencias flotantes |
-| BOOT-002 | P0 | M | Crear estructura de repositorios/proyectos para Gateway, Backend, Crypto y HSM Simulator | BOOT-001 | Límites de despliegue claros; sin módulos por capa innecesarios |
-| BOOT-003 | P0 | M | Configurar Maven Wrapper, compilación reproducible y perfiles | BOOT-002 | Build reproducible desde entorno limpio |
-| BOOT-004 | P0 | M | Configurar Quality Gate y análisis estático/dependencias | BOOT-003 | Comandos y umbrales documentados y ejecutables |
-| BOOT-005 | P0 | M | Crear Docker Compose mínimo con Mongo replica set y servicios vacíos | BOOT-002 | Servicios healthy; replica set inicializado |
-| BOOT-006 | P1 | S | Configurar gestión externa de secretos/certificados de laboratorio | BOOT-005 | No hay secretos en Git ni imágenes |
-| BOOT-007 | P1 | S | Crear health/readiness y configuración externa por servicio | BOOT-002 | Health checks verificables |
+| ID | Pri. | Tamaño | Tarea | Dependencias | Criterio de salida | Estado |
+|---|---|---:|---|---|---|---|
+| BOOT-001 | P0 | S | Verificar versiones compatibles Java 21/Spring Boot 3/Maven/Netty/jPOS/Mongo | DOC-001..DOC-009 | Matriz versionada sin dependencias flotantes | Autorizada |
+| BOOT-002 | P0 | M | Crear estructura de repositorios/proyectos para Gateway, Backend, Crypto y HSM Simulator | BOOT-001 | Límites de despliegue claros; sin módulos por capa innecesarios | Autorizada |
+| BOOT-003 | P0 | M | Configurar Maven Wrapper, compilación reproducible y perfiles | BOOT-002 | Build reproducible desde entorno limpio | Autorizada |
+| BOOT-004 | P0 | M | Configurar Quality Gate y análisis estático/dependencias | BOOT-003 | Comandos y umbrales documentados y ejecutables | Autorizada |
+| BOOT-005 | P0 | M | Crear Docker Compose mínimo con Mongo replica set y servicios vacíos | BOOT-002 | Servicios healthy; replica set inicializado | Autorizada |
+| BOOT-006 | P1 | S | Configurar gestión externa de secretos/certificados de laboratorio | BOOT-005 | No hay secretos en Git ni imágenes | Autorizada |
+| BOOT-007 | P1 | S | Crear health/readiness y configuración externa por servicio | BOOT-002 | Health checks verificables | Autorizada |
 
 ## Épica E2 — Transporte y protocolo ISO
 
@@ -158,4 +158,4 @@
 
 ## Gate de ejecución
 
-DOC-001..DOC-009 fueron elaboradas y aprobadas documentalmente junto con SPEC/PLAN/TASKS v2.0. BOOT-001..BOOT-007 requieren autorización explícita por IDs/rango; la aprobación documental no habilita Bootstrap ni implementación general.
+DOC-001..DOC-009 fueron elaboradas y aprobadas documentalmente junto con SPEC/PLAN/TASKS v2.0. El usuario autorizó explícitamente BOOT-001..BOOT-007: pueden ejecutarse respetando dependencias y criterios de salida, sin solicitar nueva autorización. Esta autorización no habilita E2 ni épicas posteriores. Durante Bootstrap debe verificarse CRL en el stack TLS real con política fail-closed; si el soporte no existe o no puede demostrarse, detener la tarea afectada, documentar evidencia y solicitar decisión. No sustituir CRL por OCSP, soft-fail u otra política sin aprobación.
