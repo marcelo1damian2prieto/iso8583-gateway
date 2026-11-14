@@ -1,7 +1,7 @@
 # Validación del diseño — ISO8583 Gateway Lab v2.0
 
-**Estado:** DOC-001..DOC-009, SPEC v2.0, PLAN v2.0 y TASKS v2.0 aprobados documentalmente por el usuario. No hay implementación ni evidencia de tests ejecutados.  
-**Base:** arquitectura integral v2.0 aprobada y borradores SPEC/PLAN/TASKS v2.0.
+**Estado:** DOC-001..DOC-009, SPEC v2.0, PLAN v2.0, TASKS v2.0 y arquitectura integral v2.0 aprobados documentalmente por el usuario. No hay implementación ni evidencia de tests ejecutados.
+**Base:** arquitectura integral v2.0 aprobada y documentos SPEC/PLAN/TASKS v2.0.
 
 ## 1. Requisitos funcionales
 
@@ -79,6 +79,12 @@ Se consideran satisfechos únicamente con evidencia de tests/build: invariantes 
 
 `0420/0430` y persistencia DE52 permanecen fuera del baseline. La excepción PCI DSS 3.3.3 no está habilitada. Los contratos son decisiones de laboratorio, no certificación ni evidencia de ejecución.
 
-## 9. Resultado
+## 9. Resultado y autorización vigente
 
-El bloque documental DOC-001..DOC-009 y SPEC/PLAN/TASKS v2.0 fueron aprobados por el usuario. Bootstrap aún requiere autorización explícita de BOOT-*; durante BOOT-001/004 se fijarán versiones y Quality Gate, y la compatibilidad CRL debe verificarse antes de declarar mTLS listo. Esta validación no es una auditoría PCI ni certificación de seguridad. No autoriza implementación.
+El bloque documental DOC-001..DOC-009, SPEC/PLAN/TASKS v2.0 y la arquitectura integral v2.0 fueron aprobados documentalmente por el usuario.
+
+El usuario autorizó explícitamente la ejecución de BOOT-001..BOOT-007. Esa autorización está vigente y cubre exclusivamente esas tareas, sus dependencias declaradas y las verificaciones necesarias para satisfacer sus criterios de salida. No se requiere una nueva autorización para iniciar ni completar esas tareas.
+
+Las versiones concretas de dependencias se verificarán y fijarán durante BOOT-001. Las herramientas y umbrales del Quality Gate se seleccionarán durante BOOT-004. La compatibilidad de revocación CRL debe verificarse en el stack TLS real antes de declarar mTLS listo; la política es fail-closed. Si el soporte CRL no existe o no puede demostrarse, se debe detener la tarea afectada, documentar evidencia y solicitar decisión. No sustituir CRL por OCSP, soft-fail u otra política sin aprobación.
+
+Esta validación es documental; no constituye auditoría PCI, certificación de seguridad ni evidencia de implementación. No autoriza épicas funcionales posteriores a BOOT-001..BOOT-007.
