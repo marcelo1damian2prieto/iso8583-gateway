@@ -1,10 +1,10 @@
 # Revisión arquitectónica integral v2.0 — ISO8583 Gateway Lab
 
-**Estado:** borrador para validación humana; no aprobado  
+**Estado:** arquitectura v2.0 aprobada documentalmente por el usuario.  
 **Versión:** 2.0-integral  
-**Base:** SPEC/PLAN/TASKS v1.0 aprobados, `architecture-review-v2.0.md`, decisiones posteriores del usuario y descripción del puesto Java Senior ISO8583 de Coderio.  
-**Implementación:** no autorizada.  
-**Propósito:** definir una arquitectura objetivo de prototipo bancario moderno, operable y verificable, sin afirmar certificación ni compatibilidad con redes productivas.
+**Base:** decisiones arquitectónicas acordadas, SPEC/PLAN/TASKS v2.0 y contratos DOC-001..DOC-009 aprobados documentalmente.  
+**Implementación:** autorizada exclusivamente para BOOT-001..BOOT-007, conforme a sus dependencias y criterios de salida. Las épicas funcionales posteriores requieren autorización independiente.  
+**Propósito:** definir la arquitectura objetivo del laboratorio bancario moderno, operable y verificable, sin afirmar certificación ni compatibilidad con redes productivas.
 
 ---
 
@@ -63,7 +63,7 @@ La descripción del puesto menciona ISO 8583, MTI/bitmap/DE, autorización, reve
 10. HSM representado por un puerto; simulador inicial reemplazable por adaptador de fabricante.
 11. No afirmar compatibilidad Link/Prisma sin perfil técnico oficial y pruebas de certificación.
 12. Cada control de seguridad debe tener una amenaza, requisito o criterio de aceptación asociado.
-13. Ninguna implementación comienza sin aprobación explícita del SPEC/PLAN/TASKS y de las tareas.
+13. La implementación requiere aprobación explícita del alcance y de las tareas. La autorización vigente cubre únicamente BOOT-001..BOOT-007; las épicas funcionales posteriores requieren autorización independiente.
 
 ## 4. Alcance funcional
 
@@ -569,31 +569,42 @@ El diseño se considerará validado cuando cada requisito tenga escenario de pru
 5. **Perfil ISO incompleto:** no se conoce especificación de Link/Prisma. Mitigar con perfil de laboratorio explícito y no afirmar compatibilidad.
 6. **Resultado indeterminado:** puede producir doble ejecución si se reintenta sin consulta. Mitigar con idempotencia backend y reconciliación.
 
-## 15. Impacto sobre v1.0
+## 15. Estado de aprobación e impacto sobre v1.0
 
-Los documentos v1.0 aprobados permanecen intactos y describen una línea base anterior. Esta revisión no los modifica ni los invalida retroactivamente.
+La arquitectura integral v2.0 fue revisada y aprobada documentalmente por el usuario. La aprobación se materializa en los artefactos versionados `SPEC.md`, `PLAN.md`, `TASKS.md` y los contratos `DOC-001` a `DOC-009`.
 
-Si la arquitectura v2.0 se aprueba, se crearán nuevos artefactos versionados:
+Los documentos v1.0 aprobados permanecen intactos como baseline histórico. No se modifican ni se invalidan retroactivamente.
 
-- `SPEC v2.0`;
-- `PLAN v2.0`;
-- `TASKS v2.0`;
-- perfiles ISO y contratos actualizados;
-- especificación `HSM Simulator v1.0` como subsistema de la solución v2.0;
-- revisión de consistencia y criterios de VERIFY.
+La aprobación documental no equivale a implementación ni habilita todo el backlog. El usuario autorizó explícitamente el Bootstrap limitado a:
 
-La aprobación de esta arquitectura no autoriza por sí sola la implementación. La implementación requerirá aprobación explícita del plan y de las tareas.
+- `BOOT-001`: fijar versiones compatibles.
+- `BOOT-002`: establecer estructura de repositorios/proyectos.
+- `BOOT-003`: configurar Maven Wrapper y builds.
+- `BOOT-004`: configurar Quality Gate.
+- `BOOT-005`: configurar Docker Compose y MongoDB replica set.
+- `BOOT-006`: configurar secretos y certificados de laboratorio.
+- `BOOT-007`: implementar health/readiness.
 
-## 16. Próximo paso de validación
+La ejecución debe respetar las dependencias y criterios de salida documentados en `TASKS.md`. Esta autorización no incluye épicas funcionales E2 en adelante ni tareas fuera de BOOT-001..BOOT-007.
 
-Antes de cerrar la revisión se requiere resolver, como mínimo:
+## 16. Validación completada y siguiente paso
 
-1. Validar el modelo MongoDB único: replica set, índices, actualizaciones atómicas, transacciones multi-documento y recuperación.
-2. Definir si `0420/0430` entra en el alcance funcional inicial o queda como extensión.
-3. Confirmar el tratamiento de DE52: operaciones PIN simuladas incluidas; persistencia excepcional deshabilitada por defecto y sujeta a validación formal.
-4. Validar el modelo de reserva y recuperación de lotes con múltiples instancias.
-5. Confirmar el alcance de reconciliación: consulta operacional de indeterminados, sin clearing/settlement completo.
+La validación arquitectónica y documental de v2.0 está completada. Las decisiones de alcance y los contratos correspondientes están reflejados en `SPEC.md`, `PLAN.md`, `TASKS.md` y `docs/contracts/DOC-001` a `DOC-009`.
 
-Una vez resueltos estos puntos se realizará la validación final de requisitos funcionales/no funcionales, reglas de negocio, escenarios positivos/negativos/borde, testing, riesgos y criterios de aceptación. Después se podrá preparar SPEC/PLAN/TASKS v2.0.
+La línea base aprobada queda definida así:
 
-**Estado final de este documento:** propuesta integral para revisión humana. No aprobado. No implementado.
+- Flujos incluidos: `0100/0110`, `0200/0210` y `0400/0410`.
+- `0420/0430`: fuera del baseline; extensión futura sujeta a decisión específica.
+- MongoDB: única base de datos del Gateway, desplegada como replica set; un nodo local habilita transacciones, pero no constituye alta disponibilidad.
+- Persistencia de `DE52`/PIN block: excluida del baseline ejecutable. Las operaciones PIN del simulador utilizan exclusivamente fixtures sintéticos y nunca devuelven PIN en claro.
+- Clearing/settlement completo: fuera de alcance. Se incluye reconciliación operacional acotada de operaciones indeterminadas.
+- Azure/Kubernetes: fase posterior.
+- No se declara compatibilidad Link/Prisma, certificación HSM/FIPS ni cumplimiento PCI DSS/PCI PIN.
+
+**Siguiente paso autorizado:** ejecutar BOOT-001..BOOT-007 conforme al orden de dependencias y criterios de salida de `TASKS.md`. No iniciar E2 ni ninguna épica funcional sin autorización independiente.
+
+**Gate obligatorio de CRL:** durante Bootstrap debe verificarse el soporte real de revocación mediante CRL en el stack TLS seleccionado y demostrarse su comportamiento fail-closed. Si el soporte no existe o no puede demostrarse, detener la tarea afectada, documentar evidencia y solicitar decisión. No sustituir CRL por OCSP, soft-fail ni otra política sin aprobación explícita.
+
+Cada tarea debe producir evidencia verificable y el informe Markdown exigido por `AGENTS.md`. La finalización documental o de Bootstrap no debe presentarse como implementación funcional del Gateway.
+
+**Estado final de este documento:** arquitectura v2.0 aprobada documentalmente. Bootstrap BOOT-001..BOOT-007 autorizado. Implementación funcional no iniciada ni autorizada.
