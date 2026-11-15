@@ -1140,6 +1140,22 @@ Se acepta la combinación A + B + C como dirección de diseño para resolver una
 
 **Motivo:** una escritura ambigua no puede tratarse como éxito ni como fallo por defecto. La identidad estable evita duplicados; la verificación del prefijo durable permite confirmar únicamente evidencia íntegra y comprometida; y Recovery conserva el tratamiento fail-closed cuando la presencia o ausencia no puede demostrarse.
 
+
+
+### VD-T06-87 — Representación de UNKNOWN en el snapshot mediante referencia al evento central
+
+Se acepta la opción B para representar en el snapshot una declaración Member de resultado indeterminado que fue validada por el Coordinator y cuya transición central a `UNKNOWN` quedó confirmada durablemente:
+
+1. El snapshot conserva el estado lógico de la Admission como `UNKNOWN` y el outcome correspondiente como `UNKNOWN`, manteniendo la distinción entre estado de coordinación y resultado de ejecución.
+2. El snapshot conserva una referencia al evento central del Coordinator que confirmó la transición a `UNKNOWN`. El nombre de trabajo de ese evento continúa siendo `ADMISSION_OUTCOME_UNKNOWN`, sujeto al contrato definitivo del catálogo.
+3. El evento central conserva la correlación con la declaración local Member y las referencias de evidencia necesarias conforme al contrato que se defina en TASK-04. El snapshot no copia el contenido completo de la declaración ni el ledger Member.
+4. El Reducer valida la consistencia lógica entre el estado/outcome de Admission y la referencia al evento central conforme a la matriz y al contrato de eventos. No consulta ni interpreta directamente el ledger Member.
+5. Replay conserva la responsabilidad de validar la existencia, secuencia, integridad y correlación histórica del evento central y de sus referencias de evidencia. La referencia del snapshot no sustituye esa validación ni demuestra por sí sola la existencia de la evidencia local.
+6. Esta representación no incorpora una colección histórica genérica de EventId ni convierte el snapshot en un segundo journal. La referencia se conserva porque es necesaria para justificar el estado lógico `UNKNOWN`.
+7. La forma exacta del campo/referencia, la identidad y payload definitivos del evento, y el conjunto preciso de referencias Member quedan pendientes de los contratos de TASK-03, Replay y TASK-04. Esta decisión no congela esquema Java ni CODEC.
+
+**Motivo:** mantener el snapshot centrado en el estado durable conocido por Coordinator, conservar trazabilidad hacia la transición central y evitar acoplar el Reducer al formato interno del ledger Member o duplicar el historial durable.
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -1149,7 +1165,7 @@ La aceptación de las decisiones anteriores no resuelve ni congela los siguiente
 - Matriz exhaustiva de transiciones y errores tipados/códigos definitivos.
 - CODEC: tags, anchos, byte order, domain separators, nullability, límites, unknown fields y compatibilidad/versionado.
 - Representación final de la confirmación de `HANDLER_START_INTENT` en evento/snapshot.
-- Contrato detallado de la declaración local Member para `UNKNOWN` (tipo/nombre, payload, identidad, referencias, secuencia, integridad, garantías de persistencia y condiciones de emisión); idempotencia, consulta por identidad, prefijo durable, checkpoints, detección de escrituras pendientes y resolución de escrituras ambiguas; condiciones de reintento; payload y precondiciones completas del evento central y validación en Replay. La dirección de responsabilidades queda decidida en VD-T06-83 y VD-T06-84; el tratamiento ante fallos de producción/persistencia, en VD-T06-85; la dirección para resolver escrituras ambiguas, en VD-T06-86.
+- Contrato detallado de la declaración local Member para `UNKNOWN` (tipo/nombre, payload, identidad, referencias, secuencia, integridad, garantías de persistencia y condiciones de emisión); idempotencia, consulta por identidad, prefijo durable, checkpoints, detección de escrituras pendientes y resolución de escrituras ambiguas; condiciones de reintento; payload y precondiciones completas del evento central y validación en Replay; campo/referencia exactos del snapshot. La dirección de responsabilidades queda decidida en VD-T06-83 y VD-T06-84; el tratamiento ante fallos de producción/persistencia, en VD-T06-85; la dirección para resolver escrituras ambiguas, en VD-T06-86; la representación lógica en snapshot, en VD-T06-87.
 - Contratos completos de Replay y recuperación.
 - Evidencia Member y terminación que corresponden a TASK-04.
 - Clasificación exhaustiva de estados de recuperación y fallos.
@@ -1167,7 +1183,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-86 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-87 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
