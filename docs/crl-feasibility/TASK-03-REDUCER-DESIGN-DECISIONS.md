@@ -1183,7 +1183,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-99 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-100 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
@@ -1432,3 +1432,16 @@ Esta validación no debe demostrar que el proceso haya muerto ni que la ejecuci�
 Los cuatro controles fijan el alcance conceptual, no sus mecanismos concretos. La estructura e identidad de la evidencia local, sus secuencias, referencias, canonicalización, digest y garantías de persistencia corresponden a TASK-04; los campos contractuales del evento central, las reglas formales de transición y los errores tipados permanecen sujetos al contrato formal de TASK-03. Esta decisión no inventa algoritmos ni criterios técnicos todavía no aprobados.
 
 **Motivo:** asegurar que el Coordinator solo establezca `UNKNOWN` para evidencia íntegra y atribuible a la ejecución correcta, sin confundir incertidumbre de resultado con prueba de terminación del proceso.
+
+### VD-T06-100 — Estado de origen exclusivo PENDING para transición a UNKNOWN
+
+Se acepta que el evento central `ADMISSION_OUTCOME_UNKNOWN` —denominación de trabajo, pendiente de contrato definitivo— solo pueda establecer la transición `PENDING → UNKNOWN`:
+
+1. El único estado de origen válido para esta transición es `PENDING`.
+2. Una Admission en `ADMITTED` no puede pasar directamente a `UNKNOWN) mediante este evento. La autorización durable por sí sola no satisface el estado de origen.
+3. Una Admission en `COMPLETE` o `REJECTED_NOT_STARTED` tampoco puede pasar a `UNKNOWN` mediante este evento.
+4. La repetición de una operación ya confirmada debe resolverse conforme a la identidad idempotente y al contenido de la transición original, sin crear una segunda transición ni modificar el snapshot confirmado.
+5. Si el estado actual de la Admission no es compatible con `PENDING → UNKNOWN`, el Reducer rechaza la transición y no produce un snapshot nuevo ni modifica el anterior.
+6. Esta decisión no define la clave idempotente ni los campos contractuales del evento; permanecen pendientes del contrato formal.
+
+**Motivo:** preservar la secuencia de estados aprobada, distinguiendo la autorización `ADMITTED` de la ejecución autorizada aún no resuelta `PENDING` y del resultado indeterminado `UNKNOWN`.
