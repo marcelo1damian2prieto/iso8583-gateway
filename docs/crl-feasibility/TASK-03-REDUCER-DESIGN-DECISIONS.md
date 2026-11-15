@@ -166,6 +166,17 @@ Esta decisión no congela el CODEC.
 
 **Límite:** esta validación no sustituye la integridad física, los hashes ni la validación de serialización, que corresponden a Replay/CODEC.
 
+
+### VD-T06-12 — Validación del payload del evento
+
+1. CODEC valida la estructura binaria, la versión y la decodificación del evento.
+2. El Reducer valida que el payload decodificado contenga los datos de dominio requeridos por el tipo de evento.
+3. El Reducer verifica las restricciones semánticas y la consistencia entre campos.
+4. Si el payload es semánticamente inválido, rechaza la transición mediante un error tipado y sin modificar el snapshot.
+5. El Reducer no completa campos ausentes mediante valores por defecto ni infiere información faltante.
+
+**Límite:** la validación estructural/binaria y la decodificación corresponden al CODEC; la validación semántica del contenido de dominio corresponde al Reducer.
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -193,7 +204,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-11, VD-T06-32 y VD-T06-33 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-12, VD-T06-32 y VD-T06-33 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
