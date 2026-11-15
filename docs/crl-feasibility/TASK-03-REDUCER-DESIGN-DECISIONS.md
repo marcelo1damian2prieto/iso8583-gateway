@@ -568,11 +568,24 @@ Esta decisión complementa VD-T06-05 y VD-T06-09 y establece el determinismo com
 
 **Motivo:** establecer quién garantiza la aplicabilidad de un evento sin atribuir al Reducer responsabilidades de persistencia, historial o deduplicación.
 
+### VD-T06-48 — Alcance lógico del snapshot
+
+1. El snapshot representa el estado lógico durable administrado por el Coordinator y reconstruible mediante Replay.
+2. Su contenido comprende las entidades y relaciones que el Coordinator necesita para continuar aplicando transiciones válidas: estado del rollout; membership y enrollment asociados al rollout; estado y observaciones de Members conocidas por el Coordinator; `coordinatorEpoch`; y admisiones y estados de admisión bajo responsabilidad durable del Coordinator.
+3. No incorpora el journal ni sus metadatos físicos, como secuencias, offsets, hash-chain o posiciones de lectura.
+4. No incorpora el historial de eventos como mecanismo de trazabilidad. Esa responsabilidad permanece en Replay y el journal, conforme a VD-T06-46 y VD-T06-47.
+5. No incorpora el ledger local del Member ni convierte `PERMIT_RECEIVED` en una escritura central, respetando D-03.
+6. El envelope del checkpoint conserva por separado `schemaVersion`, última secuencia confirmada, hash del último registro y metadata de correspondencia.
+7. La estructura exacta de entidades, campos, cardinalidades y datos derivados se define en decisiones posteriores.
+
+**Motivo:** separar el estado de dominio del Coordinator de la infraestructura de persistencia y de la evidencia que pertenece al Member.
+
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
 
-- Contrato completo del snapshot y enumeración exhaustiva de entidades/campos canónicos y derivados.
+- Estructura exacta del snapshot: entidades, campos, cardinalidades, relaciones y enumeración exhaustiva de datos canónicos y derivados; VD-T06-48 fija únicamente su alcance lógico.
 - Catálogo completo de eventos, payloads, precondiciones y efectos por transición.
 - Matriz exhaustiva de transiciones y errores tipados/códigos definitivos.
 - CODEC: tags, anchos, byte order, domain separators, nullability, límites, unknown fields y compatibilidad/versionado.
@@ -595,7 +608,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-47 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-48 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
