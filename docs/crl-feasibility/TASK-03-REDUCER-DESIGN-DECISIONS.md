@@ -1974,3 +1974,17 @@ Se acepta la opción D: los índices derivados son estructuras reconstruibles en
 La interfaz entre snapshot y estructuras derivadas, el responsable concreto de su construcción durante carga/recuperación, las condiciones de invalidación y descarte, y las garantías técnicas de actualización atómica permanecen pendientes del diseño técnico y de los contratos de Replay/snapshot.
 
 **Motivo:** evitar persistir información derivada como fuente adicional, reducir reconstrucciones durante transiciones y conservar las fronteras de responsabilidad entre Reducer, Replay y persistencia.
+
+### VD-T06-136 — Propiedad e aislamiento de estructuras auxiliares entre invocaciones concurrentes
+
+Se acepta la opción A: las estructuras auxiliares inmutables son propiedad lógica del snapshot y pueden compartirse entre invocaciones concurrentes, siempre que se preserven las garantías de aislamiento e inmutabilidad.
+
+1. Los índices y estructuras auxiliares pertenecen lógicamente al snapshot cuyas entidades canónicas describen.
+2. Dos o más invocaciones pueden consultar concurrentemente las mismas estructuras auxiliares del snapshot de entrada mientras estas permanezcan inmutables.
+3. Ninguna invocación puede modificar estructuras auxiliares pertenecientes al snapshot de entrada ni estructuras compartidas con otras invocaciones.
+4. Toda transición válida produce un nuevo snapshot lógico con estructuras auxiliares coherentes con sus entidades canónicas. Las actualizaciones se realizan mediante nuevas estructuras, sin mutar las compartidas por el snapshot anterior.
+5. Se permite compartir internamente estructuras inmutables entre snapshots —incluido *structural sharing*— siempre que no exista una vía de modificación observable o indirecta sobre snapshots anteriores.
+6. La construcción y actualización deben preservar la coherencia lógica y atómica entre entidades canónicas e índices; no se expone ni comparte un resultado parcialmente actualizado.
+7. Esta decisión no selecciona colecciones Java, estructuras persistentes, *copy-on-write*, estrategia de copia ni algoritmo concreto. Esas decisiones permanecen pendientes del diseño técnico.
+
+**Motivo:** garantizar aislamiento entre invocaciones concurrentes sin imponer copias completas ni introducir estado mutable compartido, manteniendo las propiedades de pureza, determinismo e inmutabilidad observable establecidas en VD-T06-125, VD-T06-126 y VD-T06-135.
