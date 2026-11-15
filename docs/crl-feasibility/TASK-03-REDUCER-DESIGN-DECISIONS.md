@@ -1183,7 +1183,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-107 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-108 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
@@ -1547,3 +1547,17 @@ Se acepta consolidar las siguientes invariantes para el resultado de la transici
 Esta decisión consolida VD-T06-59, VD-T06-60, VD-T06-79, VD-T06-88 y VD-T06-105; no redefine las reglas de Replay ni amplía el catálogo de acciones de recuperación.
 
 **Motivo:** preservar la distinción entre estado de coordinación reconciliado y resultado de ejecución todavía desconocido, manteniendo las referencias necesarias para trazabilidad.
+
+### VD-T06-108 — Inmutabilidad del estado RECONCILED_UNKNOWN y sus referencias
+
+Se acepta establecer las siguientes invariantes para una Admission que alcanzó `RECONCILED_UNKNOWN`:
+
+1. La Admission no puede volver a `UNKNOWN`.
+2. La Admission no puede pasar a `COMPLETE` mediante una acción posterior de recuperación.
+3. La referencia al evento central que estableció `UNKNOWN` no puede modificarse ni reemplazarse.
+4. Los `RecoveryRecord` ya confirmados permanecen inmutables; una acción posterior no puede modificar, reemplazar ni eliminar registros anteriores.
+5. La Admission puede recibir acciones adicionales únicamente cuando estén expresamente catalogadas y sean compatibles con `RECONCILED_UNKNOWN`, conforme a VD-T06-90 y VD-T06-91.
+6. Cada acción adicional debe conservar la inmutabilidad de los registros previos y no alterar el outcome, que permanece `UNKNOWN`.
+7. Esta decisión no amplía el catálogo de acciones permitidas ni habilita reejecución del handler.
+
+**Motivo:** impedir que la reconciliación sea tratada como un estado transitorio o que acciones posteriores reescriban la evidencia y la historia durable ya confirmadas.
