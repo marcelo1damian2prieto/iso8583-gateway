@@ -2113,3 +2113,18 @@ Se acepta mantener completamente fuera del contrato del Reducer la definición y
 6. Esta decisión no prescribe una política concreta de retención ni un mecanismo de infraestructura; esos aspectos quedan pendientes de su diseño específico y fuera del alcance de TASK-03.
 
 **Motivo:** preservar la responsabilidad acotada del Reducer como transformación pura y determinista, evitando introducir en su contrato políticas operativas de ciclo de vida, capacidad o gestión de recursos.
+
+### VD-T06-145 — Separación entre identidad física y equivalencia semántica de snapshots
+
+Se acepta separar explícitamente la identidad física de un snapshot de su identidad o equivalencia semántica. El mecanismo concreto de identificación y versionado queda pendiente del diseño técnico.
+
+1. La identidad física refiere a la instancia u objeto concreto que representa un snapshot en memoria.
+2. La equivalencia semántica refiere a que dos snapshots representan el mismo estado lógico, de acuerdo con las entidades canónicas, relaciones, índices derivados y comportamiento observable definido por el contrato.
+3. Dos snapshots pueden ser semánticamente equivalentes sin ser la misma instancia física ni compartir las mismas referencias.
+4. Dos snapshots físicamente distintos no deben considerarse estados lógicamente diferentes únicamente por tener identidades de objeto distintas.
+5. El *structural sharing* no implica por sí mismo identidad semántica entre snapshots; solo describe una posible reutilización de estructuras inmutables.
+6. La identidad física no se utiliza como sustituto de la validación de coherencia ni de la comparación semántica establecida en VD-T06-140.
+7. Esta decisión no selecciona UUID, hashes de contenido, contadores de versión, secuencias, marcas temporales ni otro mecanismo concreto de identificación o versionado.
+8. La asignación, persistencia, comparación y ciclo de vida de identificadores o versiones, si fueran necesarios, deberán definirse en el diseño de los componentes responsables del estado y su coordinación, sin introducir estado mutable compartido ni efectos secundarios en el Reducer.
+
+**Motivo:** evitar que la identidad de objetos en memoria se confunda con la identidad lógica del estado, preservar la independencia respecto de la representación física y mantener pendiente la elección del mecanismo de versionado hasta contar con el diseño de arquitectura correspondiente.
