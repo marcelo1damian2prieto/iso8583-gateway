@@ -827,6 +827,19 @@ Se establecen los siguientes criterios para la inmutabilidad de los registros de
 **Motivo:** preservar la trazabilidad de cada acción de recuperación y evitar que una reconciliación posterior altere silenciosamente evidencia previa.
 
 
+### VD-T06-66 — Retención de RecoveryRecord en el snapshot
+
+Se establecen los siguientes criterios para la retención de registros de recuperación:
+
+1. Los `RecoveryRecord` confirmados permanecen representados en el estado lógico durable del Coordinator.
+2. El Reducer no elimina registros de recuperación por antigüedad, cantidad ni estado de la admisión.
+3. La compactación del journal no implica automáticamente eliminar sus referencias del snapshot.
+4. El Reducer no implementa políticas de retención ni archivado.
+5. Cualquier eliminación futura requiere un contrato explícito que preserve las garantías de reconciliación, unicidad y trazabilidad.
+
+**Motivo:** evitar que la compactación o la finalización de una admisión provoquen pérdida implícita de evidencia de recuperación.
+
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -854,7 +867,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-65 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-66 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
