@@ -1183,7 +1183,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-128 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-129 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
@@ -1845,3 +1845,19 @@ Se acepta establecer la siguiente separación para la observabilidad:
 Los campos concretos del resultado estructurado y las reglas de redacción segura permanecen pendientes del contrato formal de errores y observabilidad.
 
 **Motivo:** preservar la pureza del Reducer y evitar acoplar la evaluación de dominio a infraestructura de logging, métricas o trazas.
+
+
+### VD-T06-129 — Versionado del snapshot lógico
+
+Se acepta establecer las siguientes reglas para el versionado del snapshot lógico:
+
+1. El snapshot debe incluir una versión explícita de su esquema lógico.
+2. El Reducer solo procesa snapshots cuyas versiones estén declaradas como compatibles por su contrato.
+3. Una versión desconocida o incompatible se rechaza; el Reducer no intenta interpretarla por aproximación.
+4. El Reducer no migra ni transforma snapshots entre versiones.
+5. La migración y la compatibilidad entre versiones corresponden a un componente o procedimiento explícito de versionado, fuera del Reducer.
+6. La versión del esquema lógico del snapshot se distingue de la versión del codec binario; no son intercambiables ni se presumen equivalentes.
+
+La representación concreta del campo de versión, el catálogo de versiones soportadas y las reglas de compatibilidad/migración permanecen pendientes del contrato de versionado.
+
+**Motivo:** impedir que el Reducer aplique transiciones sobre modelos lógicos cuya semántica no reconoce y mantener separadas la evolución del dominio y la representación binaria.
