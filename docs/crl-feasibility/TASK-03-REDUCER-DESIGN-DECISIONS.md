@@ -963,6 +963,19 @@ Se establecen los siguientes criterios para crear observaciones Member:
 **Motivo:** definir las condiciones generales para incorporar observaciones sin inferir estados operativos ni anticipar el nombre o payload del evento.
 
 
+### VD-T06-76 — Eliminación de observaciones Member
+
+Se establecen los siguientes criterios para eliminar observaciones Member:
+
+1. El Reducer no elimina observaciones por ausencia de actividad, reinicio de proceso, finalización del rollout ni antigüedad.
+2. La eliminación de una observación solo puede producirse mediante un evento explícito y un contrato que defina sus precondiciones y efectos.
+3. El contrato de eliminación debe preservar las referencias necesarias para mantener la consistencia del snapshot.
+4. El Reducer rechaza una eliminación que deje referencias huérfanas o contradiga invariantes del modelo.
+5. Esta decisión no establece una retención ilimitada: cualquier política de eliminación futura requiere un contrato explícito.
+
+**Motivo:** evitar eliminaciones implícitas y preservar la consistencia referencial del estado lógico.
+
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -990,7 +1003,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-75 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-76 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
