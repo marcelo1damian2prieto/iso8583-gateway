@@ -675,6 +675,19 @@ Se establecen los siguientes criterios para la relación entre admisiones y even
 **Motivo:** mantener la frontera entre la validación de dominio del Reducer y el control del historial durable de Replay.
 
 
+### VD-T06-55 — Alcance de EventId dentro del snapshot
+
+Se establecen los siguientes criterios respecto de `EventId` y el snapshot:
+
+1. `EventId` no se incorpora automáticamente como colección histórica dentro del snapshot.
+2. La referencia lógica al evento que se está aplicando se conserva en el resultado de la invocación del Reducer, conforme VD-T06-46.
+3. El snapshot solo contiene referencias a eventos cuando el modelo de dominio las define expresamente como parte del estado lógico.
+4. El Reducer no mantiene un registro histórico de eventos aplicados.
+5. Replay conserva el journal y determina qué eventos ya fueron aplicados.
+
+**Motivo:** evitar duplicar en el snapshot el historial que pertenece al journal y mantener coherencia con las decisiones de trazabilidad ya aceptadas.
+
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -702,7 +715,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-54 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-55 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
