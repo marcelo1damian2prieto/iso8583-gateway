@@ -1183,7 +1183,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-133 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-134 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
@@ -1938,3 +1938,21 @@ Se acepta la opción B: mantener la validación exhaustiva del snapshot de entra
 La selección de estructuras auxiliares, su construcción y mantenimiento, la estrategia de copia, los criterios de equivalencia y la eventual evaluación de rendimiento permanecen pendientes del diseño técnico. Cualquier benchmark o experimento requiere autorización explícita.
 
 **Motivo:** preservar las garantías de integridad global ya aceptadas y permitir optimizaciones internas sin alterar la semántica del Reducer ni introducir fuentes de verdad adicionales.
+
+
+### VD-T06-134 — Rechazo del Reducer y reconstrucción externa de estructuras auxiliares inconsistentes
+
+Se acepta la opción C: ante una inconsistencia entre un índice o estructura auxiliar y las entidades canónicas del snapshot, el Reducer rechaza la operación y la eventual reconstrucción se realiza mediante un procedimiento externo.
+
+1. El Reducer detecta la inconsistencia y devuelve un error tipado conforme al contrato de errores; no modifica el índice, las estructuras auxiliares ni las entidades canónicas.
+2. El Reducer no reconstruye, repara, descarta ni normaliza estructuras auxiliares durante la aplicación de una transición.
+3. El rechazo no produce ni expone un snapshot nuevo o parcialmente modificado.
+4. La capa superior recibe el rechazo y determina la clasificación y el tratamiento operativo correspondiente, conforme a las políticas de recuperación aplicables.
+5. Si se autoriza una reconstrucción, esta se realiza mediante un procedimiento externo al Reducer, a partir de las entidades canónicas. La reconstrucción no puede alterar ni reinterpretar esas entidades.
+6. Una vez reconstruidas las estructuras auxiliares, el snapshot y las estructuras resultantes deben someterse nuevamente a las validaciones contractuales antes de reanudar la aplicación de eventos.
+7. La reconstrucción no demuestra por sí misma la integridad histórica del journal ni sustituye las verificaciones de Replay.
+8. Esta decisión no autoriza reconstrucción automática, retry de eventos, modificación de entidades canónicas ni continuación mientras la inconsistencia no haya sido resuelta y verificada.
+
+El responsable concreto, las condiciones de autorización, la persistencia o regeneración de índices, los criterios de clasificación operativa y el procedimiento de reanudación permanecen pendientes del contrato de recuperación y del diseño técnico.
+
+**Motivo:** mantener al Reducer puro y determinista, preservar las entidades canónicas como única fuente de verdad y permitir una recuperación controlada fuera del procesamiento de transiciones.
