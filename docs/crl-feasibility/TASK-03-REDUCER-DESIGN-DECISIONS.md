@@ -1190,3 +1190,19 @@ La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpret
 ---
 
 **Estado final:** addendum documental de decisiones aceptadas. No constituye autorización de implementación ni freeze integral del diseño.
+
+### VD-T06-88 — Conservación de referencias al reconciliar UNKNOWN
+
+Se acepta que la transición de una Admission desde `UNKNOWN` hacia `RECONCILED_UNKNOWN` conserve en el snapshot ambas referencias necesarias para mantener la trazabilidad de la reconciliación:
+
+1. La referencia al evento central del Coordinator que estableció `UNKNOWN` (`unknownEventId` como nombre descriptivo provisional, no como nombre contractual de campo).
+2. La referencia lógica al `RecoveryRecord` de reconciliación, conservando `originalEventId`, `recoveryEventId` y `recoveryAction), conforme a VD-T06-63 y VD-T06-79.
+3. El `originalEventId` del `RecoveryRecord` debe corresponder al mismo evento central que estableció `UNKNOWN` para esa Admission. Las referencias deben ser coherentes entre sí y con la Admission.
+4. Tras la transición, el snapshot representa `Admission.state = RECONCILED_UNKNOWN` y mantiene `Admission.outcome = UNKNOWN`.
+5. El Reducer valida la presencia y consistencia lógica de ambas referencias con las entidades del snapshot y la transición aplicada. No consulta el journal ni verifica la existencia histórica de los eventos.
+6. Replay conserva la responsabilidad de verificar existencia durable, secuencia, integridad, unicidad, correlación histórica y aplicación de los eventos referenciados.
+7. Esta decisión no convierte el outcome en `COMPLETE`, no habilita retry/re-ejecución del handler y no introduce una colección histórica genérica de EventId en el snapshot.
+8. Los nombres/campos contractuales definitivos y la forma Java/CODEC permanecen abiertos. La referencia `unknownEventId` es una etiqueta descriptiva de esta decisión, no una congelación del esquema.
+
+**Motivo:** preservar la trazabilidad desde el evento central que estableció UNKNOWN hasta la acción durable que justificó su reconciliación, sin duplicar el journal ni trasladar al Reducer responsabilidades de Replay.
+
