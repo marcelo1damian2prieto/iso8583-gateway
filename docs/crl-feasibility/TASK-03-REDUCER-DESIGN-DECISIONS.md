@@ -2023,3 +2023,20 @@ Se acepta la opción B: seleccionar entre actualización incremental y reconstru
 Los mecanismos técnicos para determinar la cobertura de las estructuras afectadas, identificar dependencias y demostrar la garantía de coherencia permanecen pendientes del diseño técnico. Esta decisión no selecciona algoritmos, estructuras Java ni criterios de rendimiento.
 
 **Motivo:** priorizar la corrección y la coherencia verificable de los índices derivados, utilizando la reconstrucción completa como respaldo controlado sin introducir umbrales arbitrarios ni políticas redundantes por tipo de evento.
+
+### VD-T06-139 — Tratamiento de fallos durante la construcción de índices derivados
+
+Se acepta la opción D: distinguir los rechazos contractuales del dominio de los fallos técnicos inesperados durante la actualización incremental o la reconstrucción completa de índices, proporcionando diagnóstico estructurado sin convertir detalles de implementación en categorías de dominio.
+
+1. Una inconsistencia entre los índices del snapshot de entrada y sus entidades canónicas provoca rechazo tipado, conforme a VD-T06-134. No se intenta reparar ni reconstruir dentro de la invocación del Reducer.
+2. Si la actualización incremental no puede garantizar la coherencia de las estructuras afectadas, se utiliza la reconstrucción completa del resultado candidato conforme a VD-T06-137 y VD-T06-138.
+3. Si la construcción del resultado candidato permite detectar una condición contractual de invalidez o una invariante de dominio incumplida, el Reducer rechaza la transición mediante el error tipado correspondiente.
+4. Si la reconstrucción completa no puede producir un resultado coherente por una condición contractual verificable, la transición se rechaza sin exponer el snapshot candidato.
+5. Los fallos técnicos inesperados durante la actualización incremental, reconstrucción o validación no se convierten silenciosamente en errores de dominio; se propagan conforme a VD-T06-127.
+6. Los rechazos contractuales pueden proporcionar un diagnóstico estructurado que identifique la etapa de construcción o validación y la regla incumplida, respetando VD-T06-131 y la política fail-fast.
+7. Los diagnósticos no incorporan detalles internos de implementación como nuevas categorías de dominio ni incluyen datos sensibles innecesarios.
+8. Ante cualquier rechazo o fallo, el snapshot de entrada permanece inalterado y no se devuelve ni expone un snapshot parcial o candidato como resultado exitoso.
+9. El Reducer no realiza reintentos automáticos, reparaciones silenciosas, logging, métricas ni trazas. La clasificación operativa y observabilidad de fallos técnicos corresponden a la capa superior, conforme a VD-T06-128.
+10. Esta decisión no define códigos definitivos de error, clases Java de excepciones, catálogo de diagnósticos ni mecanismos técnicos de propagación.
+
+**Motivo:** preservar la distinción entre rechazos deterministas del dominio y fallos técnicos inesperados, mantener el Reducer puro y atómico, y permitir diagnóstico suficiente sin acoplar el contrato de dominio a los mecanismos internos de indexación.
