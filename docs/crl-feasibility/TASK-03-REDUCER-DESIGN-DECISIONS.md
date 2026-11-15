@@ -1183,7 +1183,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-115 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-116 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
@@ -1657,3 +1657,21 @@ Se acepta que el snapshot inicial (`genesis`) cumpla las invariantes globales es
 Esta decisión no define el evento durable de avance de epoch ni modifica las decisiones específicas de inicialización y Replay.
 
 **Motivo:** evitar que el estado inicial introduzca entidades o referencias sin justificación durable y asegurar que el primer snapshot cumpla las mismas garantías de consistencia que los posteriores.
+
+### VD-T06-116 — Validación del snapshot de entrada antes de aplicar un evento
+
+Se acepta que el Reducer valide el snapshot de entrada antes de procesar cada evento central:
+
+1. Si el snapshot de entrada viola una invariante global, el Reducer rechaza la operación.
+2. El Reducer no repara, normaliza ni completa por inferencia un snapshot de entrada inválido.
+3. El Reducer no procesa el evento sobre un estado inconsistente.
+4. El rechazo debe distinguir mediante errores tipados, como mínimo:
+   - snapshot de entrada inválido;
+   - evento inválido para el estado actual;
+   - snapshot resultante inválido.
+5. El Reducer no modifica el snapshot recibido.
+6. Esta validación complementa la validación de precondiciones de transición y la validación global del snapshot resultante establecidas en VD-T06-111 y VD-T06-114.
+
+La taxonomía definitiva, nombres y payloads de errores tipados permanecen pendientes del contrato formal.
+
+**Motivo:** impedir que un estado inconsistente se propague o sea utilizado como base para una transición, completando la validación en los puntos de entrada, transición y resultado.
