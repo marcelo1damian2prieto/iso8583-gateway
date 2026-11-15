@@ -1041,6 +1041,20 @@ Se establecen los siguientes criterios para delimitar las referencias a eventos 
 La estructura Java de las referencias, la determinación de si otros estados de Admission requieren referencias adicionales, la representación CODEC y la reconstrucción durante Replay permanecen abiertas. También queda pendiente la matriz definitiva de referencias obligatorias por tipo de evento.
 
 
+### VD-T06-81 — Distinción semántica entre ADMITTED y PENDING
+
+Se acepta que `ADMITTED` y `PENDING` representan situaciones distintas de una `Admission`:
+
+1. `ADMITTED` representa la autorización durable concedida por el Coordinator para esa admisión.
+2. `PENDING` representa una admisión cuyo resultado de ejecución todavía no está resuelto y que, conforme a D-02 y VD-T06-59, bloquea `COMMIT_GLOBAL`.
+3. No se consideran sinónimos ni se colapsan en un único estado.
+4. La distinción semántica no establece por sí sola que la transición entre ambos sea inmediata, automática ni causada por un evento específico.
+5. El evento o condición explícita que establece `PENDING`, su relación temporal con `HANDLER_START_INTENT` y las precondiciones de esa transición permanecen pendientes de definición en la matriz formal.
+6. Esta decisión no altera la secuencia de evidencias locales del Member ni convierte `PERMIT_RECEIVED`, `HANDLER_ENTERED` o `HANDLER_RETURNED` en estados centrales de Admission.
+
+**Motivo:** distinguir la concesión durable de autorización del estado de resolución del resultado, sin inferir transiciones que las fuentes aún no especifican.
+
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -1068,7 +1082,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-80 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-81 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
