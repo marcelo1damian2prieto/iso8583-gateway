@@ -315,6 +315,19 @@ Esta decisión complementa VD-T06-05 y VD-T06-09 y establece el determinismo com
 
 **Límite:** Replay controla el orden y la secuencia; Reducer aplica la transición individual. La concurrencia y sincronización de invocaciones quedan fuera de este contrato.
 
+
+### VD-T06-24 — Contrato de salida del Reducer
+
+1. El Reducer devuelve un resultado explícito y tipado.
+2. El resultado distingue entre transición aplicada y rechazo.
+3. En caso de transición aplicada, devuelve el nuevo snapshot lógico.
+4. En caso de rechazo, devuelve un error tipado y no expone un snapshot parcialmente modificado.
+5. El resultado identifica el `eventId` asociado a la invocación.
+6. No incluye confirmación de persistencia durable ni afirma que el evento quedó confirmado en journal.
+7. La representación concreta de tipos y estructuras queda pendiente del diseño técnico y del CODEC.
+
+**Límite:** el Reducer informa el resultado lógico de la aplicación; Replay y almacenamiento determinan persistencia, checkpoint y confirmación durable.
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -342,7 +355,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-23, VD-T06-32 y VD-T06-33 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-24, VD-T06-32 y VD-T06-33 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
