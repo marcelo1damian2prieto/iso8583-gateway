@@ -949,6 +949,20 @@ Se establecen los siguientes criterios para eventos que actualizan observaciones
 **Motivo:** exigir evidencia explícita y contexto suficiente para actualizar observaciones, evitando altas o modificaciones implícitas.
 
 
+### VD-T06-75 — Alta explícita de observaciones Member
+
+Se establecen los siguientes criterios para crear observaciones Member:
+
+1. Una observación nueva solo puede crearse mediante un tipo de evento que defina explícitamente la operación de alta.
+2. El evento debe incluir la identidad completa del Member y el contexto del rollout.
+3. El Member debe pertenecer al `MembershipManifest` asociado al rollout.
+4. No puede existir ya una observación con la misma identidad lógica.
+5. El alta no implica que el proceso esté activo ni que haya completado ninguna etapa operativa.
+6. El Reducer rechaza altas duplicadas o incompatibles sin modificar el snapshot.
+
+**Motivo:** definir las condiciones generales para incorporar observaciones sin inferir estados operativos ni anticipar el nombre o payload del evento.
+
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -976,7 +990,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-74 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-75 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
