@@ -425,6 +425,19 @@ Esta decisión complementa VD-T06-05 y VD-T06-09 y establece el determinismo com
 5. Reducer no delega ni omite sus propias validaciones semánticas por el hecho de recibir un evento confirmado.
 6. Ningún componente debe asumir que las validaciones de otro componente sustituyen las propias.
 
+
+### VD-T06-35 — Validación defensiva del snapshot de entrada
+
+1. Replay entrega al Reducer un snapshot reconstruido según su contrato.
+2. Reducer verifica defensivamente las invariantes estructurales y de dominio necesarias antes de aplicar cada evento.
+3. La responsabilidad de Replay sobre la reconstrucción correcta no sustituye la validación defensiva del Reducer.
+4. Si el snapshot incumple una invariante necesaria, Reducer rechaza la operación mediante error tipado.
+5. Reducer no repara ni normaliza el snapshot recibido.
+6. El snapshot original permanece inalterado ante el rechazo.
+7. Esta validación no transfiere al Reducer las responsabilidades de integridad física, hash-chain, checkpoint o serialización.
+
+**Motivo:** establecer una frontera defensiva entre reconstrucción y aplicación de dominio, sin duplicar las responsabilidades de Replay.
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -452,7 +465,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-34 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-35 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
