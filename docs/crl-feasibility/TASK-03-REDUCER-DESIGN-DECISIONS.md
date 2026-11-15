@@ -352,6 +352,18 @@ Esta decisión complementa VD-T06-05 y VD-T06-09 y establece el determinismo com
 
 **Límite:** esta decisión no define todavía qué timestamps forman parte de cada evento ni sus reglas de comparación; eso queda pendiente del modelo formal.
 
+
+### VD-T06-27 — Límites de responsabilidad sobre datos derivados
+
+1. El Reducer puede actualizar índices y datos derivados como consecuencia de una transición válida.
+2. Los datos derivados deben poder reconstruirse desde las entidades canónicas, cuando el modelo los defina como reconstruibles.
+3. El Reducer no debe introducir datos derivados que no estén especificados por el modelo.
+4. Si un dato derivado es obligatorio para mantener una invariante, su actualización forma parte de la transición.
+5. La reconstrucción de índices durante recuperación o carga inicial corresponde a la estrategia de Replay/snapshot, no a una reparación implícita del Reducer.
+6. Los datos derivados no pueden alterar el significado de las entidades canónicas.
+
+**Límite:** la decisión no define todavía el catálogo de índices, su algoritmo de reconstrucción ni su representación serializada.
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -379,7 +391,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-26, VD-T06-32 y VD-T06-33 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-27, VD-T06-32 y VD-T06-33 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
