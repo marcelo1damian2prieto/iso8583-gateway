@@ -1003,6 +1003,24 @@ Se consolidan los siguientes criterios para toda transición de alta, actualizac
 **Motivo:** establecer una garantía común de consistencia para el ciclo de vida de observaciones Member, sin anticipar detalles todavía abiertos del modelo formal.
 
 
+### VD-T06-79 — Representación de RecoveryRecord en el snapshot y referencias EventId
+
+Se establecen los siguientes criterios para representar la evidencia de recuperación en el snapshot:
+
+1. El snapshot no almacena el historial completo de eventos ni duplica el contenido íntegro del journal.
+2. Cuando el estado de una `Admission` requiere conservar evidencia de reconciliación, el snapshot mantiene una referencia lógica al `RecoveryRecord` correspondiente.
+3. Esa referencia conserva únicamente la identidad y los datos de correlación necesarios para validar la relación con la admisión y el evento original, conforme al modelo de TASK-02.
+4. La referencia identifica `originalEventId`, `recoveryEventId` y `recoveryAction`, respetando la identidad `(originalEventId, recoveryAction)` definida en VD-T06-63.
+5. El Reducer valida la coherencia de esas referencias con las entidades y el estado lógico del snapshot. No consulta el journal ni reconstruye su historial.
+6. Replay conserva la responsabilidad de verificar que los eventos existen realmente en el journal, así como su secuencia, unicidad, canonicalización, digest y persistencia.
+7. No se introduce una cardinalidad independiente entre `Admission` y `RecoveryRecord`: las relaciones deben respetar TASK-02, especialmente `AdmissionId 1—N EventId` y `EventId 1—0..N RecoveryRecord`.
+8. Esta representación no autoriza compactación del journal, eliminación de eventos ni políticas de retención.
+
+**Motivo:** conservar la evidencia lógica necesaria para el estado reconciliado sin duplicar el historial durable ni trasladar al Reducer responsabilidades de Replay.
+
+La estructura concreta de la referencia dentro de `Admission`, los datos adicionales que eventualmente requiera la validación de dominio, la representación Java, la serialización CODEC y la reconstrucción durante Replay permanecen abiertos.
+
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -1030,7 +1048,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-78 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-79 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
