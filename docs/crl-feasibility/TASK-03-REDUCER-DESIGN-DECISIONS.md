@@ -376,6 +376,18 @@ Esta decisión complementa VD-T06-05 y VD-T06-09 y establece el determinismo com
 
 **Límite:** la decisión no establece todavía cuáles son las cardinalidades y claves únicas concretas del modelo CRL.
 
+
+### VD-T06-29 — Validación de invariantes entre Members
+
+1. El Reducer valida las invariantes que relacionen distintos Members dentro del mismo rollout.
+2. Debe comprobar que las referencias entre Members correspondan a entidades existentes y compatibles.
+3. Las restricciones globales del rollout deben verificarse cuando una transición pueda afectarlas.
+4. No debe asumir independencia entre Members si el modelo define relaciones o restricciones compartidas.
+5. Una transición que viole una invariante entre Members se rechaza sin mutación parcial.
+6. Las reglas concretas de dependencia y coordinación entre Members deben estar explícitas en el modelo de dominio.
+
+**Límite:** Reducer verifica consistencia lógica del snapshot completo; no coordina ejecución concurrente, locks ni persistencia entre Members.
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -403,7 +415,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-28, VD-T06-32 y VD-T06-33 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-29, VD-T06-32 y VD-T06-33 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
