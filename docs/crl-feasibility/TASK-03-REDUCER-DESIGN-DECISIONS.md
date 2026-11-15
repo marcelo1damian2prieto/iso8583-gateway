@@ -303,6 +303,18 @@ Esta decisión complementa VD-T06-05 y VD-T06-09 y establece el determinismo com
 
 **Límite:** esto no habilita idempotencia implícita ni reemplaza la política de deduplicación del journal.
 
+
+### VD-T06-23 — Orden de aplicación de transiciones
+
+1. El Reducer aplica un único evento por invocación.
+2. No recibe ni procesa lotes de eventos.
+3. El orden de aplicación lo determina Replay según la secuencia validada del journal.
+4. El Reducer no reordena eventos ni intenta resolver dependencias temporales entre ellos.
+5. Si un evento no es válido para el snapshot actual, lo rechaza; no busca eventos posteriores para corregir el estado.
+6. La aplicación secuencial debe preservar las invariantes definidas para cada transición.
+
+**Límite:** Replay controla el orden y la secuencia; Reducer aplica la transición individual. La concurrencia y sincronización de invocaciones quedan fuera de este contrato.
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -330,7 +342,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-22, VD-T06-32 y VD-T06-33 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-23, VD-T06-32 y VD-T06-33 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
