@@ -364,6 +364,18 @@ Esta decisión complementa VD-T06-05 y VD-T06-09 y establece el determinismo com
 
 **Límite:** la decisión no define todavía el catálogo de índices, su algoritmo de reconstrucción ni su representación serializada.
 
+
+### VD-T06-28 — Validación de cardinalidades y unicidad
+
+1. El Reducer valida las cardinalidades definidas por el modelo de dominio.
+2. Las relaciones que deban ser uno a uno, uno a muchos o muchos a muchos deben respetar esas restricciones.
+3. Las claves que el modelo declare únicas no pueden duplicarse.
+4. Una transición que viole cardinalidad o unicidad se rechaza mediante error tipado.
+5. No se resuelven duplicados eligiendo arbitrariamente una entidad ni sobrescribiendo datos existentes.
+6. Las cardinalidades y claves únicas deben estar explícitamente documentadas; las que no estén definidas quedan pendientes.
+
+**Límite:** la decisión no establece todavía cuáles son las cardinalidades y claves únicas concretas del modelo CRL.
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -391,7 +403,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-27, VD-T06-32 y VD-T06-33 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-28, VD-T06-32 y VD-T06-33 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
