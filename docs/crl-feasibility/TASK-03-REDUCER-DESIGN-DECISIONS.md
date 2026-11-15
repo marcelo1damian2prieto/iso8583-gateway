@@ -1183,7 +1183,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-127 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-128 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
@@ -1831,3 +1831,17 @@ Se acepta establecer las siguientes reglas para el tratamiento de fallos del Red
 Los tipos definitivos de errores de dominio y los contratos de propagación de fallos inesperados permanecen pendientes del diseño formal.
 
 **Motivo:** mantener diferenciados los rechazos deterministas del dominio de los defectos técnicos o fallos inesperados de ejecución, sin ocultar estos últimos ni comprometer la atomicidad.
+
+### VD-T06-128 — Observabilidad externa al Reducer
+
+Se acepta establecer la siguiente separación para la observabilidad:
+
+1. El Reducer no emite logs, métricas ni trazas como efecto secundario de la evaluación.
+2. Los errores del Reducer no incluyen datos sensibles innecesarios.
+3. El resultado estructurado del Reducer proporciona información suficiente para que la capa superior registre y correlacione un rechazo, conforme al contrato de errores.
+4. La correlación utiliza identificadores ya presentes en el contexto de la operación; el Reducer no genera identificadores nuevos para logging o trazabilidad.
+5. Logging, métricas, trazas y alertas corresponden al Coordinator y a la infraestructura de observabilidad, fuera del Reducer.
+
+Los campos concretos del resultado estructurado y las reglas de redacción segura permanecen pendientes del contrato formal de errores y observabilidad.
+
+**Motivo:** preservar la pureza del Reducer y evitar acoplar la evaluación de dominio a infraestructura de logging, métricas o trazas.
