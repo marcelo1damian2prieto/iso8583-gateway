@@ -789,7 +789,7 @@ Se establecen los siguientes criterios para la relación entre registros de recu
 
 Se establecen los siguientes criterios para la identidad y consistencia de los registros de recuperación:
 
-1. `RecoveryRecord` se identifica por la clave lógica `(originalEventId, recoveryAction), conforme TASK-02.
+1. `RecoveryRecord` se identifica por la clave lógica `(originalEventId, recoveryAction)`, conforme TASK-02.
 2. `recoveryEventId` identifica el evento durable que registra esa acción de recuperación.
 3. La referencia a `originalEventId` debe corresponder al evento original asociado a la admisión.
 4. El `recoveryEventId` y el contenido del registro deben ser coherentes con la acción declarada.
