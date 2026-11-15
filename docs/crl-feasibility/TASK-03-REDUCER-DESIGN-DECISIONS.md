@@ -1183,7 +1183,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-105 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-106 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
@@ -1516,3 +1516,19 @@ Se acepta formalizar el efecto bloqueante del estado `UNKNOWN` sobre la confirma
 6. Esta decisión no altera las reglas generales de D-02 ni la distinción de VD-T06-59; tampoco define por sí sola el conjunto completo de estados que bloquean `COMMIT_GLOBAL`.
 
 **Motivo:** asegurar que un resultado indeterminado no se trate como terminado y que el desbloqueo dependa de una reconciliación explícita, durable y validada.
+
+### VD-T06-106 — Precondiciones de la transición UNKNOWN a RECONCILED_UNKNOWN
+
+Se acepta que el Reducer aplique la transición `UNKNOWN → RECONCILED_UNKNOWN` únicamente cuando se satisfagan todas las precondiciones siguientes:
+
+1. La Admission existe en el snapshot y su estado actual es `UNKNOWN`.
+2. El evento central `RECONCILE_UNKNOWN` fue confirmado durablemente por Coordinator.
+3. El evento de reconciliación referencia el mismo evento central que estableció `UNKNOWN` para esa Admission.
+4. Existe un `RecoveryRecord` válido, asociado a esa Admission y al evento que originó UNKNOWN.
+5. La `recoveryAction` del registro está expresamente incluida en el catálogo de acciones habilitadas para reconciliar UNKNOWN y es compatible con el estado de origen, la Admission y el efecto declarado.
+6. Las referencias del evento, de la Admission y del `RecoveryRecord` son coherentes con el snapshot y con la transición solicitada.
+7. Si alguna precondición no se satisface, el Reducer rechaza la transición y no produce un snapshot nuevo ni modifica el anterior.
+
+Esta decisión aplica VD-T06-61, VD-T06-64, VD-T06-88 y VD-T06-89. No agrega acciones de recuperación ni define por sí sola sus valores contractuales, payloads, algoritmos o verificaciones históricas de Replay.
+
+**Motivo:** impedir que UNKNOWN se considere reconciliado sin una transición central durable, vinculada al mismo evento UNKNOWN y respaldada por un RecoveryRecord válido con acción expresamente habilitada.
