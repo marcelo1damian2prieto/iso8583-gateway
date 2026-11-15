@@ -400,6 +400,18 @@ Esta decisión complementa VD-T06-05 y VD-T06-09 y establece el determinismo com
 
 **Límite:** esto define atomicidad lógica dentro del resultado del Reducer; no garantiza atomicidad física ni persistencia durable, responsabilidades de almacenamiento.
 
+
+### VD-T06-31 — Consistencia de los identificadores y claves de negocio
+
+1. Los identificadores de entidades y las claves de negocio deben respetar las reglas de formato y semántica definidas por el modelo.
+2. El Reducer valida que los identificadores obligatorios estén presentes y sean coherentes con el contexto.
+3. No genera, normaliza ni reemplaza identificadores.
+4. No considera equivalentes identificadores distintos salvo que el contrato defina explícitamente esa equivalencia.
+5. Las colisiones de claves únicas se rechazan mediante error tipado.
+6. Los formatos, ámbitos de unicidad y reglas de normalización quedan pendientes cuando no estén definidos por el modelo.
+
+**Límite:** Reducer valida consistencia de dominio; CODEC valida la representación y decodificación, y Replay controla la identidad y deduplicación de eventos del journal.
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -427,7 +439,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-30, VD-T06-32 y VD-T06-33 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-31, VD-T06-32 y VD-T06-33 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
