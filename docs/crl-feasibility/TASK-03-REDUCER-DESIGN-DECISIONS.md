@@ -1117,7 +1117,7 @@ La aceptación de las decisiones anteriores no resuelve ni congela los siguiente
 - Matriz exhaustiva de transiciones y errores tipados/códigos definitivos.
 - CODEC: tags, anchos, byte order, domain separators, nullability, límites, unknown fields y compatibilidad/versionado.
 - Representación final de la confirmación de `HANDLER_START_INTENT` en evento/snapshot.
-- Contrato detallado de la evidencia Member, payload, referencias y precondiciones del evento que establece `UNKNOWN`; el principio de transición durable por autoridad del Coordinator queda decidido en VD-T06-83.
+- Contrato detallado de la declaración local Member para `UNKNOWN` (tipo/nombre, payload, identidad, referencias, secuencia, integridad, garantías de persistencia y condiciones de emisión), así como payload y precondiciones completas del evento central y validación en Replay; la dirección de responsabilidades queda decidida en VD-T06-83 y VD-T06-84.
 - Contratos completos de Replay y recuperación.
 - Evidencia Member y terminación que corresponden a TASK-04.
 - Clasificación exhaustiva de estados de recuperación y fallos.
@@ -1135,7 +1135,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-83 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-84 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
