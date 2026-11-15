@@ -1183,7 +1183,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-132 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-133 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
@@ -1919,3 +1919,22 @@ Se acepta combinar la opción B —validación global del snapshot, validación 
 La matriz exhaustiva de referencias por entidad y tipo de evento, los campos obligatorios, formatos, cardinalidades y correspondencia con errores tipados permanecen pendientes del contrato formal.
 
 **Motivo:** combinar garantías de integridad global antes y después de cada transición con validaciones específicas del evento, manteniendo explícita la frontera entre consistencia lógica del Reducer e integridad histórica de Replay.
+
+
+### VD-T06-133 — Optimización de la validación exhaustiva mediante índices coherentes
+
+Se acepta la opción B: mantener la validación exhaustiva del snapshot de entrada y del snapshot resultante en cada transición, permitiendo optimizar su ejecución mediante índices y estructuras auxiliares coherentes con las entidades canónicas.
+
+1. La optimización no reduce ni sustituye las garantías de validación global establecidas en VD-T06-114, VD-T06-116, VD-T06-119 y VD-T06-132.
+2. Antes de aplicar el evento, el Reducer valida exhaustivamente las invariantes estructurales, referenciales y de dominio del snapshot de entrada.
+3. Después de construir conceptualmente el resultado de una transición válida, el Reducer valida exhaustivamente las invariantes globales del snapshot resultante.
+4. Pueden utilizarse índices por identidades y estructuras auxiliares para evitar búsquedas lineales repetidas y optimizar verificaciones, siempre que sus resultados sean equivalentes a la validación exhaustiva contractual.
+5. Las entidades canónicas del snapshot siguen siendo la única fuente de verdad. Los índices y datos derivados no constituyen fuentes independientes de verdad y deben ser coherentes con las entidades canónicas.
+6. Toda inconsistencia entre una estructura auxiliar y las entidades canónicas provoca rechazo tipado; el Reducer no repara ni normaliza silenciosamente el snapshot.
+7. La optimización debe preservar pureza, determinismo, inmutabilidad observable, ausencia de estado mutable compartido y atomicidad del Reducer.
+8. No se adopta validación incremental como sustituto de la validación global ni se introducen certificados de integridad como mecanismo de confianza.
+9. No se establece todavía una estructura Java, algoritmo, estrategia de indexación ni complejidad temporal concreta.
+
+La selección de estructuras auxiliares, su construcción y mantenimiento, la estrategia de copia, los criterios de equivalencia y la eventual evaluación de rendimiento permanecen pendientes del diseño técnico. Cualquier benchmark o experimento requiere autorización explícita.
+
+**Motivo:** preservar las garantías de integridad global ya aceptadas y permitir optimizaciones internas sin alterar la semántica del Reducer ni introducir fuentes de verdad adicionales.
