@@ -619,6 +619,20 @@ Se fijan las siguientes identidades y referencias iniciales, conforme al modelo 
 **Motivo:** establecer identidades y referencias para el snapshot sin ampliar el modelo de dominio aprobado ni inventar multiplicidades no definidas.
 
 
+### VD-T06-51 — Separación entre estado canónico y referencias
+
+Se establecen los siguientes criterios para el estado lógico del snapshot:
+
+1. Las entidades canónicas contienen el estado lógico necesario para reconstruir el dominio conforme al modelo formal.
+2. Las referencias entre entidades identifican la entidad referenciada, pero no duplican su contenido como una segunda fuente de verdad.
+3. Los identificadores usados como referencias deben coincidir con la identidad canónica definida para la entidad correspondiente.
+4. Los índices de consulta y búsqueda son datos derivados; no constituyen fuentes independientes de verdad.
+5. Una referencia ausente, inexistente o contradictoria produce un rechazo tipado. El Reducer no repara, completa ni infiere datos faltantes.
+6. La decisión no fija la representación concreta de referencias, índices ni el algoritmo de reconstrucción.
+
+**Motivo:** mantener una única fuente de verdad por entidad y evitar divergencias entre estado canónico y estructuras auxiliares, en continuidad con VD-T06-20, VD-T06-32 y VD-T06-43.
+
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -646,7 +660,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-50 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-51 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
