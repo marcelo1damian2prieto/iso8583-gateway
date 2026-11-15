@@ -243,6 +243,18 @@ Esta decisión complementa VD-T06-05 y VD-T06-09 y establece el determinismo com
 
 **Límite:** Replay decide cómo clasificar y gestionar los errores durante la recuperación; el Reducer solo informa el resultado de aplicar la transición.
 
+
+### VD-T06-18 — Separación entre errores recuperables y no recuperables
+
+1. El Reducer informa el tipo de error y el contexto de dominio necesario.
+2. No determina si el error es recuperable, reintentable o terminal.
+3. No decide si debe repetirse la aplicación del evento.
+4. No modifica el estado para facilitar un retry.
+5. Replay y la política de recuperación determinan la acción posterior según el tipo de error y la evidencia disponible.
+6. Un retry nunca debe implicar aceptar una transición inválida ni omitir validaciones.
+
+**Motivo:** mantener el Reducer como componente determinista de dominio y evitar que incorpore decisiones operativas de recuperación.
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -270,7 +282,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-17, VD-T06-32 y VD-T06-33 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-18, VD-T06-32 y VD-T06-33 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
