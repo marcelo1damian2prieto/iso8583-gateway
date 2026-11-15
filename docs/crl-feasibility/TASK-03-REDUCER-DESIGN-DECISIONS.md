@@ -1183,7 +1183,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-114 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-115 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
@@ -1643,3 +1643,17 @@ Si alguna invariante global queda violada, el Reducer rechaza el resultado compl
 Esta decisión no sustituye las verificaciones históricas de Replay ni amplía las responsabilidades del Reducer definidas en VD-T06-110. La definición exhaustiva y formal de cada invariante y sus errores tipados permanece sujeta al contrato de dominio.
 
 **Motivo:** evitar que una transición localmente válida produzca un snapshot globalmente inconsistente, preservando la atomicidad, pureza y determinismo establecidos en VD-T06-111.
+
+### VD-T06-115 — Invariantes del snapshot genesis
+
+Se acepta que el snapshot inicial (`genesis`) cumpla las invariantes globales establecidas en VD-T06-114, con las siguientes condiciones:
+
+1. El snapshot genesis debe satisfacer las mismas invariantes globales de consistencia que cualquier snapshot resultante de una transición.
+2. No puede contener Admissions ni `RecoveryRecord` sin eventos durables que justifiquen su existencia.
+3. Sus colecciones deben estar inicializadas y respetar las reglas de identidad, cardinalidad y consistencia de dominio aprobadas.
+4. Un genesis inválido se rechaza; no se corrige automáticamente ni se completa mediante inferencias.
+5. La creación y persistencia del genesis corresponden al mecanismo de inicialización y no al Reducer.
+
+Esta decisión no define el evento durable de avance de epoch ni modifica las decisiones específicas de inicialización y Replay.
+
+**Motivo:** evitar que el estado inicial introduzca entidades o referencias sin justificación durable y asegurar que el primer snapshot cumpla las mismas garantías de consistencia que los posteriores.
