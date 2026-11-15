@@ -854,6 +854,20 @@ Se establecen los siguientes criterios para la consistencia referencial de los r
 **Motivo:** asegurar que la conservación de registros de recuperación no introduzca referencias huérfanas o inconsistencias en el estado lógico.
 
 
+### VD-T06-68 — Integridad de referencias ante transiciones multiMember
+
+Se establecen los siguientes criterios para transiciones que afectan varios Members:
+
+1. Una transición multiMember valida todas las referencias de los Members afectados antes de producir el nuevo snapshot.
+2. Todas las referencias deben corresponder al mismo `Rollout` y contexto de `MembershipManifest`.
+3. Si una referencia es inexistente, incompatible o contradictoria, se rechaza la transición completa.
+4. No se admite actualizar parcialmente las observaciones de algunos Members.
+5. El Reducer devuelve un único resultado lógico: transición aplicada o rechazo tipado.
+6. La atomicidad aquí es lógica; no implica persistencia durable ni coordinación concurrente. Esas responsabilidades permanecen fuera del Reducer.
+
+**Motivo:** mantener la garantía de atomicidad lógica multiMember ya aceptada en VD-T06-29 y VD-T06-30, extendiéndola a la validación de referencias.
+
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -881,7 +895,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-67 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-68 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
