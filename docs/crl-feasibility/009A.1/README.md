@@ -1,22 +1,24 @@
-# CRL Feasibility — 009A.1
+# TASK-03 — Paquete de diseño preliminar
 
-Esta carpeta reúne exclusivamente los documentos de la investigación de factibilidad CRL `CRL-FEASIBILITY-009A.1`.
+Este paquete contiene borradores para revisar, no documentos aprobados ni autorización de implementación:
 
-## Estado vigente
+- `TASK-03-SPEC-DRAFT-1.md`
+- `TASK-03-PLAN-DRAFT-1.md`
+- `TASK-03-TASKS-DRAFT-1.md`
+- `TASK-03-DESIGN-VALIDATION-DRAFT-1.md`
+- `SOURCE-BASIS-AND-LIMITATIONS.md`
 
-- TASK-02: `CLOSED — HUMAN APPROVED`.
-- TASK-03: `AUTHORIZED — DESIGN PREPARATION AND VALIDATION ONLY`.
-- Implementación: no autorizada todavía.
-- Gate CRL para producción: cerrado.
+## Estado
 
-## Documentos
+`DRAFT — PENDING HUMAN REVIEW`.
 
-- `TASK-02-*.md`: paquete documental aprobado de TASK-02-DRAFT-2.
-- `PROJECT-STATUS.md`: estado consolidado de la investigación.
-- `TASK-03-AUTHORIZATION-AND-GATES.md`: alcance y límites de la autorización TASK-03.
+La autorización actual permite preparar y validar el diseño de TASK-03. No habilita cambios de código, Maven, tests, builds o experimentos. La implementación requerirá completar la validación del diseño y recibir aprobación humana explícita independiente.
 
-## Separación de responsabilidades
+## Revisión recomendada
 
-Esta investigación no reemplaza ni modifica `docs/SPEC.md`, `docs/PLAN.md`, `docs/TASKS.md`, `docs/DESIGN-VALIDATION.md`, `docs/architecture-review-gateway-v2.0-integral.md` ni `docs/contracts/DOC-001..DOC-009` del ISO8583 Gateway. El repositorio principal conserva esos artefactos sin cambios.
+1. Validar alcance y exclusiones.
+2. Resolver las decisiones abiertas de formato, tail recovery y filesystem.
+3. Confirmar el source set actual del workspace local 009A.1 mediante lectura read-only.
+4. Revisar SPEC, PLAN, TASKS y matriz de escenarios como un conjunto.
 
-La próxima actividad es preparar y validar la especificación y el plan ejecutable de TASK-03 sin modificar código.
+El repositorio `iso8583-gateway` mantiene separada esta documentación bajo `docs/crl-feasibility/009A.1/`. Los borradores de TASK-03 no se publicaron en GitHub ni modifican archivos existentes.
