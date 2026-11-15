@@ -661,6 +661,20 @@ Se establecen los siguientes criterios para la relación entre admisiones y roll
 **Motivo:** mantener la correlación de la admisión con el contexto que autorizó el permiso, sin introducir límites de concurrencia no definidos.
 
 
+### VD-T06-54 — Relación entre Admission y sus eventos
+
+Se establecen los siguientes criterios para la relación entre admisiones y eventos:
+
+1. Los eventos asociados a una `Admission` se identifican mediante `EventId`.
+2. La relación `AdmissionId 1—N EventId` respeta el modelo de dominio aprobado en TASK-02.
+3. Cada evento debe conservar una referencia coherente con la admisión a la que afecta.
+4. Un evento que referencia una admisión inexistente o incompatible se rechaza mediante error tipado.
+5. El Reducer valida las referencias de dominio disponibles en el snapshot, pero no consulta el journal ni reconstruye el historial de eventos.
+6. La secuencia, unicidad y aplicación previa de eventos siguen siendo responsabilidad de Replay.
+
+**Motivo:** mantener la frontera entre la validación de dominio del Reducer y el control del historial durable de Replay.
+
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -688,7 +702,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-53 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-54 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
