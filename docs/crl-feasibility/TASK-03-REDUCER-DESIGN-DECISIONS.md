@@ -532,6 +532,21 @@ Esta decisión complementa VD-T06-05 y VD-T06-09 y establece el determinismo com
 
 **Motivo:** evitar que un evento no interpretable o no contemplado por el dominio sea aceptado por tolerancia implícita o por defaults.
 
+
+### VD-T06-43 — Consolidación de entidades canónicas y datos derivados
+
+1. Las entidades y atributos canónicos constituyen la fuente de verdad del dominio.
+2. Los datos derivados deben ser coherentes con las entidades canónicas.
+3. Una inconsistencia entre datos canónicos y derivados en el snapshot de entrada provoca rechazo tipado; Reducer no la repara silenciosamente.
+4. Tras una transición válida, Reducer actualiza los datos derivados que el modelo defina como necesarios para preservar las invariantes.
+5. Los datos derivados reconstruibles no constituyen una fuente independiente de verdad.
+6. La reconstrucción de datos derivados durante la carga inicial o recuperación corresponde a Replay/snapshot, no a una reparación implícita del Reducer.
+7. El catálogo de campos canónicos y derivados, así como las reglas de reconstrucción, queda pendiente del modelo formal.
+
+**Consolidación de VD-T06-11, VD-T06-20, VD-T06-27 y VD-T06-32:** esta decisión reúne las reglas comunes sobre fuente de verdad, consistencia y actualización de datos derivados. No introduce nuevas restricciones de dominio ni modifica las responsabilidades específicas establecidas en aquellas decisiones.
+
+**Motivo:** evitar interpretaciones divergentes sobre la autoridad de los datos canónicos y los límites del Reducer frente a índices y datos derivados.
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -559,7 +574,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-42 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-43 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
