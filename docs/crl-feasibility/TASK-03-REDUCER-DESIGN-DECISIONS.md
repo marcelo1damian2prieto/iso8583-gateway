@@ -267,6 +267,18 @@ Esta decisión complementa VD-T06-05 y VD-T06-09 y establece el determinismo com
 
 **Límite:** el Reducer mantiene la relación lógica entre evento y transición; Replay conserva la trazabilidad física y durable del journal.
 
+
+### VD-T06-20 — Separación entre estado canónico y datos derivados
+
+1. El snapshot debe distinguir entidades y atributos canónicos de índices o datos derivados.
+2. Los datos derivados no constituyen una fuente independiente de verdad.
+3. Toda inconsistencia entre datos derivados y entidades canónicas debe provocar rechazo tipado.
+4. El Reducer debe mantener los datos derivados coherentes después de cada transición válida.
+5. No debe reconstruir ni reparar silenciosamente un snapshot de entrada inconsistente.
+6. La estrategia concreta de almacenamiento y reconstrucción de índices queda pendiente del diseño técnico.
+
+**Límite:** el Reducer garantiza consistencia lógica del snapshot; Replay y CODEC mantienen sus responsabilidades sobre recuperación y representación durable.
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -294,7 +306,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-19, VD-T06-32 y VD-T06-33 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-20, VD-T06-32 y VD-T06-33 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
