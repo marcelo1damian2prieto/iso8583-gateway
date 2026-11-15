@@ -1183,7 +1183,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-104 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-105 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
@@ -1503,3 +1503,16 @@ Se acepta que el Reducer rechace la transición `ADMISSION_OUTCOME_UNKNOWN` cuan
 8. Los campos contractuales, las reglas exhaustivas de obligatoriedad y los errores tipados permanecen pendientes de definición formal.
 
 **Motivo:** impedir que una transición a UNKNOWN se aplique sobre referencias incompletas o contradictorias, sin trasladar al Reducer la consulta del ledger Member ni la verificación histórica propia de Replay.
+
+### VD-T06-105 — Efecto de UNKNOWN sobre COMMIT_GLOBAL
+
+Se acepta formalizar el efecto bloqueante del estado `UNKNOWN` sobre la confirmación global:
+
+1. Una Admission en estado `UNKNOWN` permanece dentro del conjunto de Admissions bloqueantes.
+2. Mientras exista una Admission `UNKNOWN` bloqueante, Coordinator no puede confirmar `COMMIT_GLOBAL`.
+3. La transición explícita y durable `UNKNOWN → RECONCILED_UNKNOWN` puede retirar esa Admission del conjunto bloqueante únicamente cuando satisface las condiciones de reconciliación ya aceptadas y el contrato formal aplicable.
+4. La reconciliación no convierte el outcome: la Admission permanece con `outcome = UNKNOWN`; no se considera `COMPLETE` ni éxito.
+5. No se puede retirar el bloqueo por timeout, STATUS, ausencia de mensajes, falta de respuesta ni inferencia del Coordinator.
+6. Esta decisión no altera las reglas generales de D-02 ni la distinción de VD-T06-59; tampoco define por sí sola el conjunto completo de estados que bloquean `COMMIT_GLOBAL`.
+
+**Motivo:** asegurar que un resultado indeterminado no se trate como terminado y que el desbloqueo dependa de una reconciliación explícita, durable y validada.
