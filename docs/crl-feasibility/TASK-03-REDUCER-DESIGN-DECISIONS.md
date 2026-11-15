@@ -894,6 +894,21 @@ Se establecen los siguientes criterios para la membership de un rollout existent
 **Motivo:** hacer efectiva la inmutabilidad establecida en VD-T06-69 y evitar cambios implícitos en el conjunto de Members esperado.
 
 
+### VD-T06-71 — Identidad de Member dentro del snapshot
+
+Se establecen los siguientes criterios para la identidad de las observaciones Member:
+
+1. La identidad lógica de una observación Member se compone de `(membershipVersion, memberId, processBootId)`.
+2. No pueden coexistir dos observaciones con esa misma identidad dentro del mismo rollout.
+3. Un `processBootId` diferente representa una identidad de proceso distinta, no una actualización de la observación anterior.
+4. Una observación debe corresponder a un Member incluido en el `MembershipManifest`.
+5. El Reducer rechaza identidades duplicadas o incompatibles, sin fusionarlas ni reemplazarlas implícitamente.
+
+**Motivo:** preservar la identidad de cada proceso Member y evitar colisiones o sustituciones implícitas de observaciones.
+
+La cardinalidad histórica de observaciones por Member permanece abierta y no queda determinada por esta decisión.
+
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -921,7 +936,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-70 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-71 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
