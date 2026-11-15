@@ -1183,7 +1183,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-108 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-109 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
@@ -1561,3 +1561,16 @@ Se acepta establecer las siguientes invariantes para una Admission que alcanzó 
 7. Esta decisión no amplía el catálogo de acciones permitidas ni habilita reejecución del handler.
 
 **Motivo:** impedir que la reconciliación sea tratada como un estado transitorio o que acciones posteriores reescriban la evidencia y la historia durable ya confirmadas.
+
+### VD-T06-109 — Idempotencia de eventos y acciones de reconciliación UNKNOWN
+
+Se acepta establecer las siguientes reglas para las operaciones de reconciliación de una Admission:
+
+1. La repetición de `RECONCILE_UNKNOWN` con la misma identidad lógica y contenido canónico reconoce el resultado durable previamente confirmado.
+2. Una repetición idempotente no genera una segunda transición ni crea un nuevo `RecoveryRecord`.
+3. La reutilización de la misma identidad lógica con contenido canónico diferente constituye un conflicto y se rechaza; no modifica el evento, el `RecoveryRecord` ni el snapshot previamente confirmados.
+4. Una acción de recuperación distinta puede producir otro `RecoveryRecord` únicamente si está expresamente catalogada y es compatible con el estado y la Admission, conforme a VD-T06-90 y VD-T06-91.
+5. Una acción adicional válida no modifica ni reemplaza la transición original a `RECONCILED_UNKNOWN`, las referencias previamente confirmadas ni el outcome `UNKNOWN`.
+6. La identidad lógica, canonicalización, contenido contractual y clasificación/error tipado de conflictos permanecen pendientes del contrato formal.
+
+**Motivo:** distinguir una repetición idempotente de una acción de recuperación independiente, preservando la inmutabilidad de la reconciliación y de los registros ya confirmados.
