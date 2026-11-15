@@ -225,6 +225,24 @@ Esta decisión no congela el CODEC.
 
 Esta decisión complementa VD-T06-05 y VD-T06-09 y establece el determinismo como propiedad contractual verificable.
 
+
+### VD-T06-17 — Política de errores del Reducer
+
+1. Todo rechazo debe expresarse mediante un error tipado.
+2. Los errores deben distinguir, como mínimo:
+   - Snapshot inválido.
+   - Evento o payload inválido.
+   - Referencia inconsistente.
+   - Transición no permitida para el estado actual.
+   - Invariante de dominio incumplida.
+   - Versión o tipo de evento no soportado.
+3. Un error no debe modificar el snapshot de entrada.
+4. El Reducer no debe convertir errores en estados de dominio.
+5. No debe capturar errores para continuar con una transición parcial.
+6. Los códigos definitivos y su representación serializada quedan pendientes del contrato de errores y del CODEC.
+
+**Límite:** Replay decide cómo clasificar y gestionar los errores durante la recuperación; el Reducer solo informa el resultado de aplicar la transición.
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -252,7 +270,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-16, VD-T06-32 y VD-T06-33 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-17, VD-T06-32 y VD-T06-33 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
