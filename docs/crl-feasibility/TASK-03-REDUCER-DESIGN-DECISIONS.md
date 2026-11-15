@@ -291,6 +291,18 @@ Esta decisión complementa VD-T06-05 y VD-T06-09 y establece el determinismo com
 
 **Límite:** esta decisión define cómo se documentan y verifican las invariantes, no congela todavía el catálogo completo de invariantes del dominio.
 
+
+### VD-T06-22 — Tratamiento de transiciones sin cambio de estado
+
+1. Una transición válida puede producir un snapshot lógicamente equivalente al de entrada, únicamente cuando el contrato del evento permita explícitamente ese resultado.
+2. El Reducer no debe interpretar automáticamente una transición sin cambio como duplicado o evento ya procesado.
+3. Si el evento exige modificar el estado y no lo hace, debe rechazarse mediante error tipado.
+4. La equivalencia se evalúa sobre el estado lógico, no sobre identidad de objetos ni representación binaria.
+5. La detección de duplicados y la decisión de re-aplicar eventos corresponden a Replay/checkpoint.
+6. Cada tipo de evento debe declarar explícitamente si admite una transición sin cambio de estado.
+
+**Límite:** esto no habilita idempotencia implícita ni reemplaza la política de deduplicación del journal.
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -318,7 +330,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-21, VD-T06-32 y VD-T06-33 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-22, VD-T06-32 y VD-T06-33 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
