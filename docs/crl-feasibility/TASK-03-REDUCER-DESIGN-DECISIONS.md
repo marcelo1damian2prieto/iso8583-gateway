@@ -1183,7 +1183,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-92 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-93 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
@@ -1268,4 +1268,33 @@ Se acepta una política de rechazo estricto en el Reducer y clasificación del i
 7. Los nombres de errores tipados, la clasificación exhaustiva y el procedimiento de resolución quedan pendientes del contrato formal; esta decisión no los inventa ni autoriza recuperación automática.
 
 **Motivo:** evitar tanto la aceptación de estados cuya evidencia de recuperación el Reducer no comprende como la clasificación automática de toda incompatibilidad de catálogo como corrupción, manteniendo la separación de responsabilidades entre Reducer, Replay y Coordinator.
+
+### VD-T06-93 — Matriz de transición T-01: creación de Admission mediante ADMIT
+
+Se acepta la fila T-01 de la matriz formal de transiciones del Reducer, con los siguientes criterios y reservas explícitas:
+
+1. **Origen:** no existe una Admission para la `TransitionKey` correspondiente.
+2. **Evento:** `ADMIT`, emitido por Coordinator.
+3. **Precondiciones:** `GLOBAL_ACTIVE`; ausencia de un `FENCE` que impida nuevas admisiones; Member, `processBootId`, membership, epoch, rollout, generación y hash válidos y correlacionados.
+4. **Identidad:** `TransitionKey=(memberId, processBootId, requestId, ADMIT)`.
+5. **Destino:** `Admission.state=ADMITTED`.
+6. **Outcome:** esta transición no determina todavía un resultado de ejecución. El valor formal de `outcome` para `ADMITTED` permanece pendiente.
+7. **Persistencia y autorización:** Coordinator registra ADMIT durablemente mediante el protocolo append/force/checkpoint aplicable antes de emitir Permit. Permit y ACK solo se emiten después de confirmar la persistencia requerida.
+8. **Identidad de Admission:** se crea un `AdmissionId` único asociado al evento ADMIT. No se reutiliza aunque un ADMIT en tail deba abortarse conforme a la política aprobada.
+9. **Idempotencia:** misma `TransitionKey` y mismo payload recuperan el resultado previo sin crear otra Admission; misma clave con payload diferente se rechaza como conflicto y no modifica el estado previo.
+10. **FENCE:** un ADMIT posterior a un FENCE que cierre nuevas admisiones se rechaza y no emite Permit.
+11. **ACK perdido:** se consulta STATUS con la misma clave; no se crea una admisión paralela.
+12. **Fallo o ambigüedad de persistencia:** no se emite Permit ni se confirma `ADMITTED` sin la confirmación durable requerida.
+13. **Tail sin checkpoint:** se aplica exclusivamente `ADMIT_ABORTED_UNCOMMITTED` bajo las condiciones aprobadas en R3.1 y el catálogo T03-01; no se emite Permit ni se crea otro `AdmissionId`.
+14. **Correlación inválida:** Member, boot, epoch u otros datos de contexto inconsistentes provocan rechazo de la admisión.
+15. **Replay:** valida identidad, secuencia, referencias, integridad y consistencia del evento con el snapshot.
+
+**Reservas que permanecen abiertas y no quedan decididas por esta aceptación:**
+
+- Valor exacto de `outcome` cuando `state=ADMITTED`.
+- Si `ADMITTED` bloquea por sí mismo `COMMIT_GLOBAL` y su integración exacta al conjunto de admissions in-flight.
+- Representación exacta de Admission en snapshot y referencias obligatorias del evento ADMIT.
+- Contrato definitivo de errores y respuestas.
+
+**Motivo:** aceptar la semántica de creación durable de Admission sin anticipar decisiones de outcome, bloqueo global, estructura del snapshot ni errores que requieren definición específica en el contrato formal.
 
