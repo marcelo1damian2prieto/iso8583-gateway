@@ -438,6 +438,19 @@ Esta decisión complementa VD-T06-05 y VD-T06-09 y establece el determinismo com
 
 **Motivo:** establecer una frontera defensiva entre reconstrucción y aplicación de dominio, sin duplicar las responsabilidades de Replay.
 
+
+### VD-T06-36 — Alcance de la validación de invariantes globales
+
+1. El contrato identifica explícitamente el conjunto completo de invariantes globales del snapshot.
+2. Cada transición declara qué invariantes puede afectar directa o indirectamente.
+3. Reducer puede utilizar validación selectiva durante una transición únicamente cuando el contrato permita demostrar que las invariantes omitidas no pueden resultar afectadas.
+4. La validación selectiva no reduce ni modifica la garantía contractual de consistencia global.
+5. Toda invariante potencialmente afectada debe verificarse antes de aceptar el nuevo snapshot.
+6. Si no puede determinarse con certeza qué invariantes pueden verse afectadas, se verifican todas las invariantes globales aplicables.
+7. La optimización concreta de estas verificaciones queda para el diseño técnico y no puede introducir falsos negativos.
+
+**Motivo:** permitir optimizaciones sin debilitar las garantías de consistencia del dominio.
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -465,7 +478,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-35 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-36 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
