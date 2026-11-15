@@ -1183,7 +1183,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-110 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-111 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
@@ -1588,3 +1588,17 @@ Se acepta consolidar la siguiente separación de responsabilidades:
 Esta separación no modifica los contratos ni las responsabilidades específicas ya aprobadas en D-01, D-02 y VD-T06-01 a VD-T06-109. Los detalles de interfaces, errores tipados y orden exacto de invocación permanecen sujetos a los contratos formales correspondientes.
 
 **Motivo:** mantener al Reducer como función de transición de dominio sobre eventos centrales confirmados, preservando las fronteras entre validación de evidencia, integridad histórica, persistencia y clasificación operativa.
+
+### VD-T06-111 — Pureza, determinismo y atomicidad del Reducer
+
+Se acepta establecer el siguiente contrato para la operación del Reducer:
+
+1. El Reducer recibe un snapshot de entrada y un evento central.
+2. Valida todas las precondiciones de dominio y consistencia antes de producir un resultado.
+3. Si la transición es válida, devuelve un snapshot nuevo, íntegro y consistente; no modifica el snapshot de entrada.
+4. Si la transición es inválida, devuelve un error tipado y no modifica el snapshot de entrada.
+5. El Reducer no expone snapshots parciales ni aplica mutaciones incrementales visibles. La transición se acepta o rechaza como una unidad lógica.
+6. Para el mismo snapshot y el mismo evento, el Reducer produce el mismo resultado o la misma clase de rechazo, sin depender de estado externo, reloj, I/O ni efectos secundarios.
+7. La pureza y el determinismo del Reducer no sustituyen las validaciones históricas de Replay ni las garantías de persistencia del Journal/Coordinator.
+
+**Motivo:** obtener transiciones reproducibles y atómicas, facilitar Replay determinista y permitir pruebas unitarias aisladas, manteniendo la separación de responsabilidades aprobada en VD-T06-110.
