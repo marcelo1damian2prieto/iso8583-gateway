@@ -2006,3 +2006,20 @@ Se acepta la opción C: utilizar actualización incremental de índices derivado
 La selección de estructuras Java, algoritmos, criterios técnicos para elegir entre actualización incremental y reconstrucción completa, estrategia concreta de *structural sharing*, complejidades temporales y espaciales, y cualquier benchmark o experimento permanecen pendientes del diseño técnico y requieren autorización explícita cuando corresponda.
 
 **Motivo:** equilibrar eficiencia y seguridad, evitando reconstrucciones completas innecesarias sin debilitar la coherencia de los datos derivados, la inmutabilidad observable, el aislamiento concurrente ni la validación global del Reducer.
+
+### VD-T06-138 — Selección del mecanismo de actualización por garantía de coherencia
+
+Se acepta la opción B: seleccionar entre actualización incremental y reconstrucción completa según la capacidad del mecanismo incremental para garantizar la coherencia de todas las estructuras derivadas afectadas por una transición válida.
+
+1. La actualización incremental se utiliza cuando el mecanismo puede garantizar la actualización completa y coherente de todas las entradas y estructuras derivadas afectadas por los cambios en las entidades canónicas.
+2. Si no puede garantizarse esa coherencia mediante actualización incremental, se utiliza la reconstrucción completa de los índices a partir de las entidades canónicas del resultado candidato, conforme a VD-T06-137.
+3. La reconstrucción completa no utiliza índices ni estructuras derivadas anteriores como fuente de verdad; las entidades canónicas del resultado candidato son su única fuente.
+4. La actualización incremental y la reconstrucción completa deben producir estructuras semánticamente equivalentes para las mismas entidades canónicas.
+5. El snapshot resultante debe superar siempre la validación global establecida en VD-T06-133, independientemente del mecanismo utilizado para construir sus índices.
+6. Si no puede construirse o validarse un resultado coherente, la transición se rechaza sin exponer un snapshot parcial ni modificar el snapshot de entrada.
+7. La selección no depende de umbrales de rendimiento, estimaciones de costo ni mediciones durante la ejecución. Tampoco introduce una política específica por tipo de evento.
+8. La imposibilidad de garantizar una actualización incremental no debe confundirse con una inconsistencia del snapshot de entrada. Si este último contiene índices inconsistentes con las entidades canónicas, corresponde aplicar VD-T06-134: rechazo y eventual reconstrucción externa autorizada, no reconstrucción como parte de la transición.
+
+Los mecanismos técnicos para determinar la cobertura de las estructuras afectadas, identificar dependencias y demostrar la garantía de coherencia permanecen pendientes del diseño técnico. Esta decisión no selecciona algoritmos, estructuras Java ni criterios de rendimiento.
+
+**Motivo:** priorizar la corrección y la coherencia verificable de los índices derivados, utilizando la reconstrucción completa como respaldo controlado sin introducir umbrales arbitrarios ni políticas redundantes por tipo de evento.
