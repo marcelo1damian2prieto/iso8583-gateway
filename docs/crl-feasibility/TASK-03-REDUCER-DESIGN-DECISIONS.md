@@ -976,6 +976,19 @@ Se establecen los siguientes criterios para eliminar observaciones Member:
 **Motivo:** evitar eliminaciones implícitas y preservar la consistencia referencial del estado lógico.
 
 
+### VD-T06-77 — Consistencia de referencias al eliminar una observación
+
+Se establecen los siguientes criterios para eliminar una observación Member:
+
+1. Antes de aceptar una eliminación, el Reducer verifica que ninguna entidad canónica del snapshot conserve referencias obligatorias a la observación eliminada.
+2. Si existen referencias obligatorias, la transición se rechaza, salvo que el mismo evento defina explícitamente las modificaciones necesarias para mantener la integridad referencial.
+3. Cuando esas modificaciones estén definidas, se aplican como una única transición lógica.
+4. No se admiten eliminaciones parciales ni referencias huérfanas.
+5. El Reducer rechaza la transición completa si no puede preservar las invariantes y relaciones del modelo.
+
+**Motivo:** complementar VD-T06-76 con una regla explícita de integridad referencial y mantener la atomicidad lógica establecida en VD-T06-30.
+
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -1003,7 +1016,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-76 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-77 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
