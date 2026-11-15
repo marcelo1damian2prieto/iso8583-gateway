@@ -702,6 +702,19 @@ Se establecen los siguientes criterios de consistencia para las admisiones:
 **Motivo:** asegurar consistencia referencial sin introducir una regla de vigencia de epochs que todavía no está definida.
 
 
+### VD-T06-57 — Conservación de admisiones terminales
+
+Se establecen los siguientes criterios para la representación de admisiones terminales en el snapshot:
+
+1. Una admisión que alcanza `COMPLETE` permanece representada en el estado lógico durable del Coordinator.
+2. Una admisión que alcanza `REJECTED_NOT_STARTED` también permanece representada.
+3. Los estados terminales no se eliminan automáticamente del snapshot.
+4. El Reducer no aplica políticas de retención ni compactación.
+5. La eliminación o el archivado de admisiones, si llegara a ser necesario, requiere un contrato explícito fuera de estas decisiones del Reducer.
+
+**Motivo:** evitar que una transición terminal implique pérdida implícita de estado durable o de correlación de admisiones.
+
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -729,7 +742,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-56 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-57 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
