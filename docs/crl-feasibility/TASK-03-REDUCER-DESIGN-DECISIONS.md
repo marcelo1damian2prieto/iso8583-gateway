@@ -647,6 +647,20 @@ Se establecen los siguientes criterios para las observaciones de Members en el s
 **Motivo:** evitar confundir el membership esperado con las observaciones efectivamente recibidas, sin introducir una cardinalidad temporal todavía no definida.
 
 
+### VD-T06-53 — Relación entre Admission y Rollout
+
+Se establecen los siguientes criterios para la relación entre admisiones y rollouts:
+
+1. Toda `Admission` pertenece a un único `Rollout`, identificado por `rolloutId`.
+2. La `Admission` conserva la identidad del Member y su `processBootId`.
+3. El Member de la admisión debe pertenecer al `MembershipManifest` asociado al rollout.
+4. La admisión conserva el `coordinatorEpoch` bajo el cual fue concedida.
+5. Una admisión cuyo rollout, Member, boot o epoch no coincida con el contexto validado se rechaza mediante error tipado.
+6. Esta decisión no establece un límite de cantidad de admissions por Member ni por rollout.
+
+**Motivo:** mantener la correlación de la admisión con el contexto que autorizó el permiso, sin introducir límites de concurrencia no definidos.
+
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -674,7 +688,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-52 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-53 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
