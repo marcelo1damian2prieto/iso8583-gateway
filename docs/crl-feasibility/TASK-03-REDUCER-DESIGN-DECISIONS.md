@@ -1183,7 +1183,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-117 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-118 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
@@ -1693,3 +1693,19 @@ Se establecen además estas reglas:
 8. Los nombres definitivos, estructura, payloads y taxonomía exhaustiva de errores permanecen pendientes del contrato formal.
 
 **Motivo:** distinguir fallos del estado recibido, de la transición solicitada y del resultado candidato, manteniendo el rechazo atómico y la separación entre Reducer y capa superior.
+
+### VD-T06-118 — Política fail-fast determinista para errores del Reducer
+
+Se acepta que el Reducer aplique una política fail-fast determinista, en lugar de acumular múltiples errores por operación:
+
+1. Si el snapshot de entrada es inválido, devuelve `INVALID_SNAPSHOT` y no evalúa el evento.
+2. Si la transición solicitada es inválida, devuelve `INVALID_TRANSITION` y no construye un snapshot resultado.
+3. Si el snapshot candidato viola invariantes globales, devuelve `INVALID_RESULT` y no expone ese resultado.
+4. El Reducer devuelve un único error principal por operación; no acumula una colección de errores.
+5. Si existen varias violaciones dentro de una misma etapa, selecciona la primera conforme a un orden de validación estable y documentado.
+6. El orden de validación y la selección del error deben ser deterministas para el mismo snapshot y evento.
+7. Esta política no altera las responsabilidades de clasificación operativa de la capa superior ni autoriza reparación o recuperación automática.
+
+El orden exhaustivo de validaciones y los detalles contractuales de los errores permanecen pendientes de definición formal.
+
+**Motivo:** mantener resultados reproducibles, simplificar el contrato de error y evitar variaciones de diagnóstico que afecten Replay o las pruebas deterministas.
