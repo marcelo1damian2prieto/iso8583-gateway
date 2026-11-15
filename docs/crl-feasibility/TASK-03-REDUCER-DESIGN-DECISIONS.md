@@ -1183,7 +1183,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-130 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-131 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
@@ -1878,3 +1878,21 @@ Se acepta la opción A: el Reducer procesa exclusivamente snapshots cuya versió
 La identificación concreta de la versión vigente, su representación y los errores tipados asociados al rechazo permanecen pendientes del contrato formal de versionado y errores.
 
 **Motivo:** mantener un único modelo lógico soportado por el Reducer, evitando compatibilidad implícita, migraciones internas y coexistencia de semánticas de versiones diferentes.
+
+
+### VD-T06-131 — Diagnóstico estructurado para rechazo de snapshot inválido
+
+Se acepta la opción C: cuando el Reducer rechaza un snapshot por incumplir el esquema lógico vigente o sus invariantes, el rechazo debe proporcionar un diagnóstico estructurado, sujeto a las siguientes reglas:
+
+1. El rechazo se expresa mediante la categoría de error tipado correspondiente, conforme a VD-T06-117.
+2. El diagnóstico identifica la etapa de validación en la que se detectó la primera violación, conforme al orden determinista de VD-T06-119.
+3. El diagnóstico identifica la regla o invariante incumplida.
+4. Cuando resulte aplicable y seguro, incluye una referencia al campo o entidad afectada y los identificadores de contexto ya disponibles.
+5. Se conserva la política fail-fast: se informa un único error principal por operación, sin acumular múltiples errores.
+6. El diagnóstico no incluye datos sensibles innecesarios ni valores completos del snapshot.
+7. El Reducer no repara, normaliza, completa ni modifica el snapshot rechazado, y no expone un snapshot candidato.
+8. La información estructurada permite que la capa superior registre y correlacione el rechazo, sin que el Reducer emita logs, métricas o trazas ni genere identificadores nuevos, conforme a VD-T06-128.
+
+Los campos exactos del diagnóstico, su representación contractual, las reglas de redacción y el mapeo exhaustivo entre reglas e invariantes permanecen pendientes del contrato formal de errores y observabilidad.
+
+**Motivo:** facilitar el diagnóstico operativo de snapshots inválidos sin debilitar el rechazo estricto, la política fail-fast, la pureza ni la protección de información sensible.
