@@ -340,6 +340,18 @@ Esta decisión complementa VD-T06-05 y VD-T06-09 y establece el determinismo com
 
 **Límite:** Reducer valida consistencia contextual de dominio. Replay conserva la validación de secuencia y procedencia física del registro.
 
+
+### VD-T06-26 — Consistencia temporal de las transiciones
+
+1. Reducer no utiliza reloj local ni obtiene timestamps durante la aplicación.
+2. Las restricciones temporales relevantes deben estar expresadas mediante datos explícitos del evento y/o snapshot.
+3. Cuando el dominio requiera orden temporal, Reducer valida los datos temporales disponibles contra las reglas explícitas del contrato.
+4. No infiere timestamps faltantes ni corrige secuencias temporales.
+5. Una contradicción temporal definida por el contrato produce rechazo tipado.
+6. La validación de orden físico del journal y de secuencias de persistencia corresponde a Replay, no al Reducer.
+
+**Límite:** esta decisión no define todavía qué timestamps forman parte de cada evento ni sus reglas de comparación; eso queda pendiente del modelo formal.
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -367,7 +379,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-25, VD-T06-32 y VD-T06-33 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-26, VD-T06-32 y VD-T06-33 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
