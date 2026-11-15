@@ -490,6 +490,21 @@ Esta decisión complementa VD-T06-05 y VD-T06-09 y establece el determinismo com
 
 **Motivo:** eliminar la ambigüedad sobre la validez de entrada y establecer que la reconstrucción de Replay no sustituye las validaciones defensivas del Reducer.
 
+
+### VD-T06-40 — Garantía global y estrategia de validación selectiva de invariantes
+
+1. El contrato define explícitamente el conjunto completo de invariantes globales del snapshot.
+2. La garantía del Reducer consiste en preservar todas las invariantes globales aplicables.
+3. Cada transición identifica las invariantes que puede afectar directa o indirectamente.
+4. Reducer puede aplicar validación selectiva únicamente cuando el contrato permita demostrar que las invariantes omitidas no pueden verse afectadas por la transición.
+5. Toda invariante potencialmente afectada debe verificarse antes de aceptar el resultado.
+6. Ante incertidumbre sobre el alcance de los efectos de una transición, se verifican todas las invariantes globales aplicables.
+7. La validación selectiva no reduce la garantía de consistencia global ni puede introducir falsos negativos.
+
+**Aclaración de VD-T06-21 y VD-T06-36:** la obligación contractual es preservar el conjunto completo de invariantes globales aplicables. La estrategia de comprobación puede ser selectiva solo bajo las condiciones demostrables establecidas en esta decisión.
+
+**Motivo:** armonizar la garantía global de consistencia con la posibilidad de optimizar la ejecución de las verificaciones, sin debilitar las propiedades del dominio.
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -517,7 +532,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-39 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-40 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
