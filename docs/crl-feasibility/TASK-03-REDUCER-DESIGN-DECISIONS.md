@@ -757,6 +757,20 @@ Se establecen los siguientes criterios para separar el estado de admisión de su
 **Motivo:** impedir que la representación del estado de coordinación o reconciliación se confunda con el resultado de ejecución.
 
 
+### VD-T06-61 — Representación de la evidencia de reconciliación
+
+Se establecen los siguientes criterios para la evidencia asociada a `RECONCILED_UNKNOWN`:
+
+1. `RECONCILED_UNKNOWN` debe conservar una referencia a la evidencia de reconciliación que justificó el cambio de estado.
+2. Esa referencia debe identificar el `RecoveryRecord` correspondiente, conforme al modelo de TASK-02.
+3. El Reducer valida que la referencia exista en el snapshot y sea compatible con la admisión y el evento de reconciliación.
+4. El Reducer no verifica por sí mismo la evidencia externa ni reconstruye el historial durable.
+5. La validación de secuencia, unicidad y persistencia del `RecoveryRecord` corresponde a Replay.
+6. La forma exacta de la referencia y sus campos queda pendiente del contrato formal.
+
+**Motivo:** evitar que `RECONCILED_UNKNOWN` aparezca como un estado sin justificación trazable, respetando las responsabilidades de Reducer y Replay.
+
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -784,7 +798,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-60 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-61 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
