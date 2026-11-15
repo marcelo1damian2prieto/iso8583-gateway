@@ -1183,7 +1183,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-106 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-107 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
@@ -1532,3 +1532,18 @@ Se acepta que el Reducer aplique la transición `UNKNOWN → RECONCILED_UNKNOWN`
 Esta decisión aplica VD-T06-61, VD-T06-64, VD-T06-88 y VD-T06-89. No agrega acciones de recuperación ni define por sí sola sus valores contractuales, payloads, algoritmos o verificaciones históricas de Replay.
 
 **Motivo:** impedir que UNKNOWN se considere reconciliado sin una transición central durable, vinculada al mismo evento UNKNOWN y respaldada por un RecoveryRecord válido con acción expresamente habilitada.
+
+### VD-T06-107 — Conservación del outcome y referencias después de reconciliar UNKNOWN
+
+Se acepta consolidar las siguientes invariantes para el resultado de la transición `UNKNOWN → RECONCILED_UNKNOWN`:
+
+1. El estado resultante de la Admission es `RECONCILED_UNKNOWN`.
+2. El outcome de la Admission permanece `UNKNOWN`; la reconciliación no lo convierte en `COMPLETE` ni en éxito.
+3. El snapshot conserva la referencia al evento central que estableció `UNKNOWN`.
+4. El snapshot conserva la referencia lógica al `RecoveryRecord` que justifica la reconciliación, incluyendo la identidad y correlación requeridas por VD-T06-79 y VD-T06-88.
+5. La Admission puede dejar de integrar el conjunto bloqueante para `COMMIT_GLOBAL` únicamente conforme a las condiciones aceptadas en VD-T06-105 y VD-T06-106.
+6. Ninguna acción de reconciliación convierte implícitamente el outcome en `COMPLETE`, acredita finalización de ejecución ni habilita reejecución del handler.
+
+Esta decisión consolida VD-T06-59, VD-T06-60, VD-T06-79, VD-T06-88 y VD-T06-105; no redefine las reglas de Replay ni amplía el catálogo de acciones de recuperación.
+
+**Motivo:** preservar la distinción entre estado de coordinación reconciliado y resultado de ejecución todavía desconocido, manteniendo las referencias necesarias para trazabilidad.
