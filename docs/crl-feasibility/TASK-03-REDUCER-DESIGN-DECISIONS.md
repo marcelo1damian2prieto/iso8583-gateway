@@ -542,6 +542,18 @@ Esta decisión complementa VD-T06-05 y VD-T06-09 y establece el determinismo com
 
 **Motivo:** precisar la frontera de responsabilidades sin trasladar al Reducer consultas de historial ni controles de deduplicación.
 
+
+### VD-T06-46 — Ubicación contractual de la trazabilidad
+
+1. `eventId` y tipo de evento son metadatos del resultado de la invocación del Reducer.
+2. Se conservan tanto en transiciones con cambios como en transiciones sin cambios lógicos.
+3. No es obligatorio incorporarlos al snapshot como atributos de dominio.
+4. El snapshot solo contiene información de trazabilidad si el modelo formal define explícitamente que pertenece a su estado lógico.
+5. Replay conserva la trazabilidad durable en el journal.
+6. Esta decisión aclara VD-T06-19, VD-T06-24, VD-T06-37 y VD-T06-41, sin modificar sus restantes criterios.
+
+**Motivo:** eliminar la ambigüedad sobre la ubicación de la trazabilidad y evitar que se introduzcan mutaciones artificiales en el estado de dominio.
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -569,7 +581,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-45 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-46 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
