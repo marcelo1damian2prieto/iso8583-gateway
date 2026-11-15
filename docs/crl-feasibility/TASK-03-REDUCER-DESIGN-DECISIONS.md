@@ -1183,7 +1183,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-101 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-102 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
@@ -1458,3 +1458,16 @@ Se acepta distinguir los fallos de validación de la evidencia local Member seg�
 6. Esta decisión establece la distinción conceptual de clasificación; los errores tipados, criterios exhaustivos y procedimientos operativos permanecen sujetos al contrato formal y a las tareas responsables.
 
 **Motivo:** diferenciar la falta de evidencia suficiente para resolver de una violación de integridad demostrada, manteniendo en ambos casos el comportamiento fail-closed y la prohibición de establecer UNKNOWN sin validación satisfactoria y confirmación durable del evento central.
+
+### VD-T06-102 — Idempotencia de ADMISSION_OUTCOME_UNKNOWN
+
+Se acepta aplicar las siguientes reglas de idempotencia a la operación central `ADMISSION_OUTCOME_UNKNOWN`:
+
+1. La repetición de la misma operación, con idéntica identidad lógica y contenido canónico, devuelve o reconoce el resultado durable previamente confirmado.
+2. Una repetición idempotente no genera un segundo evento central, no produce una segunda transición del Reducer y no modifica el snapshot confirmado.
+3. La reutilización de la misma identidad lógica con contenido canónico diferente constituye un conflicto y debe rechazarse.
+4. El conflicto no sobrescribe, reemplaza ni reinterpreta el evento original, y no modifica el snapshot confirmado.
+5. La identidad lógica debe estar vinculada a la Admission correspondiente y mantenerse estable entre reintentos de comunicación; no se crea una identidad nueva por cada intento.
+6. La forma exacta de la identidad, los campos del contenido canónico, la canonicalización y la clasificación/error tipado del conflicto permanecen pendientes del contrato formal.
+
+**Motivo:** asegurar que reintentos de comunicación no dupliquen la transición durable a UNKNOWN ni permitan alterar su contenido mediante reutilización de identidad.
