@@ -1183,7 +1183,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-120 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-121 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
@@ -1741,3 +1741,15 @@ Se acepta que el Reducer aplique una política estricta a los campos del modelo 
 La clasificación exacta de cada error y los detalles de versionado permanecen sujetos al contrato formal.
 
 **Motivo:** evitar interpretaciones divergentes del mismo estado o evento y mantener validación explícita, fail-fast y determinista.
+
+### VD-T06-121 — Política explícita de nulabilidad y ausencia de campos
+
+Se acepta distinguir explícitamente la nulabilidad y la ausencia de campos en el modelo lógico y los eventos:
+
+1. Un campo obligatorio cuyo valor sea `null` se rechaza.
+2. Un campo opcional con valor `null` solo se admite cuando el contrato de dominio declara expresamente que ese campo es nullable.
+3. La ausencia de un campo opcional no equivale automáticamente a un valor `null`; su interpretación debe estar definida por el contrato.
+4. El Reducer no convierte automáticamente un campo ausente en `null`, ni convierte `null` en un valor por defecto.
+5. La nulabilidad de cada campo y la semántica de su ausencia deben quedar especificadas en el contrato formal del modelo.
+
+**Motivo:** evitar que ausencia, nulidad y valores por defecto se interpreten como equivalentes sin una decisión explícita de dominio.
