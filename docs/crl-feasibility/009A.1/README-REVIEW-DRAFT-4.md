@@ -15,10 +15,10 @@ Este paquete conserva la corrección H-01 ya aceptada y corrige la trazabilidad 
 
 ## Baseline y provisión
 
-- El informe TASK-01 inspeccionó `009a\\project`, no `009a1\\project`.
+- El informe TASK-01 inspeccionó `009a\project`, no `009a1\project`.
 - La captura del 2026-11-15 muestra la raíz 009A.1 con ocho documentos Markdown y sin subdirectorio `project`; el usuario confirmó que eso es todo su contenido.
 - T03-00 está `BLOCKED — WORKSPACE NOT PROVISIONED`.
-- Provisionar `009a1\\project` requiere un plan y autorización humana separados. T03-00 seguirá siendo read-only.
+- Provisionar `009a1\project` requiere un plan y autorización humana separados. T03-00 seguirá siendo read-only.
 
 ## Corrección H-01 preservada
 

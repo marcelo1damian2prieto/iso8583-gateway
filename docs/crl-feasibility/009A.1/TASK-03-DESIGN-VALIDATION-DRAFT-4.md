@@ -10,7 +10,7 @@
 
 **VIABLE CON CONDICIONES PARA CONTINUAR LA PREPARACIÓN DOCUMENTAL.**
 
-La propuesta conserva el modelo append-only, checkpoint atómico, replay, tail recovery acotado, idempotencia, serialización ADMIT/FENCE/START_INTENT/rechazo por expiry y fail-closed. No se considera lista para aprobación de implementación mientras permanezcan abiertas las decisiones D03-OPEN-01..08 de SPEC. Además, el baseline local 009A.1 no está disponible: T03-00 permanece bloqueada hasta provisionar `009a1\\project` mediante una operación separada y autorizada.
+La propuesta conserva el modelo append-only, checkpoint atómico, replay, tail recovery acotado, idempotencia, serialización ADMIT/FENCE/START_INTENT/rechazo por expiry y fail-closed. No se considera lista para aprobación de implementación mientras permanezcan abiertas las decisiones D03-OPEN-01..08 de SPEC. Además, el baseline local 009A.1 no está disponible: T03-00 permanece bloqueada hasta provisionar `009a1\project` mediante una operación separada y autorizada.
 
 ## 2. Requisitos funcionales y no funcionales
 
@@ -207,7 +207,7 @@ La evidencia de las tareas de implementación se generará únicamente después 
 
 ## 12. Decisiones y bloqueos antes de aprobar implementación
 
-1. Provisionar `009a1\\project` mediante gate separado y autorizado; después completar T03-00 read-only con source set y hashes verificables. El informe TASK-01 corresponde a 009A y no valida la identidad de 009A.1.
+1. Provisionar `009a1\project` mediante gate separado y autorizado; después completar T03-00 read-only con source set y hashes verificables. El informe TASK-01 corresponde a 009A y no valida la identidad de 009A.1.
 2. Cerrar encoding, canonicalización, algoritmo de recordHash/payloadDigest y formato de checkpoint.
 3. Aprobar política tail de cada evento no cubierto expresamente por R3.1 o mantenerlo como recovery manual/stop.
 4. Definir evento, clave, primer arranque y crash recovery del avance `coordinatorEpoch`.

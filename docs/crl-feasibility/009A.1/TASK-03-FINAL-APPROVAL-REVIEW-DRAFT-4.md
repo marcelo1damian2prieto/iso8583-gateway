@@ -56,7 +56,7 @@ No se detecta en la revisión documental una ampliación funcional más allá de
 7. D03-OPEN-07: evidencia del filesystem Windows para FileLock/ATOMIC_MOVE/directory force.
 8. D03-OPEN-08: contrato/evidencia Member para REBIND.
 
-Además, T03-00 está actualmente `BLOCKED — WORKSPACE NOT PROVISIONED`: el informe TASK-01 inspeccionó `009a\\project`, mientras la captura del usuario muestra que `009a1` contiene únicamente ocho documentos Markdown y carece del subdirectorio `project`. Antes de cualquier implementación se requiere un gate separado de provisión, con plan de copia y autorización humana; luego debe completarse T03-00 read-only. Las pruebas de filesystem Windows requieren autorización específica del experimento.
+Además, T03-00 está actualmente `BLOCKED — WORKSPACE NOT PROVISIONED`: el informe TASK-01 inspeccionó `009a\project`, mientras la captura del usuario muestra que `009a1` contiene únicamente ocho documentos Markdown y carece del subdirectorio `project`. Antes de cualquier implementación se requiere un gate separado de provisión, con plan de copia y autorización humana; luego debe completarse T03-00 read-only. Las pruebas de filesystem Windows requieren autorización específica del experimento.
 
 ## 7. Resultado de pruebas/revisión
 
@@ -76,8 +76,8 @@ El gate de factibilidad CRL para producción permanece cerrado.
 
 ## 9. Trazabilidad del baseline y provisión
 
-- El informe TASK-01 identifica el proyecto histórico 009A en `%TEMP%\\crl-feasibility-009a\\project`; no inspecciona `009a1\\project`.
-- R3.1 propone el aislamiento bajo `%TEMP%\\crl-feasibility-009a1` y conservar 009A inmutable.
+- El informe TASK-01 identifica el proyecto histórico 009A en `%TEMP%\crl-feasibility-009a\project`; no inspecciona `009a1\project`.
+- R3.1 propone el aislamiento bajo `%TEMP%\crl-feasibility-009a1` y conservar 009A inmutable.
 - La captura del usuario muestra la raíz 009A.1 con ocho documentos Markdown. Según la confirmación del usuario, no hay otros elementos; no se observa un subdirectorio `project`.
 - T03-00 no crea, copia ni reconstruye el workspace. La provisión se documenta en `WORKSPACE-PROVISIONING-REQUIREMENTS-DRAFT-4.md` y requiere autorización humana independiente.
 - El contenido H-01 aceptado, las reglas D-01/D-02/D-03/D-VD03-5, D03-OPEN-01..08 y los límites de implementación se preservan.

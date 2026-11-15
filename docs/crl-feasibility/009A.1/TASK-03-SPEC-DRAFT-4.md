@@ -16,7 +16,7 @@ Este documento especifica el alcance de TASK-03. No convierte el laboratorio en 
 
 1. `CRL-FEASIBILITY-009A.1-DESIGN(9).md`, revisión R3.1 del 2026-11-14, especialmente §§3.2, 3.11, 3.15, 3.17, 3.18 y 3.20.
 2. Paquete TASK-02-DRAFT-2 cerrado y aprobado por el usuario: D-01, D-02, D-03 y D-VD03-5.
-3. Informe de inspección TASK-01 compartido anteriormente, dictamen `VIABLE WITH CONDITIONS`; inspeccionó 009A (`%TEMP%\\crl-feasibility-009a\\project`), no el workspace aislado 009A.1. Es evidencia estática anterior y no acredita la provisión de 009A.1.
+3. Informe de inspección TASK-01 compartido anteriormente, dictamen `VIABLE WITH CONDITIONS`; inspeccionó 009A (`%TEMP%\crl-feasibility-009a\project`), no el workspace aislado 009A.1. Es evidencia estática anterior y no acredita la provisión de 009A.1.
 4. Evidencia histórica 009A, únicamente como antecedente; no acredita identidad del workspace actual 009A.1.
 
 Ante conflicto prevalecen las decisiones humanas aprobadas en TASK-02 y la revisión fuente R3.1. Los estados históricos contradictorios de documentos TASK-02 quedan subordinados al addendum de cierre aprobado.
@@ -27,19 +27,19 @@ Ante conflicto prevalecen las decisiones humanas aprobadas en TASK-02 y la revis
 
 El informe TASK-01 identifica como laboratorio inspeccionado:
 
-`C:\\Users\\marce\\AppData\\Local\\Temp\\crl-feasibility-009a\\project`
+`C:\Users\marce\AppData\Local\Temp\crl-feasibility-009a\project`
 
-Ese informe describe fuentes candidatas bajo `src/test/java/lab/crl`, un POM y evidencia histórica de 009A. No informa que haya inspeccionado ni provisionado `crl-feasibility-009a1\\project`. Sus observaciones no deben atribuirse al workspace 009A.1.
+Ese informe describe fuentes candidatas bajo `src/test/java/lab/crl`, un POM y evidencia histórica de 009A. No informa que haya inspeccionado ni provisionado `crl-feasibility-009a1\project`. Sus observaciones no deben atribuirse al workspace 009A.1.
 
 ### 3.2 Workspace aislado propuesto por R3.1
 
-El diseño fuente R3.1 propone un subdirectorio nuevo `%TEMP%\\crl-feasibility-009a1` y exige conservar 009A como evidencia inmutable. La ruta hija `%TEMP%\\crl-feasibility-009a1\\project` fue adoptada como ubicación esperada del arnés aislado, pero no existe evidencia TASK-01 que certifique que esa copia se haya creado o inspeccionado.
+El diseño fuente R3.1 propone un subdirectorio nuevo `%TEMP%\crl-feasibility-009a1` y exige conservar 009A como evidencia inmutable. La ruta hija `%TEMP%\crl-feasibility-009a1\project` fue adoptada como ubicación esperada del arnés aislado, pero no existe evidencia TASK-01 que certifique que esa copia se haya creado o inspeccionado.
 
 ### 3.3 Estado observado el 2026-11-15
 
 La captura de Explorador de archivos proporcionada por el usuario muestra la raíz:
 
-`C:\\Users\\marce\\AppData\\Local\\Temp\\crl-feasibility-009a1`
+`C:\Users\marce\AppData\Local\Temp\crl-feasibility-009a1`
 
 El usuario indicó que ese directorio contiene únicamente los ocho documentos Markdown visibles. La captura no muestra un subdirectorio `project`, un `pom.xml` ni un source set Java. Esta evidencia visual no equivale a un inventario filesystem completo ni permite afirmar el estado Git, hashes, atributos ocultos o contenido de archivos no visibles.
 
@@ -53,7 +53,7 @@ En consecuencia, con la evidencia disponible:
 
 El ZIP `project.zip` y el directorio histórico 009A son antecedentes de 009A. No sustituyen ni acreditan identidad del workspace 009A.1, aun cuando contengan fuentes, POM o evidencia reutilizable.
 
-La provisión de `009a1\\project` es una operación separada de T03-00, que es exclusivamente read-only. Debe tener un plan de copia, manifiesto de inclusión/exclusión, tratamiento de `.git`, artefactos generados y material criptográfico local, verificación SHA-256 y autorización humana independiente. No se copiará, moverá, reconstruirá ni modificará el proyecto 009A como parte de T03-00.
+La provisión de `009a1\project` es una operación separada de T03-00, que es exclusivamente read-only. Debe tener un plan de copia, manifiesto de inclusión/exclusión, tratamiento de `.git`, artefactos generados y material criptográfico local, verificación SHA-256 y autorización humana independiente. No se copiará, moverá, reconstruirá ni modificará el proyecto 009A como parte de T03-00.
 
 Una vez autorizada y completada la provisión, T03-00 podrá inspeccionar el nuevo workspace en modo read-only y producir su baseline real.
 

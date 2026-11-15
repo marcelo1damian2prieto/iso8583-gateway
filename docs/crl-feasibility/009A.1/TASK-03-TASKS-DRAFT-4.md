@@ -10,7 +10,7 @@
 
 | ID | Prioridad | Entrega | Descripción | Dependencias | Criterio de salida |
 |---|---|---|---|---|---|
-| T03-00 | P0 | Baseline | Inspección read-only de `009a1\\project` ya provisionado; POM, árbol, archivos candidatos, hashes y comparación trazable con el informe TASK-01 histórico de 009A | Gate de provisión autorizado y completado | Inventario/hashes verificables del workspace aislado; si falta `project`, `BLOCKED — WORKSPACE NOT PROVISIONED`; sin copia ni cambios en T03-00 |
+| T03-00 | P0 | Baseline | Inspección read-only de `009a1\project` ya provisionado; POM, árbol, archivos candidatos, hashes y comparación trazable con el informe TASK-01 histórico de 009A | Gate de provisión autorizado y completado | Inventario/hashes verificables del workspace aislado; si falta `project`, `BLOCKED — WORKSPACE NOT PROVISIONED`; sin copia ni cambios en T03-00 |
 | T03-01 | P0 | Domain/event catalog | Cerrar envelope, tipos de evento, campos requeridos, tabla de tail, recovery permitido, advance de epoch y decisiones D03-OPEN | T03-00 | Matriz event-type/recovery completa y decisiones pendientes explícitamente resueltas o bloqueadas por aprobación humana |
 | T03-02 | P0 | Codec | Definir/implementar codec determinista para journal/checkpoint, canonicalización, schema, digest y validación | T03-01 | Round-trip determinista y rechazo de encoding inválido/ambiguo; algoritmo/formatos aprobados |
 | T03-03 | P0 | OS lock | Exclusión de proceso sobre almacén local, ownership y cierre seguro del lock | T03-00 | Un Coordinator obtiene lock; segundo proceso queda cerrado; evidencia del filesystem ensayado |
@@ -28,7 +28,7 @@
 
 ## 2. Reglas de ejecución y gates
 
-1. T03-00 es exclusivamente read-only y presupone que `009a1\\project` fue provisionado mediante un gate separado. Si falta el subdirectorio, detener y registrar `BLOCKED — WORKSPACE NOT PROVISIONED`. No copiar, crear, reconstruir ni sustituirlo con el directorio o ZIP histórico 009A. TASK-01 es evidencia histórica de 009A y no un baseline inspeccionado de 009A.1.
+1. T03-00 es exclusivamente read-only y presupone que `009a1\project` fue provisionado mediante un gate separado. Si falta el subdirectorio, detener y registrar `BLOCKED — WORKSPACE NOT PROVISIONED`. No copiar, crear, reconstruir ni sustituirlo con el directorio o ZIP histórico 009A. TASK-01 es evidencia histórica de 009A y no un baseline inspeccionado de 009A.1.
 2. La provisión del workspace no pertenece a T03-00: requiere plan de copia y autorización humana independiente conforme a `WORKSPACE-PROVISIONING-REQUIREMENTS-DRAFT-4.md`. T03-01 es una entrega de diseño/decisiones. No congelar codec o política tail hasta resolver D03-OPEN-01..08 o dejar explícitamente un alcance bloqueado y aceptado por revisión humana.
 3. T03-02..T03-10 son tareas de implementación, no están autorizadas por el estado actual. Requieren aprobación del diseño y autorización humana de implementación.
 4. La prueba real de Windows FileLock, `ATOMIC_MOVE` y directory force no se da por autorizada por leer este plan. Requiere aprobación explícita del experimento, aislamiento de directorio y plan de rollback de fixtures sintéticos.

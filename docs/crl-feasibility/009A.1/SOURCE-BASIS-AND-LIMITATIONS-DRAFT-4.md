@@ -10,7 +10,7 @@
 - `TASK-03-SPEC-DRAFT-1.md`, `TASK-03-PLAN-DRAFT-1.md`, `TASK-03-TASKS-DRAFT-1.md` y `TASK-03-DESIGN-VALIDATION-DRAFT-1.md`, leídos desde GitHub `main`.
 - `SOURCE-BASIS-AND-LIMITATIONS.md` de DRAFT-1 y el informe TASK-01 compartido anteriormente (`Markdown pegado.md`).
 - Historial conversacional donde se aprobaron D-01, D-02, D-03, D-VD03-5, la corrección H-01 y la preparación documental TASK-03.
-- Captura del Explorador de archivos aportada por el usuario el 2026-11-15, que muestra la raíz `%TEMP%\\crl-feasibility-009a1` con ocho documentos Markdown y sin subdirectorio `project` visible; el usuario confirmó que eso es todo su contenido.
+- Captura del Explorador de archivos aportada por el usuario el 2026-11-15, que muestra la raíz `%TEMP%\crl-feasibility-009a1` con ocho documentos Markdown y sin subdirectorio `project` visible; el usuario confirmó que eso es todo su contenido.
 - ZIP `project.zip` compartido como evidencia del proyecto histórico 009A; su identidad de artefacto `crl-feasibility-009a` impide tratarlo como baseline del workspace 009A.1.
 
 ## Aclaraciones normativas aplicadas
@@ -34,7 +34,7 @@ La corrección DRAFT-3 aplica esa base exclusivamente a la serialización de ope
 |---|---|---|
 | Diseño fuente | R3.1, archivo `(9)`, §§ citadas | Fuente normativa |
 | Decisiones TASK-02 | Paquete publicado y addendum aprobado | Decisión humana cerrada |
-| Workspace histórico 009A | Informe TASK-01 estático anterior, ruta `%TEMP%\\crl-feasibility-009a\\project` | Evidencia histórica de 009A; no acredita la copia aislada 009A.1 |
+| Workspace histórico 009A | Informe TASK-01 estático anterior, ruta `%TEMP%\crl-feasibility-009a\project` | Evidencia histórica de 009A; no acredita la copia aislada 009A.1 |
 | Raíz 009A.1 | Captura del usuario del 2026-11-15; ocho documentos visibles, sin `project` | Evidencia visual; no es inventario filesystem ni Git completo |
 | Workspace 009A.1/project | No aparece en la captura y el usuario informa que no existe | No provisionado; T03-00 bloqueada |
 | Código GitHub | Repositorio público contiene documentación, no `pom.xml` ni Java del arnés | No disponible en repo |
@@ -45,7 +45,7 @@ La corrección DRAFT-3 aplica esa base exclusivamente a la serialización de ope
 ## Limitaciones y prohibiciones de inferencia
 
 - No atribuir al repositorio GitHub el código del laboratorio 009A.1.
-- No atribuir al informe TASK-01 la inspección de `009a1\\project`: el informe identifica `009a\\project`.
+- No atribuir al informe TASK-01 la inspección de `009a1\project`: el informe identifica `009a\project`.
 - No presentar el ZIP 009A ni dependency tree artifact 008 como baseline exacto 009A.1.
 - No afirmar que la raíz 009A.1 contiene un subdirectorio `project`; la captura disponible muestra los ocho documentos Markdown visibles y el usuario confirmó que eso es todo.
 - No provisionar/copiar el proyecto 009A como parte de T03-00; la provisión requiere plan y autorización humana separados.

@@ -18,15 +18,15 @@ El plan es una propuesta de ejecución futura. La autorización vigente cubre ú
 
 El informe histórico TASK-01 inspeccionó el laboratorio 009A en:
 
-`C:\\Users\\marce\\AppData\\Local\\Temp\\crl-feasibility-009a\\project`
+`C:\Users\marce\AppData\Local\Temp\crl-feasibility-009a\project`
 
-No acredita que el workspace aislado 009A.1 haya sido creado o inspeccionado. El diseño R3.1 propone una raíz nueva `%TEMP%\\crl-feasibility-009a1`, conservando 009A como evidencia inmutable.
+No acredita que el workspace aislado 009A.1 haya sido creado o inspeccionado. El diseño R3.1 propone una raíz nueva `%TEMP%\crl-feasibility-009a1`, conservando 009A como evidencia inmutable.
 
 La captura de Explorador de archivos aportada por el usuario el 2026-11-15 muestra que la raíz 009A.1 contiene los ocho documentos Markdown visibles, pero no muestra el subdirectorio `project`. El usuario confirmó que eso es todo lo que contiene. El estado Git, los archivos ocultos y cualquier contenido no visible no se consideran inspeccionados.
 
-**Estado:** T03-00 está `BLOCKED — WORKSPACE NOT PROVISIONED`. No se puede inspeccionar POM, árbol de fuentes ni hashes del proyecto 009A.1 mientras falte `%TEMP%\\crl-feasibility-009a1\\project`.
+**Estado:** T03-00 está `BLOCKED — WORKSPACE NOT PROVISIONED`. No se puede inspeccionar POM, árbol de fuentes ni hashes del proyecto 009A.1 mientras falte `%TEMP%\crl-feasibility-009a1\project`.
 
-**Gate previo de provisión (fuera de T03-00):** la copia aislada debe planificarse y recibir autorización humana independiente. El origen candidato es `%TEMP%\\crl-feasibility-009a\\project`, según el informe TASK-01; no se moverá ni modificará. Deben resolverse antes de copiar el tratamiento de `.git`, `target/`, evidencia histórica, keystores y secretos locales, y generarse un manifiesto de archivos copiados/excluidos con SHA-256. Ver `WORKSPACE-PROVISIONING-REQUIREMENTS-DRAFT-4.md`.
+**Gate previo de provisión (fuera de T03-00):** la copia aislada debe planificarse y recibir autorización humana independiente. El origen candidato es `%TEMP%\crl-feasibility-009a\project`, según el informe TASK-01; no se moverá ni modificará. Deben resolverse antes de copiar el tratamiento de `.git`, `target/`, evidencia histórica, keystores y secretos locales, y generarse un manifiesto de archivos copiados/excluidos con SHA-256. Ver `WORKSPACE-PROVISIONING-REQUIREMENTS-DRAFT-4.md`.
 
 El repositorio público `iso8583-gateway` contiene documentación, no el `pom.xml` ni las fuentes Java del arnés local. No usar la raíz de GitHub, el ZIP histórico ni el proyecto 009A como si fueran el workspace 009A.1.
 
@@ -52,7 +52,7 @@ El grafo es vinculante; la secuencia operativa de la sección 4 respeta estas re
 
 ### T03-00 — Baseline read-only
 
-**Precondición:** debe existir `%TEMP%\\crl-feasibility-009a1\\project`, provisionado mediante un gate separado y autorizado. La raíz 009A.1 con documentación, por sí sola, no satisface esta precondición.
+**Precondición:** debe existir `%TEMP%\crl-feasibility-009a1\project`, provisionado mediante un gate separado y autorizado. La raíz 009A.1 con documentación, por sí sola, no satisface esta precondición.
 
 - Confirmar la ruta hija `project` y que corresponde al workspace aislado, no al origen 009A.
 - Inventariar `pom.xml`, árbol, fuentes, tests, evidencia y estado Git si existe.
