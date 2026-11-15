@@ -1183,7 +1183,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-131 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-132 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
@@ -1896,3 +1896,26 @@ Se acepta la opción C: cuando el Reducer rechaza un snapshot por incumplir el e
 Los campos exactos del diagnóstico, su representación contractual, las reglas de redacción y el mapeo exhaustivo entre reglas e invariantes permanecen pendientes del contrato formal de errores y observabilidad.
 
 **Motivo:** facilitar el diagnóstico operativo de snapshots inválidos sin debilitar el rechazo estricto, la política fail-fast, la pureza ni la protección de información sensible.
+
+
+### VD-T06-132 — Validación global y específica de referencias con clasificación de responsabilidades
+
+Se acepta combinar la opción B —validación global del snapshot, validación específica de la transición y validación global del resultado— con la clasificación de responsabilidades de la opción D.
+
+1. **Snapshot de entrada:** antes de evaluar el evento, el Reducer valida la consistencia referencial global del snapshot conforme al orden determinista de VD-T06-119.
+2. **Transición:** el Reducer valida específicamente las referencias requeridas por el tipo de evento y su correspondencia con el estado lógico y las precondiciones de la transición.
+3. **Snapshot resultante:** después de aplicar conceptualmente la transición, el Reducer valida nuevamente las invariantes globales y la consistencia referencial del snapshot candidato. Si falla, rechaza el resultado completo y no expone un snapshot nuevo.
+4. La validación referencial distingue las siguientes categorías:
+   - **Estructurales:** presencia y formato válido de las referencias requeridas por el esquema lógico.
+   - **De identidad:** correspondencia entre identificadores y entidades lógicas, sin duplicidades ni asociaciones contradictorias.
+   - **De dominio:** validez de las relaciones y cardinalidades aprobadas entre entidades.
+   - **Históricas:** el Reducer verifica únicamente la coherencia lógica y contextual de las referencias conservadas en el snapshot y requeridas por la transición. No verifica la existencia durable de eventos ni reconstruye su secuencia histórica.
+5. La existencia durable de eventos y referencias, la secuencia, unicidad e integridad histórica del journal y la correlación histórica corresponden a Replay, conforme a las decisiones existentes.
+6. La consulta o interpretación del ledger Member y la validación de evidencia externa no corresponden al Reducer.
+7. Una referencia ausente, inválida, huérfana o contradictoria según el contrato aplicable provoca rechazo tipado, sin reparación, normalización ni mutación parcial.
+8. Se mantiene la política fail-fast: se informa un único error principal conforme al orden determinista de validación. El diagnóstico estructurado respeta VD-T06-131.
+9. Esta decisión no introduce recorridos incrementales como sustituto de la validación global ni altera las responsabilidades ya aprobadas de Reducer, Replay, Coordinator y TASK-04.
+
+La matriz exhaustiva de referencias por entidad y tipo de evento, los campos obligatorios, formatos, cardinalidades y correspondencia con errores tipados permanecen pendientes del contrato formal.
+
+**Motivo:** combinar garantías de integridad global antes y después de cada transición con validaciones específicas del evento, manteniendo explícita la frontera entre consistencia lógica del Reducer e integridad histórica de Replay.
