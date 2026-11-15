@@ -785,6 +785,20 @@ Se establecen los siguientes criterios para la relación entre registros de recu
 **Motivo:** explicitar la multiplicidad sin confundir la referencia lógica que valida Reducer con el control de unicidad durable de Replay.
 
 
+### VD-T06-63 — Identidad y consistencia de RecoveryRecord
+
+Se establecen los siguientes criterios para la identidad y consistencia de los registros de recuperación:
+
+1. `RecoveryRecord` se identifica por la clave lógica `(originalEventId, recoveryAction)), conforme TASK-02.
+2. `recoveryEventId` identifica el evento durable que registra esa acción de recuperación.
+3. La referencia a `originalEventId` debe corresponder al evento original asociado a la admisión.
+4. El `recoveryEventId` y el contenido del registro deben ser coherentes con la acción declarada.
+5. El Reducer valida las referencias disponibles en el snapshot, pero no calcula ni verifica la clave durable de deduplicación.
+6. Replay valida la unicidad, canonicalización, digest y correspondencia durable del registro.
+
+**Motivo:** separar la identidad lógica de la recuperación de la identidad del evento durable que la registra.
+
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -812,7 +826,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-62 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-63 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
