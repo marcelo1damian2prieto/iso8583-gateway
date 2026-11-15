@@ -1183,7 +1183,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-126 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-127 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
@@ -1817,3 +1817,17 @@ Se acepta establecer los siguientes criterios de concurrencia para el Reducer:
 5. La concurrencia interna del Reducer no altera el orden lógico de eventos establecido por el protocolo.
 
 **Motivo:** separar la evaluación pura y concurrente de transiciones de la coordinación serializada y durable del protocolo.
+
+### VD-T06-127 — Separación entre rechazos de dominio y fallos inesperados
+
+Se acepta establecer las siguientes reglas para el tratamiento de fallos del Reducer:
+
+1. Los rechazos esperados del dominio se representan mediante errores tipados, no mediante excepciones genéricas.
+2. Las excepciones inesperadas no se convierten silenciosamente en `INVALID_TRANSITION` ni en otra categoría de rechazo de dominio.
+3. El Reducer no captura fallos para continuar ni expone una transición parcial.
+4. Ante un fallo inesperado, el Reducer no devuelve un snapshot candidato como resultado exitoso.
+5. La captura en los límites apropiados, el registro seguro y la clasificación operativa de excepciones corresponden a la capa superior.
+
+Los tipos definitivos de errores de dominio y los contratos de propagación de fallos inesperados permanecen pendientes del diseño formal.
+
+**Motivo:** mantener diferenciados los rechazos deterministas del dominio de los defectos técnicos o fallos inesperados de ejecución, sin ocultar estos últimos ni comprometer la atomicidad.
