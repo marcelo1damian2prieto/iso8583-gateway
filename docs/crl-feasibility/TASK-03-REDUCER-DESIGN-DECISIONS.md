@@ -1183,7 +1183,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-125 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-126 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
@@ -1805,3 +1805,15 @@ Se acepta establecer que el snapshot sea inmutable desde la perspectiva de sus c
 5. La estrategia técnica concreta para garantizar estas propiedades —copia defensiva, copia estructural, estructuras persistentes u otra alternativa— permanece pendiente del diseño técnico.
 
 **Motivo:** evitar que una transición aparentemente pura produzca efectos secundarios sobre snapshots anteriores y reforzar las garantías de pureza, atomicidad y determinismo de VD-T06-111.
+
+### VD-T06-126 — Concurrencia y ausencia de estado compartido en el Reducer
+
+Se acepta establecer los siguientes criterios de concurrencia para el Reducer:
+
+1. El Reducer no mantiene estado mutable compartido entre invocaciones.
+2. Dos invocaciones concurrentes que reciben snapshots y eventos semánticamente equivalentes producen resultados semánticamente equivalentes, conforme a VD-T06-112.
+3. El Reducer no requiere locks internos para proteger estado de dominio compartido, dado que no mantiene dicho estado mutable compartido.
+4. La serialización de eventos y la exclusión mutua sobre el estado durable corresponden al Coordinator y al mecanismo de persistencia, no al Reducer.
+5. La concurrencia interna del Reducer no altera el orden lógico de eventos establecido por el protocolo.
+
+**Motivo:** separar la evaluación pura y concurrente de transiciones de la coordinación serializada y durable del protocolo.
