@@ -152,6 +152,20 @@ Esta decisión no congela el CODEC.
 6. Una relación inconsistente provoca rechazo tipado sin mutación.
 7. El modelo formal debe documentar las relaciones y restricciones aplicables.
 
+
+### VD-T06-11 — Validación del snapshot de entrada
+
+1. Antes de aplicar cualquier evento, el Reducer comprueba que el snapshot de entrada cumple las invariantes estructurales y de dominio necesarias para procesar la transición.
+2. El snapshot debe estar completo según el modelo de dominio soportado.
+3. Debe respetar las relaciones y cardinalidades definidas.
+4. No puede contener referencias huérfanas ni contradicciones entre entidades canónicas.
+5. Los datos derivados deben ser consistentes con las entidades canónicas.
+6. Si el snapshot es inválido, el Reducer rechaza la operación mediante un error tipado.
+7. El Reducer no intenta reparar ni normalizar silenciosamente el snapshot.
+8. El snapshot original permanece inalterado.
+
+**Límite:** esta validación no sustituye la integridad física, los hashes ni la validación de serialización, que corresponden a Replay/CODEC.
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
