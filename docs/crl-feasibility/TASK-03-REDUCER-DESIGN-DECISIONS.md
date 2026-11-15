@@ -475,6 +475,21 @@ Esta decisión complementa VD-T06-05 y VD-T06-09 y establece el determinismo com
 
 **Motivo:** delimitar la validación de referencias de dominio y evitar trasladar al Reducer responsabilidades de historial y deduplicación del journal.
 
+
+### VD-T06-39 — Validez del snapshot de entrada y frontera con Replay
+
+1. Replay entrega al Reducer un snapshot reconstruido según su contrato.
+2. La reconstrucción realizada por Replay no implica que el snapshot haya superado las validaciones estructurales y de dominio que corresponden al Reducer.
+3. Antes de aplicar cada evento, Reducer valida las invariantes estructurales y de dominio necesarias para procesar la transición.
+4. Si el snapshot incumple una invariante necesaria, Reducer rechaza la operación mediante error tipado.
+5. Reducer no repara ni normaliza el snapshot recibido.
+6. El snapshot original permanece inalterado ante el rechazo.
+7. Se mantienen en Replay/CODEC las responsabilidades sobre integridad física, hash-chain, checkpoint y serialización.
+
+**Aclaración de VD-T06-05:** la expresión «recibe un snapshot válido» debe entenderse como un snapshot reconstruido y entregado por Replay, no como uno cuyas invariantes estructurales y de dominio ya hayan sido certificadas para la aplicación de la transición. El Reducer conserva la responsabilidad de realizar esas validaciones antes de aplicar el evento.
+
+**Motivo:** eliminar la ambigüedad sobre la validez de entrada y establecer que la reconstrucción de Replay no sustituye las validaciones defensivas del Reducer.
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -502,7 +517,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-38 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-39 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
