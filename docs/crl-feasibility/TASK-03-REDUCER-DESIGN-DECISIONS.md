@@ -1183,7 +1183,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-123 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-124 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
@@ -1779,3 +1779,17 @@ Se acepta establecer los siguientes criterios para los identificadores procesado
 5. La representación canónica y las restricciones de formato corresponden al contrato de identidad y al codec; el Reducer valida los valores recibidos conforme a ese contrato.
 
 **Motivo:** impedir que el Reducer altere o interprete identidades de manera diferente a los componentes responsables de identidad, canonicalización y Replay.
+
+### VD-T06-124 — Identidad lógica de entidades y referencias de objetos
+
+Se acepta establecer los siguientes criterios para la identidad de entidades representadas en el snapshot:
+
+1. Dos referencias que identifican el mismo identificador de dominio representan la misma entidad lógica, no dos entidades distintas.
+2. El snapshot no puede contener dos objetos Admission con el mismo `AdmissionId`.
+3. El snapshot no puede contener dos `RecoveryRecord` distintos con la misma clave `(originalEventId, recoveryAction)).
+4. El Reducer valida identidad lógica conforme a las claves de dominio; no utiliza identidad de referencia en memoria (`object identity`) como criterio de identidad de entidades.
+5. Compartir internamente una referencia de objeto Java no modifica la semántica del dominio ni convierte una misma entidad lógica en entidades distintas.
+
+Esta decisión no impone estructuras Java ni define políticas de copia, mutabilidad interna o representación del snapshot.
+
+**Motivo:** evitar que la implementación confunda identidad de entidades del dominio con igualdad o identidad de instancias Java.
