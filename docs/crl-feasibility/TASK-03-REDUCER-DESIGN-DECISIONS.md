@@ -1183,7 +1183,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-134 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-135 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
@@ -1956,3 +1956,21 @@ Se acepta la opción C: ante una inconsistencia entre un índice o estructura au
 El responsable concreto, las condiciones de autorización, la persistencia o regeneración de índices, los criterios de clasificación operativa y el procedimiento de reanudación permanecen pendientes del contrato de recuperación y del diseño técnico.
 
 **Motivo:** mantener al Reducer puro y determinista, preservar las entidades canónicas como única fuente de verdad y permitir una recuperación controlada fuera del procesamiento de transiciones.
+
+
+### VD-T06-135 — Ciclo de vida híbrido de índices derivados en memoria
+
+Se acepta la opción D: los índices derivados son estructuras reconstruibles en memoria, asociadas al snapshot durante su procesamiento, sin persistencia durable independiente.
+
+1. Las entidades canónicas del snapshot permanecen como única fuente de verdad.
+2. Durante la carga inicial o recuperación, Replay/snapshot construye los índices derivados a partir de las entidades canónicas y verifica su coherencia conforme al contrato aplicable.
+3. Los índices derivados pueden mantenerse en memoria durante el procesamiento y actualizarse como consecuencia de cada transición válida.
+4. La actualización de entidades canónicas y estructuras derivadas debe ser lógica y atómicamente coherente en el snapshot resultante; no se expone un resultado parcial.
+5. Los índices no constituyen una fuente durable independiente ni requieren persistencia separada en el journal o en el snapshot durable.
+6. El Reducer puede utilizar y actualizar estas estructuras como parte de la evaluación pura de una transición, preservando determinismo, inmutabilidad observable, ausencia de estado mutable compartido y prevención de aliasing.
+7. Si se detecta una inconsistencia entre índices y entidades canónicas, se aplica VD-T06-134: rechazo del Reducer y eventual reconstrucción mediante procedimiento externo autorizado. No se reconstruyen índices como reparación dentro de la invocación del Reducer.
+8. Esta decisión no selecciona estructuras Java, algoritmos, estrategia de copia, duración de caché, límites de memoria ni política de descarte.
+
+La interfaz entre snapshot y estructuras derivadas, el responsable concreto de su construcción durante carga/recuperación, las condiciones de invalidación y descarte, y las garantías técnicas de actualización atómica permanecen pendientes del diseño técnico y de los contratos de Replay/snapshot.
+
+**Motivo:** evitar persistir información derivada como fuente adicional, reducir reconstrucciones durante transiciones y conservar las fronteras de responsabilidad entre Reducer, Replay y persistencia.
