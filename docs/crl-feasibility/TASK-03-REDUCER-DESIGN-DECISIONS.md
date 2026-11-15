@@ -935,6 +935,20 @@ Se establecen los siguientes criterios para interpretar y actualizar observacion
 **Motivo:** evitar inferencias de ciclo de vida no respaldadas por evidencia explícita y mantener la separación entre identidad, observación y estado real del proceso.
 
 
+### VD-T06-74 — Evidencia para actualizar observaciones Member
+
+Se establecen los siguientes criterios para eventos que actualizan observaciones Member:
+
+1. El evento identifica explícitamente el `rolloutId`.
+2. El evento identifica la identidad del Member mediante `membershipVersion`, `memberId` y `processBootId`.
+3. El evento identifica el tipo de observación que actualiza.
+4. El evento contiene los datos necesarios para aplicar la transición definida por el contrato.
+5. El Reducer rechaza eventos cuya identidad no coincida con una observación compatible del snapshot.
+6. El Reducer no crea observaciones ni completa campos faltantes por inferencia, salvo que el contrato del evento defina expresamente una operación de alta.
+
+**Motivo:** exigir evidencia explícita y contexto suficiente para actualizar observaciones, evitando altas o modificaciones implícitas.
+
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -962,7 +976,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-73 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-74 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
