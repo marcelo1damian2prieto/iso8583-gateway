@@ -2069,3 +2069,20 @@ Se acepta una estrategia combinada de pruebas, con pruebas diferenciales como me
 8. La selección de frameworks, herramientas, organización de suites, generación de datos, cobertura cuantitativa y automatización concreta permanece pendiente del diseño de testing.
 
 **Motivo:** verificar la equivalencia de ambos mecanismos desde perspectivas complementarias, detectar errores de actualización y preservar las garantías de coherencia, inmutabilidad, aislamiento concurrente y atomicidad sin introducir complejidad de testing innecesaria.
+
+### VD-T06-142 — Construcción concurrente independiente con reutilización de estructuras inmutables
+
+Se acepta la opción C: permitir que varias invocaciones construyan concurrentemente resultados independientes a partir del mismo snapshot de entrada, reutilizando estructuras auxiliares únicamente cuando sean inmutables.
+
+1. Varias invocaciones del Reducer pueden procesar concurrentemente el mismo snapshot de entrada, sin serialización interna.
+2. Cada invocación construye y devuelve su propio resultado lógico; ningún resultado se comparte como estado mutable con otra invocación.
+3. Las invocaciones pueden reutilizar estructuras del snapshot de entrada o componentes de otros resultados únicamente cuando sean inmutables y su reutilización no permita modificar indirectamente ningún snapshot.
+4. Toda estructura nueva o modificada pertenece lógicamente al resultado de la invocación que la construye; no se modifica el snapshot de entrada ni los resultados de otras invocaciones.
+5. La construcción concurrente debe preservar la coherencia entre entidades canónicas e índices derivados, la validación global y la equivalencia semántica establecidas en las decisiones anteriores.
+6. El Reducer no requiere locks, cachés mutables compartidas ni coordinación interna para construir los resultados.
+7. Invocaciones con snapshots y eventos semánticamente equivalentes deben producir resultados semánticamente equivalentes, independientemente de su ejecución concurrente o del orden de intercalado.
+8. La serialización de eventos y la exclusión mutua sobre el estado durable continúan siendo responsabilidad del Coordinator y de la persistencia; esta decisión no autoriza al Reducer a resolver conflictos entre resultados concurrentes ni a decidir cuál debe persistirse.
+
+La implementación de estructuras inmutables, la estrategia concreta de *structural sharing*, la gestión de memoria, las optimizaciones de asignación y cualquier evaluación de rendimiento permanecen pendientes del diseño técnico. No se autoriza introducir cachés compartidas mediante esta decisión.
+
+**Motivo:** permitir concurrencia segura y determinista en la construcción de snapshots derivados, reutilizando datos inmutables sin introducir estado mutable compartido, locks ni coordinación operativa dentro del Reducer.
