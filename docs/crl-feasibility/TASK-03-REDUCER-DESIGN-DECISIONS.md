@@ -554,6 +554,20 @@ Esta decisión complementa VD-T06-05 y VD-T06-09 y establece el determinismo com
 
 **Motivo:** eliminar la ambigüedad sobre la ubicación de la trazabilidad y evitar que se introduzcan mutaciones artificiales en el estado de dominio.
 
+
+### VD-T06-47 — Responsabilidad de Replay sobre la aplicación única de eventos
+
+1. Reducer no mantiene estado interno de eventos aplicados ni administra deduplicación.
+2. Replay determina si un evento del journal está habilitado para ser aplicado al snapshot reconstruido.
+3. Replay debe impedir que un evento ya aplicado vuelva a incorporarse como una nueva transición dentro de la misma progresión de replay.
+4. La responsabilidad de controlar el avance de aplicación y su correspondencia con el estado reconstruido pertenece a Replay.
+5. Reducer aplica exclusivamente la transición solicitada; no verifica por sí mismo si el evento ya fue aplicado anteriormente.
+6. Una invocación repetida del Reducer no constituye un mecanismo válido de deduplicación.
+7. El mecanismo técnico para garantizar esta coordinación entre Replay, checkpoint y Reducer queda pendiente del diseño de integración.
+8. Esta decisión aclara VD-T06-13, VD-T06-24, VD-T06-37, VD-T06-38 y VD-T06-45.
+
+**Motivo:** establecer quién garantiza la aplicabilidad de un evento sin atribuir al Reducer responsabilidades de persistencia, historial o deduplicación.
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -581,7 +595,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-46 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-47 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
