@@ -1183,7 +1183,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-109 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-110 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
@@ -1574,3 +1574,17 @@ Se acepta establecer las siguientes reglas para las operaciones de reconciliaci�
 6. La identidad lógica, canonicalización, contenido contractual y clasificación/error tipado de conflictos permanecen pendientes del contrato formal.
 
 **Motivo:** distinguir una repetición idempotente de una acción de recuperación independiente, preservando la inmutabilidad de la reconciliación y de los registros ya confirmados.
+
+### VD-T06-110 — Separación de responsabilidades entre Reducer, Replay, Coordinator, persistencia y capa superior
+
+Se acepta consolidar la siguiente separación de responsabilidades:
+
+1. **Reducer:** valida las precondiciones de dominio y la consistencia lógica del snapshot y del evento central recibido; aplica la transición válida y produce el snapshot resultante. No consulta el journal ni inspecciona directamente el ledger Member.
+2. **Replay:** valida la existencia durable, secuencia, unicidad, integridad y correlación histórica de los eventos y referencias que reconstruye. No fabrica evidencia local Member ni sustituye validaciones de dominio del Reducer.
+3. **Coordinator:** valida la evidencia local Member y su correlación antes de confirmar eventos centrales que dependan de ella, incluido `ADMISSION_OUTCOME_UNKNOWN`.
+4. **Journal / Coordinator:** la persistencia de eventos y la confirmación de durabilidad preceden a la aplicación/confirmación de las transiciones centrales conforme al protocolo aprobado. El Reducer no realiza la persistencia.
+5. **Capa superior:** clasifica los fallos y determina el tratamiento correspondiente, incluidos `RECOVERY_REQUIRED` y `FAILED_CLOSED`, conforme a los criterios aprobados. El Reducer rechaza entradas inválidas sin asumir el procedimiento de recuperación.
+
+Esta separación no modifica los contratos ni las responsabilidades específicas ya aprobadas en D-01, D-02 y VD-T06-01 a VD-T06-109. Los detalles de interfaces, errores tipados y orden exacto de invocación permanecen sujetos a los contratos formales correspondientes.
+
+**Motivo:** mantener al Reducer como función de transición de dominio sobre eventos centrales confirmados, preservando las fronteras entre validación de evidencia, integridad histórica, persistencia y clasificación operativa.
