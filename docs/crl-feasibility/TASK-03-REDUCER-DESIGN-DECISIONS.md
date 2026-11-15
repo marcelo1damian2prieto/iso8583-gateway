@@ -1183,7 +1183,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-121 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-122 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
@@ -1753,3 +1753,17 @@ Se acepta distinguir explícitamente la nulabilidad y la ausencia de campos en e
 5. La nulabilidad de cada campo y la semántica de su ausencia deben quedar especificadas en el contrato formal del modelo.
 
 **Motivo:** evitar que ausencia, nulidad y valores por defecto se interpreten como equivalentes sin una decisión explícita de dominio.
+
+### VD-T06-122 — Validación estricta de rangos numéricos y valores temporales
+
+Se acepta que el Reducer valide los rangos numéricos y valores temporales conforme a los tipos y restricciones definidos en el contrato:
+
+1. Los identificadores numéricos deben respetar los rangos establecidos por su tipo contractual.
+2. Los contadores y secuencias no pueden ser negativos cuando representan cantidades o posiciones.
+3. Los valores temporales deben respetar la precisión y unidad definidas por el contrato.
+4. No se permiten overflow, truncamiento ni conversiones implícitas.
+5. El Reducer no define políticas de reloj, TTL, tolerancia ni expiración; valida únicamente los valores recibidos conforme al contrato aplicable.
+
+Los rangos, unidades, precisiones y límites concretos permanecen pendientes de especificación formal.
+
+**Motivo:** evitar que representaciones numéricas o temporales inválidas, ambiguas o fuera de rango alteren la interpretación determinista del estado y de los eventos.
