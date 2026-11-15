@@ -813,6 +813,20 @@ Se establecen los siguientes criterios para la compatibilidad de la evidencia de
 **Motivo:** impedir que una reconciliación válida para una admisión o evento se reutilice para justificar otra.
 
 
+### VD-T06-65 — Inmutabilidad de RecoveryRecord
+
+Se establecen los siguientes criterios para la inmutabilidad de los registros de recuperación:
+
+1. Un `RecoveryRecord` confirmado es inmutable dentro del estado lógico del snapshot.
+2. Una acción posterior de recuperación no modifica ni reemplaza un registro anterior.
+3. Una acción adicional válida se representa mediante otro `RecoveryRecord`, con su propia identidad lógica.
+4. Dos registros con la misma clave `(originalEventId, recoveryAction)` no pueden coexistir como registros distintos.
+5. El Reducer no resuelve conflictos de identidad ni sobrescribe registros; rechaza inconsistencias mediante error tipado.
+6. Replay controla la unicidad durable y la detección de duplicados o conflictos.
+
+**Motivo:** preservar la trazabilidad de cada acción de recuperación y evitar que una reconciliación posterior altere silenciosamente evidencia previa.
+
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -840,7 +854,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-64 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-65 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
