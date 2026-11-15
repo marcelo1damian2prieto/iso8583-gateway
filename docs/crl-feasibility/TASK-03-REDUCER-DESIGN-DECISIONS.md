@@ -1183,7 +1183,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-112 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-113 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
@@ -1614,3 +1614,15 @@ Se acepta que la igualdad utilizada para verificar el determinismo del Reducer s
 5. Esta decisión no define canonicalización binaria, serialización ni codec; esos aspectos permanecen sujetos a sus contratos específicos.
 
 **Motivo:** evaluar el determinismo del Reducer sobre el significado del snapshot y no sobre variaciones irrelevantes de representación, sin descartar diferencias relevantes para el dominio.
+
+### VD-T06-113 — Criterios semánticos para colecciones del snapshot
+
+Se acepta establecer los siguientes criterios para las colecciones contenidas en el snapshot:
+
+1. **Colecciones con orden semántico:** el Reducer conserva y valida el orden, porque forma parte del significado de dominio.
+2. **Colecciones sin orden semántico:** su igualdad no depende del orden accidental de almacenamiento, conforme al criterio de igualdad semántica de VD-T06-112.
+3. **Colecciones con identidad propia:** no admiten elementos con identidad duplicada ni elementos contradictorios para una misma identidad.
+4. Estos criterios se aplican a las colecciones de Admissions y `RecoveryRecord`, respetando las identidades y cardinalidades ya aprobadas.
+5. Esta decisión no selecciona estructuras Java (`List`, `Set`, `Map`) ni define representación, canonicalización o codec.
+
+**Motivo:** preservar el significado de dominio de cada colección, evitando que el orden incidental afecte la igualdad y que identidades duplicadas o contradictorias queden representadas en el snapshot.
