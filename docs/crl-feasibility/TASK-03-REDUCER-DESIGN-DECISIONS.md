@@ -581,6 +581,29 @@ Esta decisión complementa VD-T06-05 y VD-T06-09 y establece el determinismo com
 **Motivo:** separar el estado de dominio del Coordinator de la infraestructura de persistencia y de la evidencia que pertenece al Member.
 
 
+### VD-T06-49 — Inventario inicial de entidades canónicas del snapshot
+
+Se reconoce el siguiente inventario inicial de entidades canónicas:
+
+| Entidad | Contenido de referencia |
+|---|---|
+| `CoordinatorEpoch` | Epoch vigente del Coordinator. |
+| `Rollout` | Identidad, fase y estado lógico del rollout. |
+| `MembershipManifest` | Membership exacto asociado al rollout. |
+| `MemberObservation` | Observaciones conocidas por el Coordinator para cada Member del rollout. |
+| `Admission` | Admisión identificada por `admissionId`, con su contexto y estado lógico. |
+
+Criterios:
+
+1. Las entidades canónicas son la fuente de verdad del snapshot.
+2. Las relaciones entre ellas deben respetar las referencias y cardinalidades del modelo de dominio aprobado en TASK-02.
+3. `Admission` representa el estado durable conocido por el Coordinator; no absorbe el ledger local del Member.
+4. `TransitionKey` y los índices de idempotencia no se incorporan todavía a este inventario: su representación y reconstrucción deben analizarse junto con T03-10.
+5. Este inventario no fija cardinalidades entre rollouts, campos internos ni estructura Java.
+
+**Motivo:** identificar las unidades de estado que el snapshot debe representar sin anticipar detalles que todavía no están definidos en el modelo formal.
+
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -608,7 +631,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-48 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-49 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
