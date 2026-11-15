@@ -840,6 +840,20 @@ Se establecen los siguientes criterios para la retención de registros de recupe
 **Motivo:** evitar que la compactación o la finalización de una admisión provoquen pérdida implícita de evidencia de recuperación.
 
 
+### VD-T06-67 — Consistencia global de las referencias de RecoveryRecord
+
+Se establecen los siguientes criterios para la consistencia referencial de los registros de recuperación:
+
+1. Todo `RecoveryRecord` presente en el snapshot debe referenciar un `originalEventId` existente en el modelo lógico.
+2. Su `recoveryEventId` debe ser coherente con el registro que representa.
+3. La admisión asociada debe existir y mantener correspondencia con el evento original.
+4. No se admiten referencias huérfanas ni asociaciones contradictorias.
+5. El Reducer valida la consistencia referencial del snapshot y del registro involucrado en la transición.
+6. Replay conserva la validación de integridad histórica del journal, orden, unicidad y persistencia.
+
+**Motivo:** asegurar que la conservación de registros de recuperación no introduzca referencias huérfanas o inconsistencias en el estado lógico.
+
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -867,7 +881,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-66 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-67 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
