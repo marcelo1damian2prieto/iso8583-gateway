@@ -2128,3 +2128,16 @@ Se acepta separar explícitamente la identidad física de un snapshot de su iden
 8. La asignación, persistencia, comparación y ciclo de vida de identificadores o versiones, si fueran necesarios, deberán definirse en el diseño de los componentes responsables del estado y su coordinación, sin introducir estado mutable compartido ni efectos secundarios en el Reducer.
 
 **Motivo:** evitar que la identidad de objetos en memoria se confunda con la identidad lógica del estado, preservar la independencia respecto de la representación física y mantener pendiente la elección del mecanismo de versionado hasta contar con el diseño de arquitectura correspondiente.
+
+### VD-T06-146 — Asignación de versiones e identificadores fuera del Reducer
+
+Se acepta que el Reducer no asigne versiones ni genere identificadores de snapshots. Su responsabilidad se limita a producir el resultado lógico de la transición a partir del snapshot de entrada y el evento recibido.
+
+1. El Reducer no genera, incrementa, reserva ni asigna identificadores o números de versión a snapshots.
+2. El resultado del Reducer representa el estado lógico candidato de la transición; no implica por sí mismo que ese estado haya sido aceptado, publicado o persistido.
+3. La asignación de versiones e identificadores, cuando corresponda, pertenece al Coordinator o al componente responsable de administrar y confirmar el estado, de acuerdo con el diseño de coordinación y persistencia.
+4. El Reducer no consulta relojes, secuencias externas, generadores de UUID ni servicios de identidad para producir su resultado.
+5. La identidad física y la equivalencia semántica continúan separadas conforme a VD-T06-145; una versión o identificador asignado externamente no sustituye la validación de coherencia ni define por sí solo equivalencia semántica.
+6. Esta decisión no prescribe el formato, alcance, unicidad, monotonicidad ni mecanismo de generación de identificadores o versiones; esos aspectos quedan pendientes del diseño del Coordinator y la persistencia.
+
+**Motivo:** preservar la pureza y determinismo del Reducer, evitando que la transformación de estado dependa de fuentes externas o de decisiones de coordinación y confirmación del estado durable.
