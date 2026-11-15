@@ -1123,6 +1123,23 @@ Se acepta la combinación B + A + C como dirección de diseño para tratar la im
 
 **Motivo:** una declaración local solo puede habilitar la transición central si su persistencia es verificable. Reintentar la operación de evidencia puede resolver fallas transitorias sin volver a ejecutar el handler; si no hay confirmación, el tratamiento fail-closed preserva la incertidumbre y Recovery ofrece una vía explícita sin convertir la ausencia de evidencia en un hecho de dominio.
 
+
+
+### VD-T06-86 — Resolución de escritura ambigua de la declaración Member de UNKNOWN
+
+Se acepta la combinación A + B + C como dirección de diseño para resolver una escritura ambigua de la declaración local Member de resultado indeterminado:
+
+1. **Identidad lógica estable:** la declaración tiene una identidad lógica estable. Ante una escritura ambigua, cualquier consulta, verificación o reintento se realiza usando esa misma identidad; no se genera una identidad nueva para resolver la ambigüedad.
+2. **Consulta por identidad:** como primer paso, el Member consulta el ledger por la identidad de la declaración y verifica el registro encontrado. La mera presencia de bytes o de un registro parcial no constituye confirmación durable.
+3. **Verificación del prefijo durable:** la confirmación requiere comprobar que el registro íntegro forma parte del prefijo durable confirmado del ledger, de acuerdo con el contrato de integridad y secuencia que se defina para TASK-04.
+4. **Reintento solo ante ausencia demostrada:** si se demuestra que la declaración no forma parte del prefijo durable y que no queda una escritura pendiente o ambigua que pueda incorporarla posteriormente, puede reintentarse la misma operación con la misma identidad lógica e idempotencia. La imposibilidad de demostrar ausencia no habilita el reintento.
+5. **Recovery ante incertidumbre:** si no puede determinarse con certeza la presencia, ausencia o integridad de la declaración —incluyendo tail ambiguo, registro parcial, discontinuidad o inconsistencia—, no se confirma la evidencia ni se crea otra identidad. Se conserva el tratamiento bloqueante y se deriva a `RECOVERY_REQUIRED` conforme a la clasificación aplicable.
+6. **Sin efectos sobre la ejecución:** este mecanismo resuelve exclusivamente la persistencia de la evidencia Member. No reintenta el handler, no autoriza una nueva ejecución y no habilita `COMMIT_GLOBAL` mientras la declaración no esté confirmada y el estado central no haya sido resuelto conforme al protocolo.
+7. La secuencia A → B → C define el orden preferido: consultar por identidad, verificar contra el prefijo durable y recurrir a Recovery cuando la evidencia no permita una conclusión segura. No establece que la consulta por identidad, por sí sola, sea suficiente para demostrar presencia o ausencia.
+8. Quedan pendientes para TASK-04 el contrato de identidad e idempotencia, la semántica de consulta, el formato y verificación del prefijo durable, los checkpoints, la detección de escrituras pendientes, las reglas de tail y los criterios exactos para demostrar ausencia. No se fijan aquí algoritmos ni detalles de implementación.
+
+**Motivo:** una escritura ambigua no puede tratarse como éxito ni como fallo por defecto. La identidad estable evita duplicados; la verificación del prefijo durable permite confirmar únicamente evidencia íntegra y comprometida; y Recovery conserva el tratamiento fail-closed cuando la presencia o ausencia no puede demostrarse.
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -1132,7 +1149,7 @@ La aceptación de las decisiones anteriores no resuelve ni congela los siguiente
 - Matriz exhaustiva de transiciones y errores tipados/códigos definitivos.
 - CODEC: tags, anchos, byte order, domain separators, nullability, límites, unknown fields y compatibilidad/versionado.
 - Representación final de la confirmación de `HANDLER_START_INTENT` en evento/snapshot.
-- Contrato detallado de la declaración local Member para `UNKNOWN` (tipo/nombre, payload, identidad, referencias, secuencia, integridad, garantías de persistencia y condiciones de emisión); idempotencia y resolución de escrituras ambiguas; condiciones de reintento; payload y precondiciones completas del evento central y validación en Replay. La dirección de responsabilidades queda decidida en VD-T06-83 y VD-T06-84; el tratamiento ante fallos de producción/persistencia, en VD-T06-85.
+- Contrato detallado de la declaración local Member para `UNKNOWN` (tipo/nombre, payload, identidad, referencias, secuencia, integridad, garantías de persistencia y condiciones de emisión); idempotencia, consulta por identidad, prefijo durable, checkpoints, detección de escrituras pendientes y resolución de escrituras ambiguas; condiciones de reintento; payload y precondiciones completas del evento central y validación en Replay. La dirección de responsabilidades queda decidida en VD-T06-83 y VD-T06-84; el tratamiento ante fallos de producción/persistencia, en VD-T06-85; la dirección para resolver escrituras ambiguas, en VD-T06-86.
 - Contratos completos de Replay y recuperación.
 - Evidencia Member y terminación que corresponden a TASK-04.
 - Clasificación exhaustiva de estados de recuperación y fallos.
@@ -1150,7 +1167,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-85 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-86 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
