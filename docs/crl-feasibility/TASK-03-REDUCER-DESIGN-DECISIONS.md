@@ -1183,7 +1183,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-94 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-95 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
@@ -1335,4 +1335,30 @@ Se acepta la fila T-02 de la matriz formal de transiciones del Reducer, con las 
 - Evidencia y validación exactas del ledger Member, correspondientes a TASK-04.
 
 **Motivo:** fijar la transición lógica a PENDING en el commit durable que consume el Permit, preservando la distinción entre autorización, intención durable y evidencia local de ejecución, sin anticipar el contrato del snapshot ni los detalles de TASK-04.
+
+### VD-T06-95 — Matriz de transición T-03: PENDING a COMPLETE mediante confirmación central de escritura HTTP
+
+Se acepta la fila T-03 de la matriz formal de transiciones del Reducer, adoptando la opción A: Coordinator confirma centralmente `COMPLETE` a partir de evidencia de que Reactor Netty completó la escritura HTTP en el servidor.
+
+1. **Estado origen:** `PENDING`.
+2. **Evento:** `COMPLETE`, confirmado durablemente por Coordinator.
+3. **Origen de evidencia:** Reactor Netty/Member informa la finalización de la escritura HTTP en el servidor (`HTTP_RESPONSE_WRITE_COMPLETED`).
+4. **Identidad:** `TransitionKey=(admissionId, COMPLETE)`.
+5. **Precondiciones:** Admission existente en `PENDING`; `admissionId` y `processBootId` correlacionados; evidencia válida de `HTTP_RESPONSE_WRITE_COMPLETED`; ausencia de contradicciones.
+6. **Estado destino:** `Admission.state=COMPLETE`.
+7. **Semántica:** `COMPLETE` acredita exclusivamente la finalización de la escritura de la respuesta HTTP en el servidor. No acredita recepción por el cliente ni éxito del resultado de negocio.
+8. **Persistencia:** Coordinator persiste el evento `COMPLETE` y confirma el checkpoint correspondiente antes de retirar la Admission del conjunto pendiente.
+9. **Efecto:** cierra la Admission y deja de bloquear `COMMIT_GLOBAL`, sujeto a la confirmación durable.
+10. **Respuesta:** ACK únicamente después de la confirmación durable. Si se pierde, STATUS consulta la misma clave; no se crea una transición paralela.
+11. **Idempotencia:** una repetición con la misma clave y contenido devuelve el resultado anterior, sin crear otro COMPLETE. Contenido contradictorio para la misma clave se rechaza.
+12. **Evidencia Member:** esta decisión adopta la opción A y no agrega como requisito una escritura durable adicional en el ledger Member para esta transición. La evidencia de escritura HTTP se informa desde Reactor Netty/Member y la transición central la confirma Coordinator.
+13. **Distinción de fronteras:** `HANDLER_RETURNED` es evidencia local de retorno del cuerpo GET y no equivale a `HTTP_RESPONSE_WRITE_COMPLETED`. No se infiere COMPLETE a partir de HANDLER_RETURNED.
+14. **Timeout/ausencia de respuesta:** no autorizan a inferir COMPLETE ni generan UNKNOWN automáticamente.
+15. **Fallo/ambigüedad de persistencia central:** no se confirma COMPLETE ni se retira la Admission del conjunto bloqueante.
+16. **Replay:** valida identidad, secuencia, integridad, referencias y consistencia del evento con la Admission.
+17. **Tail:** un COMPLETE en tail sin checkpoint queda sujeto exclusivamente a la política de recuperación aprobada para COMPLETE; esta decisión no amplía esa política por analogía.
+
+**Reserva que permanece abierta:** contrato exacto de validación y correlación que realiza Coordinator sobre la evidencia local recibida de Reactor Netty/Member, sin introducir una segunda escritura central redundante ni convertir `HANDLER_RETURNED` en prueba de write completion. También permanecen sujetos al contrato formal los campos/payload definitivos y los errores tipados.
+
+**Motivo:** mantener COMPLETE como cierre durable central bajo autoridad del Coordinator, distinguiendo el retorno del handler de la finalización de escritura HTTP y evitando afirmar recepción del cliente o éxito de negocio.
 
