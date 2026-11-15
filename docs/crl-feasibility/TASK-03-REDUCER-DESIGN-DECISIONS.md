@@ -518,6 +518,20 @@ Esta decisión complementa VD-T06-05 y VD-T06-09 y establece el determinismo com
 
 **Motivo:** precisar la ubicación de la trazabilidad sin introducir mutaciones artificiales en el snapshot ni duplicar responsabilidades de Replay.
 
+
+### VD-T06-42 — Frontera de soporte de versiones y tipos de evento
+
+1. CODEC reconoce y decodifica únicamente versiones soportadas.
+2. Un evento cuya versión no pueda decodificarse no llega al Reducer como evento válido.
+3. Reducer valida que el tipo de evento decodificado esté contemplado en su contrato de dominio.
+4. Un tipo conocido y decodificable por CODEC, pero no soportado por Reducer, se rechaza mediante error tipado.
+5. Replay gestiona el rechazo según su política de recuperación.
+6. Ningún componente ignora versiones o tipos desconocidos ni aplica defaults implícitos para aceptarlos.
+
+**Aclaración de VD-T06-07 y VD-T06-34:** CODEC es responsable de la compatibilidad de versión y decodificación; Reducer, de la admisibilidad del tipo de evento en el contrato de dominio; Replay, de gestionar el rechazo durante recuperación. Estas responsabilidades no se sustituyen entre sí.
+
+**Motivo:** evitar que un evento no interpretable o no contemplado por el dominio sea aceptado por tolerancia implícita o por defaults.
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -545,7 +559,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-41 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-42 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
