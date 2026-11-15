@@ -17,8 +17,8 @@ La revisión documental combinada se denomina `SPEC-DRAFT-5`. No equivale a apro
 
 Reemplazar el estado histórico de §3.2–§3.4 que indicaba ausencia del workspace y `T03-00 BLOCKED — WORKSPACE NOT PROVISIONED` por el siguiente baseline:
 
-- Workspace provisionado: `%TEMP%\<redacted>sibility-009a1\project`.
-- Origen de la copia: `%TEMP%\<redacted>sibility-009a\project`; el origen se preservó y no se movió.
+- Workspace provisionado: `%TEMP%\crl-feasibility-009a1\project`.
+- Origen de la copia: `%TEMP%\crl-feasibility-009a\project`; el origen se preservó y no se movió.
 - Manifiesto: `WORKSPACE-PROVISIONING-MANIFEST.json`.
 - Inventario: 31 archivos incluidos (1 POM, 21 archivos Java bajo `src/test/java/lab/crl`, 9 fixtures públicos PEM); 70 rutas/carpetas excluidas.
 - Git: no se detectó metadata `.git`; branch/HEAD/status no están disponibles en el workspace provisionado.
