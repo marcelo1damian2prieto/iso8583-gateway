@@ -152,6 +152,8 @@ Esta decisión no congela el CODEC.
 5. El Reducer no crea relaciones implícitas para completar referencias faltantes.
 6. Una relación inconsistente provoca rechazo tipado sin mutación.
 7. El modelo formal debe documentar las relaciones y restricciones aplicables.
+8. Esta decisión consolida las reglas de consistencia referencial entre entidades y debe interpretarse junto con VD-T06-06, VD-T06-11, VD-T06-28 y VD-T06-29, respetando el alcance específico de cada una.
+9. Su carácter integrador no duplica responsabilidades ni introduce restricciones adicionales no documentadas en el modelo formal.
 
 
 ### VD-T06-11 — Validación del snapshot de entrada
