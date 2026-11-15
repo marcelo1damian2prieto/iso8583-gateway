@@ -1183,7 +1183,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-118 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-119 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
@@ -1709,3 +1709,21 @@ Se acepta que el Reducer aplique una política fail-fast determinista, en lugar 
 El orden exhaustivo de validaciones y los detalles contractuales de los errores permanecen pendientes de definición formal.
 
 **Motivo:** mantener resultados reproducibles, simplificar el contrato de error y evitar variaciones de diagnóstico que afecten Replay o las pruebas deterministas.
+
+### VD-T06-119 — Orden determinista de validación del Reducer
+
+Se acepta establecer el siguiente orden de validación para el Reducer:
+
+1. **Validación estructural:** presencia de campos obligatorios, colecciones inicializadas y referencias con formato válido.
+2. **Validación de integridad local:** unicidad de identidades, ausencia de duplicados y coherencia referencial interna.
+3. **Validación de invariantes de dominio:** consistencia entre estado y outcome, cardinalidades, relaciones y conjunto de Admissions bloqueantes.
+4. **Validación de transición:** compatibilidad del evento con el estado actual y cumplimiento de las precondiciones específicas.
+5. **Validación global del resultado:** comprobación de todas las invariantes sobre el snapshot candidato.
+
+La primera etapa que falle determina el error devuelto, conforme a la política fail-fast de VD-T06-118. El orden de validación dentro de cada etapa también deberá ser estable y documentado para mantener el determinismo.
+
+Este orden no incorpora verificaciones históricas del journal ni consultas al ledger Member, que permanecen fuera de las responsabilidades del Reducer.
+
+Los chequeos exhaustivos de cada etapa y su correspondencia con errores tipados permanecen pendientes del contrato formal.
+
+**Motivo:** fijar una secuencia reproducible de validaciones y una prioridad inequívoca para el error principal, sin mezclar validación de dominio con integridad histórica o evidencia externa.
