@@ -189,6 +189,19 @@ Esta decisión no congela el CODEC.
 
 **Límite:** se distingue la idempotencia del procesamiento del journal, responsabilidad de Replay/checkpoint, de la aplicación de una transición de dominio. La garantía concreta frente a invocaciones repetidas debe quedar definida en el contrato de integración Reducer/Replay.
 
+
+### VD-T06-14 — Validación del snapshot resultante
+
+1. Toda transición válida debe producir un snapshot consistente con el modelo de dominio.
+2. Deben conservarse las invariantes globales, incluidas las relaciones entre entidades.
+3. Los contadores e índices derivados deben seguir siendo consistentes con las entidades canónicas.
+4. No pueden quedar referencias huérfanas ni entidades en estados imposibles según el contrato.
+5. Si la transición no puede producir un snapshot válido, debe rechazarse mediante error tipado.
+6. El snapshot de entrada debe permanecer inalterado ante el rechazo.
+7. El Reducer no debe corregir inconsistencias mediante reparaciones implícitas.
+
+**Límite:** el Reducer garantiza la consistencia lógica del resultado. La persistencia durable y la confirmación del nuevo snapshot corresponden a la capa responsable del almacenamiento.
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -216,7 +229,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-13, VD-T06-32 y VD-T06-33 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-14, VD-T06-32 y VD-T06-33 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
