@@ -451,6 +451,18 @@ Esta decisión complementa VD-T06-05 y VD-T06-09 y establece el determinismo com
 
 **Motivo:** permitir optimizaciones sin debilitar las garantías de consistencia del dominio.
 
+
+### VD-T06-37 — Trazabilidad cuando una transición no modifica el snapshot
+
+1. El resultado del Reducer conserva el `eventId` y el tipo de evento de la invocación.
+2. Esta información se conserva incluso cuando la transición válida produce un snapshot lógicamente equivalente al de entrada.
+3. La trazabilidad de la invocación no se utiliza como mecanismo de deduplicación.
+4. Reducer no mantiene historial de eventos aplicados ni modifica el snapshot para registrar artificialmente una transición sin cambios.
+5. Replay conserva la trazabilidad durable y determina si el evento ya fue aplicado.
+6. La representación concreta de esta información en el resultado queda sujeta al contrato de salida definido en VD-T06-24.
+
+**Motivo:** separar la trazabilidad de una invocación de la mutación del estado de dominio y de la deduplicación del journal.
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -478,7 +490,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-36 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-37 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
