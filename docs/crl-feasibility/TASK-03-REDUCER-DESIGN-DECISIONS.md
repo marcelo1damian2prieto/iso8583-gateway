@@ -1108,6 +1108,21 @@ Se acepta la opción A como dirección de diseño para establecer `UNKNOWN`: el 
 
 **Motivo:** hacer explícita la frontera de responsabilidades: el Member aporta evidencia durable sobre su propia ejecución y el Coordinator decide y persiste el estado central. Separar `UNKNOWN` de `RECONCILED_UNKNOWN` evita exigir prueba de muerte del proceso para declarar un resultado indeterminado y evita liberar el bloqueo sin la reconciliación requerida.
 
+
+
+### VD-T06-85 — Fallo al producir o persistir la declaración Member de UNKNOWN
+
+Se acepta la combinación B + A + C como dirección de diseño para tratar la imposibilidad del Member de producir o confirmar durablemente su declaración local de resultado indeterminado:
+
+1. **Reintento acotado de la operación de evidencia:** cuando resulte seguro, el Member puede reintentar exclusivamente la producción/persistencia de la declaración local, usando la misma identidad lógica y garantías de idempotencia. Este reintento no es un reintento del handler ni autoriza una nueva ejecución de negocio.
+2. **Persistencia no confirmada o ambigua:** mientras no exista confirmación durable verificable de la declaración local, el Coordinator no confirma `ADMISSION_OUTCOME_UNKNOWN` ni deriva `UNKNOWN`. No se interpreta el fallo o la ambigüedad de persistencia como una declaración válida.
+3. **Fail-closed:** si no puede confirmarse la evidencia, la Admission conserva el tratamiento bloqueante y se deriva a `RECOVERY_REQUIRED` cuando corresponda conforme a la clasificación de recuperación aprobada. No se habilita `COMMIT_GLOBAL`, retry del handler ni una ejecución alternativa.
+4. **Recovery posterior:** si el mecanismo automático no puede resolver el caso, Recovery puede examinar la evidencia disponible y aplicar el procedimiento explícito que corresponda. Solo puede confirmar una resolución si existe evidencia suficiente conforme al contrato aplicable; no puede fabricar la declaración Member ni inferir `UNKNOWN` por ausencia de evidencia. Si la evidencia sigue siendo insuficiente, inaccesible, ambigua o contradictoria, el caso permanece sin resolver y bloqueante.
+5. La secuencia B → A → C expresa el orden de tratamiento preferido: reintento idempotente de la operación de evidencia, fail-closed ante falta de confirmación y Recovery si persiste el problema. No implica que todo fallo admita reintento ni fija cantidad, intervalo o política de backoff.
+6. El contrato de idempotencia e identidad de la declaración, resolución de escrituras ambiguas, condiciones que habilitan el reintento, clasificación exacta `RECOVERY_REQUIRED`/fallo y procedimiento/autorizaciones de Recovery permanecen pendientes de definición en sus tareas responsables, en particular TASK-04 para la evidencia Member.
+
+**Motivo:** una declaración local solo puede habilitar la transición central si su persistencia es verificable. Reintentar la operación de evidencia puede resolver fallas transitorias sin volver a ejecutar el handler; si no hay confirmación, el tratamiento fail-closed preserva la incertidumbre y Recovery ofrece una vía explícita sin convertir la ausencia de evidencia en un hecho de dominio.
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -1117,7 +1132,7 @@ La aceptación de las decisiones anteriores no resuelve ni congela los siguiente
 - Matriz exhaustiva de transiciones y errores tipados/códigos definitivos.
 - CODEC: tags, anchos, byte order, domain separators, nullability, límites, unknown fields y compatibilidad/versionado.
 - Representación final de la confirmación de `HANDLER_START_INTENT` en evento/snapshot.
-- Contrato detallado de la declaración local Member para `UNKNOWN` (tipo/nombre, payload, identidad, referencias, secuencia, integridad, garantías de persistencia y condiciones de emisión), así como payload y precondiciones completas del evento central y validación en Replay; la dirección de responsabilidades queda decidida en VD-T06-83 y VD-T06-84.
+- Contrato detallado de la declaración local Member para `UNKNOWN` (tipo/nombre, payload, identidad, referencias, secuencia, integridad, garantías de persistencia y condiciones de emisión); idempotencia y resolución de escrituras ambiguas; condiciones de reintento; payload y precondiciones completas del evento central y validación en Replay. La dirección de responsabilidades queda decidida en VD-T06-83 y VD-T06-84; el tratamiento ante fallos de producción/persistencia, en VD-T06-85.
 - Contratos completos de Replay y recuperación.
 - Evidencia Member y terminación que corresponden a TASK-04.
 - Clasificación exhaustiva de estados de recuperación y fallos.
@@ -1135,7 +1150,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-84 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-85 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
