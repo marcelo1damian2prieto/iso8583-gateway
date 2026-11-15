@@ -1183,7 +1183,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-111 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-112 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
@@ -1602,3 +1602,15 @@ Se acepta establecer el siguiente contrato para la operación del Reducer:
 7. La pureza y el determinismo del Reducer no sustituyen las validaciones históricas de Replay ni las garantías de persistencia del Journal/Coordinator.
 
 **Motivo:** obtener transiciones reproducibles y atómicas, facilitar Replay determinista y permitir pruebas unitarias aisladas, manteniendo la separación de responsabilidades aprobada en VD-T06-110.
+
+### VD-T06-112 — Igualdad semántica de snapshots para determinismo del Reducer
+
+Se acepta que la igualdad utilizada para verificar el determinismo del Reducer sea semántica y represente el estado lógico, no detalles accidentales de su representación:
+
+1. Dos snapshots son equivalentes cuando representan el mismo estado lógico y conservan las mismas referencias significativas para ese estado.
+2. El orden interno de una colección no afecta la igualdad cuando dicho orden no tiene significado de dominio.
+3. Las referencias a eventos y a `RecoveryRecord` forman parte de la igualdad cuando son necesarias para representar o justificar el estado lógico.
+4. No se ignoran diferencias de estado, outcome, identidad o correlación.
+5. Esta decisión no define canonicalización binaria, serialización ni codec; esos aspectos permanecen sujetos a sus contratos específicos.
+
+**Motivo:** evaluar el determinismo del Reducer sobre el significado del snapshot y no sobre variaciones irrelevantes de representación, sin descartar diferencias relevantes para el dominio.
