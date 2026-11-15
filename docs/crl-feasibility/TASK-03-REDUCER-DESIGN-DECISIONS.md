@@ -1183,7 +1183,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-119 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-120 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
@@ -1727,3 +1727,17 @@ Este orden no incorpora verificaciones históricas del journal ni consultas al l
 Los chequeos exhaustivos de cada etapa y su correspondencia con errores tipados permanecen pendientes del contrato formal.
 
 **Motivo:** fijar una secuencia reproducible de validaciones y una prioridad inequívoca para el error principal, sin mezclar validación de dominio con integridad histórica o evidencia externa.
+
+### VD-T06-120 — Política estricta para campos ausentes, inválidos o desconocidos
+
+Se acepta que el Reducer aplique una política estricta a los campos del modelo lógico y de los eventos:
+
+1. Un campo obligatorio ausente produce un rechazo tipado: `INVALID_SNAPSHOT` cuando corresponde al snapshot de entrada, o `INVALID_TRANSITION` cuando corresponde al evento o a la transición solicitada.
+2. Un campo conocido cuyo valor no satisface las restricciones estructurales o de dominio aplicables se rechaza; no se normaliza ni se sustituye por inferencia.
+3. Un campo desconocido en el modelo lógico recibido se rechaza; no se ignora silenciosamente.
+4. El Reducer no asigna valores por defecto para completar información obligatoria faltante.
+5. La compatibilidad entre versiones del modelo, la evolución del esquema y las reglas para interpretar versiones distintas corresponden al contrato de versionado, no al Reducer.
+
+La clasificación exacta de cada error y los detalles de versionado permanecen sujetos al contrato formal.
+
+**Motivo:** evitar interpretaciones divergentes del mismo estado o evento y mantener validación explícita, fail-fast y determinista.
