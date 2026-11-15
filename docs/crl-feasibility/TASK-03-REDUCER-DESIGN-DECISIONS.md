@@ -1183,7 +1183,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-116 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-117 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
@@ -1675,3 +1675,21 @@ Se acepta que el Reducer valide el snapshot de entrada antes de procesar cada ev
 La taxonomía definitiva, nombres y payloads de errores tipados permanecen pendientes del contrato formal.
 
 **Motivo:** impedir que un estado inconsistente se propague o sea utilizado como base para una transición, completando la validación en los puntos de entrada, transición y resultado.
+
+### VD-T06-117 — Categorías conceptuales de errores del Reducer
+
+Se acepta distinguir, como mínimo, las siguientes categorías conceptuales de errores del Reducer:
+
+1. **`INVALID_SNAPSHOT`:** el snapshot de entrada viola invariantes globales, por ejemplo, por identidades duplicadas, referencias huérfanas o inconsistencias entre estado y outcome.
+2. **`INVALID_TRANSITION`:** el evento no es compatible con el estado actual o no satisface las precondiciones de la transición.
+3. **`INVALID_RESULT`:** la aplicación de la transición produciría un snapshot que viola invariantes globales.
+
+Se establecen además estas reglas:
+
+4. Los errores deben ser deterministas y no depender de excepciones accidentales o detalles no controlados de ejecución.
+5. Los errores no deben exponer información sensible innecesaria.
+6. La detección y clasificación del error no implican reparación del snapshot, recuperación automática ni aplicación parcial de la transición.
+7. La clasificación operativa posterior corresponde a la capa superior, conforme a las responsabilidades establecidas en VD-T06-110.
+8. Los nombres definitivos, estructura, payloads y taxonomía exhaustiva de errores permanecen pendientes del contrato formal.
+
+**Motivo:** distinguir fallos del estado recibido, de la transición solicitada y del resultado candidato, manteniendo el rechazo atómico y la separación entre Reducer y capa superior.
