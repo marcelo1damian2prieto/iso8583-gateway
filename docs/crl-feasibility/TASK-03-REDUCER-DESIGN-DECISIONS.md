@@ -1183,7 +1183,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-102 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-103 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
@@ -1471,3 +1471,20 @@ Se acepta aplicar las siguientes reglas de idempotencia a la operación central 
 6. La forma exacta de la identidad, los campos del contenido canónico, la canonicalización y la clasificación/error tipado del conflicto permanecen pendientes del contrato formal.
 
 **Motivo:** asegurar que reintentos de comunicación no dupliquen la transición durable a UNKNOWN ni permitan alterar su contenido mediante reutilización de identidad.
+
+### VD-T06-103 — Referencias de evidencia en ADMISSION_OUTCOME_UNKNOWN y snapshot
+
+Se acepta separar las referencias conservadas por el evento central `ADMISSION_OUTCOME_UNKNOWN` de la referencia mínima mantenida en el snapshot:
+
+1. El evento central debe conservar referencias suficientes para identificar y correlacionar:
+   - la Admission afectada;
+   - el Member y `processBootId` a los que se atribuye la declaración;
+   - la declaración local Member que el Coordinator validó;
+   - el propio evento central durable que establece `UNKNOWN`;
+   - la ejecución autorizada correspondiente y las relaciones necesarias para comprobar esa correlación.
+2. Estas referencias permiten a Replay verificar la existencia, integridad, secuencia y correlación histórica de la evidencia y del evento central, conforme a sus responsabilidades.
+3. El snapshot conserva únicamente la referencia al evento central que estableció `UNKNOWN`, conforme a VD-T06-87. No duplica el contenido de la declaración local ni el ledger Member.
+4. El Reducer valida la coherencia de dominio de la referencia al evento central presente en el snapshot, conforme al contrato formal; no consulta ni interpreta directamente el ledger Member.
+5. Los nombres, tipos, cardinalidades y formato contractuales de los campos y referencias, así como las reglas exactas de validación de Replay, permanecen pendientes de definición formal.
+
+**Motivo:** mantener trazabilidad suficiente para validación histórica sin duplicar evidencia local en el snapshot ni trasladar al Reducer responsabilidades propias de Coordinator o Replay.
