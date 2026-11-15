@@ -505,6 +505,19 @@ Esta decisión complementa VD-T06-05 y VD-T06-09 y establece el determinismo com
 
 **Motivo:** armonizar la garantía global de consistencia con la posibilidad de optimizar la ejecución de las verificaciones, sin debilitar las propiedades del dominio.
 
+
+### VD-T06-41 — Metadatos de trazabilidad en el resultado del Reducer
+
+1. `eventId` y tipo de evento son metadatos del resultado de la invocación del Reducer.
+2. Estos metadatos se conservan tanto si la transición modifica el snapshot como si produce un resultado lógicamente equivalente al snapshot de entrada.
+3. No se incorporan artificialmente al snapshot cuando no corresponden a un cambio del estado de dominio.
+4. Replay conserva la trazabilidad durable en el journal.
+5. Reducer no administra historial de eventos ni deduplicación.
+
+**Aclaración de VD-T06-19, VD-T06-24 y VD-T06-37:** la asociación lógica entre invocación y evento se expresa en el resultado del Reducer; la trazabilidad durable permanece en el journal bajo responsabilidad de Replay. La equivalencia lógica del snapshot no elimina los metadatos de la invocación.
+
+**Motivo:** precisar la ubicación de la trazabilidad sin introducir mutaciones artificiales en el snapshot ni duplicar responsabilidades de Replay.
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -532,7 +545,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-40 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-41 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
