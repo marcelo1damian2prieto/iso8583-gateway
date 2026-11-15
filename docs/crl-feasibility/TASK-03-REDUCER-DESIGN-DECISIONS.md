@@ -1988,3 +1988,21 @@ Se acepta la opción A: las estructuras auxiliares inmutables son propiedad lóg
 7. Esta decisión no selecciona colecciones Java, estructuras persistentes, *copy-on-write*, estrategia de copia ni algoritmo concreto. Esas decisiones permanecen pendientes del diseño técnico.
 
 **Motivo:** garantizar aislamiento entre invocaciones concurrentes sin imponer copias completas ni introducir estado mutable compartido, manteniendo las propiedades de pureza, determinismo e inmutabilidad observable establecidas en VD-T06-125, VD-T06-126 y VD-T06-135.
+
+### VD-T06-137 — Actualización incremental de índices con reconstrucción completa de respaldo
+
+Se acepta la opción C: utilizar actualización incremental de índices derivados como mecanismo habitual durante una transición válida y permitir la reconstrucción completa de respaldo cuando la actualización incremental no pueda garantizar la coherencia del resultado.
+
+1. La actualización incremental constituye el mecanismo habitual para mantener los índices derivados durante una transición válida.
+2. La actualización se limita a las entradas y estructuras afectadas por los cambios en las entidades canónicas, pudiendo conservarse mediante *structural sharing* las partes inmutables no afectadas.
+3. Ninguna actualización puede modificar estructuras compartidas con el snapshot de entrada ni con otros snapshots que continúen siendo utilizados por invocaciones concurrentes.
+4. Cuando una transición válida requiera cambios que no puedan resolverse de manera segura mediante la actualización incremental, puede utilizarse una reconstrucción completa de los índices a partir de las entidades canónicas del resultado candidato.
+5. La actualización incremental y la reconstrucción completa deben producir estructuras semánticamente equivalentes para las mismas entidades canónicas.
+6. Tanto el mecanismo incremental como la reconstrucción completa deben preservar la coherencia lógica y atómica entre las entidades canónicas y los índices. No se expone un snapshot parcial ni una combinación temporalmente inconsistente.
+7. La validación global del snapshot resultante continúa siendo obligatoria conforme a VD-T06-133; la estrategia incremental no sustituye ni reduce las garantías de validación exhaustiva.
+8. Si la construcción o validación del resultado falla, la transición se rechaza sin exponer un nuevo snapshot ni modificar el snapshot de entrada.
+9. La reconstrucción de respaldo se limita a construir los índices del resultado de una transición válida. No autoriza reparar ni reconstruir índices inconsistentes detectados en el snapshot de entrada, cuyo tratamiento continúa regido por VD-T06-134.
+
+La selección de estructuras Java, algoritmos, criterios técnicos para elegir entre actualización incremental y reconstrucción completa, estrategia concreta de *structural sharing*, complejidades temporales y espaciales, y cualquier benchmark o experimento permanecen pendientes del diseño técnico y requieren autorización explícita cuando corresponda.
+
+**Motivo:** equilibrar eficiencia y seguridad, evitando reconstrucciones completas innecesarias sin debilitar la coherencia de los datos derivados, la inmutabilidad observable, el aislamiento concurrente ni la validación global del Reducer.
