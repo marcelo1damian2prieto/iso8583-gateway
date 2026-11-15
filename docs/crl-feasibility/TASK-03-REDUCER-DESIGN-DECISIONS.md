@@ -279,6 +279,18 @@ Esta decisión complementa VD-T06-05 y VD-T06-09 y establece el determinismo com
 
 **Límite:** el Reducer garantiza consistencia lógica del snapshot; Replay y CODEC mantienen sus responsabilidades sobre recuperación y representación durable.
 
+
+### VD-T06-21 — Alcance de las invariantes del Reducer
+
+1. Las invariantes del Reducer deben estar identificadas explícitamente en el contrato de dominio.
+2. Deben distinguirse invariantes estructurales, referenciales y de negocio.
+3. Cada transición debe declarar qué invariantes verifica y cuáles preserva.
+4. El Reducer debe verificar las invariantes globales aplicables antes y después de cada transición.
+5. No debe incorporar reglas de negocio implícitas ni derivadas de convenciones de implementación.
+6. Las invariantes aún no definidas deben registrarse como pendientes; no deben completarse por inferencia.
+
+**Límite:** esta decisión define cómo se documentan y verifican las invariantes, no congela todavía el catálogo completo de invariantes del dominio.
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -306,7 +318,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-20, VD-T06-32 y VD-T06-33 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-21, VD-T06-32 y VD-T06-33 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
