@@ -715,6 +715,20 @@ Se establecen los siguientes criterios para la representación de admisiones ter
 **Motivo:** evitar que una transición terminal implique pérdida implícita de estado durable o de correlación de admisiones.
 
 
+### VD-T06-58 — Representación de estados de Admission
+
+Se establecen los siguientes criterios para el estado de cada admisión en el snapshot:
+
+1. El snapshot conserva el estado lógico actual de cada `Admission`.
+2. El estado debe pertenecer al catálogo definido por TASK-02 y las decisiones de dominio aprobadas.
+3. El Reducer no infiere estados intermedios a partir de ausencia de eventos, timeouts o falta de observaciones.
+4. Una transición solo cambia el estado cuando existe un evento explícito y válido que la autoriza.
+5. Un estado desconocido o no contemplado se rechaza mediante error tipado.
+6. La matriz exacta de transiciones permitidas y sus precondiciones sigue siendo parte del contrato formal pendiente.
+
+**Motivo:** mantener el estado de admisión gobernado por eventos explícitos, sin inferencias temporales ni transiciones implícitas.
+
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -742,7 +756,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-57 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-58 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
