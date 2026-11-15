@@ -922,6 +922,19 @@ Se establecen los siguientes criterios para observaciones Member asociadas a dis
 **Motivo:** evitar confundir la identidad de proceso con el ciclo de vida del Member.
 
 
+### VD-T06-73 — Estado de ciclo de vida de las observaciones Member
+
+Se establecen los siguientes criterios para interpretar y actualizar observaciones Member:
+
+1. Una observación Member no constituye por sí sola prueba automática de que el proceso esté activo o haya finalizado.
+2. El Reducer modifica el estado de una observación únicamente ante eventos explícitos definidos por el contrato.
+3. El Reducer no deduce la terminación de un proceso por ausencia de mensajes, aparición de otro `processBootId` ni transcurso del tiempo.
+4. La identidad del proceso, la observación conocida por Coordinator y el estado real del proceso son conceptos diferenciados.
+5. La semántica y el catálogo de estados de observación quedan sujetos al modelo formal y al contrato de eventos.
+
+**Motivo:** evitar inferencias de ciclo de vida no respaldadas por evidencia explícita y mantener la separación entre identidad, observación y estado real del proceso.
+
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -949,7 +962,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-72 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-73 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
