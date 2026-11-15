@@ -1183,7 +1183,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-95 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-96 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
@@ -1361,4 +1361,30 @@ Se acepta la fila T-03 de la matriz formal de transiciones del Reducer, adoptand
 **Reserva que permanece abierta:** contrato exacto de validación y correlación que realiza Coordinator sobre la evidencia local recibida de Reactor Netty/Member, sin introducir una segunda escritura central redundante ni convertir `HANDLER_RETURNED` en prueba de write completion. También permanecen sujetos al contrato formal los campos/payload definitivos y los errores tipados.
 
 **Motivo:** mantener COMPLETE como cierre durable central bajo autoridad del Coordinator, distinguiendo el retorno del handler de la finalización de escritura HTTP y evitando afirmar recepción del cliente o éxito de negocio.
+
+### VD-T06-96 — Matriz de transición T-04: ADMITTED a REJECTED_NOT_STARTED por expiración previa al consumo del Permit
+
+Se acepta la fila T-04 de la matriz formal de transiciones del Reducer, con origen `ADMITTED`. `PERMIT_RECEIVED` se considera evidencia local durable del Member y una precondición de la operación, no un estado central de Admission ni un estado de origen del Reducer.
+
+1. **Estado origen:** `ADMITTED`, que representa la autorización durable concedida por Coordinator mediante ADMIT.
+2. **Evento:** `ADMISSION_REJECTED_EXPIRED`, registrado y confirmado durablemente por Coordinator al rechazar `HANDLER_START_INTENT` porque el Permit venció antes de su commit durable.
+3. **Identidad:** la transición se correlaciona con la Admission y el ADMIT original mediante una clave estable e idempotente. La forma contractual exacta de la clave y del payload permanece sujeta al contrato formal.
+4. **Precondiciones:** ADMIT confirmado; Admission identificada; Member, `processBootId`, `requestId` y referencias correspondientes válidos y correlacionados; receipt `PERMIT_RECEIVED` durable en el ledger local del Member; Permit todavía no consumido; ausencia de `HANDLER_START_INTENT` confirmado; y expiración anterior al punto de confirmación durable de START_INTENT.
+5. **Punto de decisión temporal:** Coordinator comprueba la vigencia en el instante en que habría de confirmar durablemente `HANDLER_START_INTENT`, dentro de la operación lógica serializada con ADMIT/FENCE conforme a D-01 y H-01. Si el Permit ya venció, no confirma START_INTENT ni establece PENDING.
+6. **Evento y persistencia:** Coordinator registra `ADMISSION_REJECTED_EXPIRED` correlacionado con el ADMIT original y la Admission. La transición solo queda confirmada cuando se completa la persistencia durable y el checkpoint correspondiente, conforme al protocolo aprobado.
+7. **Estado destino:** únicamente después de esa confirmación durable, `Admission.state=REJECTED_NOT_STARTED`.
+8. **Efecto sobre bloqueo:** solo después de la confirmación durable del rechazo la Admission deja de integrar el conjunto bloqueante de WAIT_IN_FLIGHT/COMMIT_GLOBAL. La entrega del ACK al Member no es una condición adicional para derivar el estado ni liberar el bloqueo.
+9. **Respuesta:** Coordinator comunica el rechazo únicamente después de la confirmación durable. Si el ACK se pierde, STATUS consulta la misma clave idempotente; no se crea una transición paralela.
+10. **Idempotencia:** repetición con la misma clave y el mismo contenido devuelve el resultado durable previo. Misma clave con contenido contradictorio se rechaza; no se crea otro rechazo ni se sobrescribe el resultado.
+11. **Fallo de persistencia:** si la persistencia falla, no se confirma `REJECTED_NOT_STARTED` ni se libera el bloqueo. La Admission conserva tratamiento bloqueante y fail-closed.
+12. **Persistencia ambigua:** si no puede determinarse si el rechazo quedó confirmado, no se deriva el estado destino ni se libera el bloqueo. La resolución utiliza la misma clave y el procedimiento de STATUS/Recovery aplicable; no se infiere el rechazo por timeout.
+13. **Tail sin checkpoint:** un `ADMISSION_REJECTED_EXPIRED` encontrado en tail sin checkpoint no confirma la transición. Conforme a D03-OPEN-02, no tiene recuperación automática; queda `RECOVERY_REQUIRED`, sin ACK, sin derivar `REJECTED_NOT_STARTED` y sin liberar el bloqueo.
+14. **Frontera de ejecución:** tras el rechazo confirmado no se permite `HANDLER_ENTERED`, ejecución del cuerpo GET ni `COMPLETE`. No se reintenta automáticamente el handler.
+15. **Distinción de evidencia:** `PERMIT_RECEIVED` permanece evidencia local Member, no estado central. Su presencia no consume el Permit ni establece PENDING; la expiración pre-consumo se decide en el commit durable de START_INTENT.
+16. **Replay:** valida identidad, secuencia, integridad, referencias y consistencia de la transición con la Admission. No fabrica evidencia local Member ni convierte un tail en confirmación.
+17. **Alcance temporal:** esta decisión no fija TTL, fuente de reloj, precisión, tolerancia ni renovación pre-consumo; permanecen pendientes conforme a D-VD03-1..4.
+
+**Escenarios cubiertos:** Permit vencido antes del commit de START_INTENT; Permit vigente en el commit (aplica T-02 y estado PENDING); ACK perdido; repetición idempotente; payload contradictorio; persistencia fallida o ambigua; evento de rechazo en tail sin checkpoint; intento de ejecución posterior al rechazo.
+
+**Motivo:** representar la expiración como rechazo de una Admission todavía ADMITTED, sin introducir PERMIT_RECEIVED como estado central ni permitir que una escritura no confirmada libere el bloqueo. Se preserva el punto de consumo del Permit definido por D-01 y la política de tail aprobada en D03-OPEN-02.
 
