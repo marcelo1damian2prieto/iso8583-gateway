@@ -1183,7 +1183,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-96 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-97 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
@@ -1388,3 +1388,17 @@ Se acepta la fila T-04 de la matriz formal de transiciones del Reducer, con orig
 
 **Motivo:** representar la expiración como rechazo de una Admission todavía ADMITTED, sin introducir PERMIT_RECEIVED como estado central ni permitir que una escritura no confirmada libere el bloqueo. Se preserva el punto de consumo del Permit definido por D-01 y la política de tail aprobada en D03-OPEN-02.
 
+### VD-T06-97 — Frontera Reducer/Member para declaración local de resultado indeterminado
+
+Se acepta el alcance de T-05.1 para separar la evidencia local del Member de la transición central de Admission:
+
+1. El Reducer no procesa las declaraciones del ledger Member como eventos centrales ni las interpreta directamente.
+2. La declaración local de resultado indeterminado constituye evidencia del Member. No cambia por sí misma el estado central de Admission ni establece `UNKNOWN`.
+3. El Coordinator valida la integridad y correlación de la evidencia local antes de confirmar mediante un evento central explícito la transición a `UNKNOWN`, conforme a VD-T06-83 y VD-T06-84.
+4. El Reducer recibe y aplica únicamente la transición central confirmada por Coordinator. Valida las referencias y la coherencia de dominio incluidas en el evento central conforme al contrato formal que se defina.
+5. Replay verifica la existencia durable, secuencia, integridad y correlación histórica de las referencias. La referencia conservada en el snapshot no sustituye esa validación.
+6. El Reducer no consulta, reconstruye ni interpreta el contenido del ledger Member. La estructura, identidad, secuencia, canonicalización, digest, persistencia e idempotencia de la declaración local corresponden a TASK-04.
+7. Esta decisión no fija campos, payload, nombres contractuales, algoritmos de ledger ni referencias concretas todavía no definidas. Tampoco modifica las reglas de VD-T06-85 y VD-T06-86 para fallos o escrituras ambiguas.
+8. La falta de declaración local confirmada no autoriza inferir `UNKNOWN` por timeout, ausencia de respuesta o ausencia de evidencia. Se mantiene el tratamiento bloqueante y fail-closed conforme a las decisiones ya aceptadas.
+
+**Motivo:** preservar la autoridad del Coordinator sobre las transiciones centrales y la separación entre Reducer, Replay y ledger Member, sin anticipar el contrato de persistencia que corresponde a TASK-04.
