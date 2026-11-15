@@ -2141,3 +2141,20 @@ Se acepta que el Reducer no asigne versiones ni genere identificadores de snapsh
 6. Esta decisión no prescribe el formato, alcance, unicidad, monotonicidad ni mecanismo de generación de identificadores o versiones; esos aspectos quedan pendientes del diseño del Coordinator y la persistencia.
 
 **Motivo:** preservar la pureza y determinismo del Reducer, evitando que la transformación de estado dependa de fuentes externas o de decisiones de coordinación y confirmación del estado durable.
+
+### VD-T06-147 — Resolución de conflictos entre resultados candidatos fuera del Reducer
+
+Se acepta que el Reducer no resuelve conflictos de concurrencia entre resultados candidatos derivados de un mismo snapshot de entrada. La detección y resolución de esos conflictos corresponden al Coordinator y al componente responsable de confirmar el estado durable.
+
+1. El Reducer procesa cada invocación de forma independiente y produce un resultado lógico candidato conforme a su contrato.
+2. El Reducer no determina si el snapshot de entrada continúa siendo el estado vigente al momento de confirmar el resultado.
+3. El Reducer no compara versiones, revisiones ni identificadores para detectar conflictos de confirmación.
+4. El Reducer no decide qué resultado candidato prevalece cuando varias transiciones concurrentes parten del mismo estado.
+5. El Reducer no serializa eventos, reordena su procesamiento, descarta resultados candidatos ni ejecuta reintentos automáticos ante conflictos.
+6. El Coordinator y la persistencia son responsables de establecer el mecanismo de concurrencia y confirmación del estado durable, incluida la detección de conflictos, la aceptación o rechazo de candidatos y cualquier política de reintento o reprocesamiento.
+7. Un resultado candidato válido no implica que deba ser confirmado ni que pueda sobrescribir un estado durable más reciente.
+8. La resolución externa de conflictos debe preservar las garantías de consistencia del estado y no modificar retroactivamente snapshots inmutables ni alterar la semántica de los resultados ya producidos por el Reducer.
+
+Esta decisión no prescribe un mecanismo concreto de concurrencia optimista o pesimista, control de versiones, compare-and-set, bloqueo, ordenamiento de eventos ni política de reintentos; esas alternativas quedan pendientes del diseño del Coordinator y la persistencia.
+
+**Motivo:** mantener separadas la transformación determinista del estado y la coordinación de transiciones concurrentes, evitando introducir en el Reducer responsabilidades de sincronización, confirmación o resolución de conflictos.
