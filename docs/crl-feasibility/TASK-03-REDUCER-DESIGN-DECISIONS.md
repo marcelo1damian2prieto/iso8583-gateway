@@ -1183,7 +1183,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-97 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-98 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
@@ -1402,3 +1402,18 @@ Se acepta el alcance de T-05.1 para separar la evidencia local del Member de la 
 8. La falta de declaración local confirmada no autoriza inferir `UNKNOWN` por timeout, ausencia de respuesta o ausencia de evidencia. Se mantiene el tratamiento bloqueante y fail-closed conforme a las decisiones ya aceptadas.
 
 **Motivo:** preservar la autoridad del Coordinator sobre las transiciones centrales y la separación entre Reducer, Replay y ledger Member, sin anticipar el contrato de persistencia que corresponde a TASK-04.
+
+### VD-T06-98 — Validación previa del Coordinator y punto central de establecimiento de UNKNOWN
+
+Se acepta que la validación de la evidencia local por Coordinator sea una condición previa obligatoria a la persistencia del evento central que establece `UNKNOWN`:
+
+1. El Coordinator debe validar la evidencia local Member y su correlación con la Admission antes de intentar confirmar la transición central.
+2. La validación satisfactoria es una precondición necesaria, pero no establece por sí misma el estado central `UNKNOWN`.
+3. El evento central explícito `ADMISSION_OUTCOME_UNKNOWN` —denominación de trabajo, pendiente de contrato definitivo— debe quedar confirmado durablemente por Coordinator.
+4. La confirmación durable de ese evento es el único punto que permite al Reducer aplicar la transición de Admission a `UNKNOWN`.
+5. Una declaración local Member, una validación aún no seguida de persistencia central, un timeout o una respuesta de transporte no establecen por sí mismos `UNKNOWN` en el snapshot.
+6. Si la validación falla, es insuficiente o contradictoria, no se confirma el evento central ni se deriva `UNKNOWN`; se mantiene el tratamiento bloqueante y fail-closed conforme a las decisiones aceptadas.
+7. Si la persistencia central falla o queda ambigua, no se confirma la transición ni se libera el bloqueo. La resolución debe seguir las reglas ya aceptadas para escrituras ambiguas y la misma identidad lógica; no se crea una transición paralela ni se infiere el resultado por timeout.
+8. Esta decisión no define todavía el algoritmo exhaustivo de validación, el payload/campos del evento, sus referencias contractuales, su clave idempotente ni los errores tipados. Esos detalles permanecen sujetos al contrato formal y a las dependencias de TASK-04.
+
+**Motivo:** preservar la autoridad exclusiva del Coordinator sobre los cambios centrales y hacer que el evento central durable, no la evidencia local ni la validación aislada, sea el punto de transición del Reducer.
