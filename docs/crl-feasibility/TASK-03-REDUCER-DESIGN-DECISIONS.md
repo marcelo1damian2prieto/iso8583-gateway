@@ -633,6 +633,20 @@ Se establecen los siguientes criterios para el estado lógico del snapshot:
 **Motivo:** mantener una única fuente de verdad por entidad y evitar divergencias entre estado canónico y estructuras auxiliares, en continuidad con VD-T06-20, VD-T06-32 y VD-T06-43.
 
 
+### VD-T06-52 — Cardinalidad de las observaciones Member
+
+Se establecen los siguientes criterios para las observaciones de Members en el snapshot:
+
+1. Cada observación corresponde a un Member identificado por `(membershipVersion, memberId, processBootId)`.
+2. Las observaciones pertenecen al contexto de un `Rollout`.
+3. El `MembershipManifest` determina el conjunto esperado de Members para ese rollout.
+4. No se presume que todos los Members tengan una observación disponible en todo momento.
+5. Una observación de un Member que no pertenece al manifest correspondiente es inconsistente y debe rechazarse mediante error tipado.
+6. No se define todavía si se conserva una única observación vigente o un historial de observaciones. Esa decisión requiere precisar qué estados y evidencias necesita el Coordinator.
+
+**Motivo:** evitar confundir el membership esperado con las observaciones efectivamente recibidas, sin introducir una cardinalidad temporal todavía no definida.
+
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -660,7 +674,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-51 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-52 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
