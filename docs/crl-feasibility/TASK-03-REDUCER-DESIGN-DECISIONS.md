@@ -527,6 +527,21 @@ Esta decisión complementa VD-T06-05 y VD-T06-09 y establece el determinismo com
 
 **Motivo:** facilitar la revisión, cobertura y mantenimiento del documento sin cambiar el contrato acordado.
 
+
+### VD-T06-45 — Frontera de validación de claves de idempotencia
+
+1. Reducer valida una clave de idempotencia únicamente si forma parte explícita del modelo de dominio.
+2. Valida su presencia, formato y consistencia contextual según las reglas definidas por el modelo.
+3. Reducer no consulta registros de deduplicación ni historiales de claves utilizadas.
+4. No determina si una clave ya fue utilizada para procesar otro evento.
+5. Replay conserva la responsabilidad de controlar la deduplicación y determinar la aplicabilidad del evento.
+6. La validación de dominio de Reducer no sustituye los controles de idempotencia de Replay.
+7. El formato, ámbito de unicidad y reglas de equivalencia de las claves quedan pendientes del modelo formal.
+
+**Aclaración de VD-T06-06, VD-T06-13 y VD-T06-38:** Reducer valida únicamente la consistencia de dominio de las claves que el modelo incorpore explícitamente; Replay controla su uso histórico, deduplicación y aplicabilidad del evento.
+
+**Motivo:** precisar la frontera de responsabilidades sin trasladar al Reducer consultas de historial ni controles de deduplicación.
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -554,7 +569,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-44 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-45 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
