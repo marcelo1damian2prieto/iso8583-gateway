@@ -1183,7 +1183,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-124 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-125 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
@@ -1793,3 +1793,15 @@ Se acepta establecer los siguientes criterios para la identidad de entidades rep
 Esta decisión no impone estructuras Java ni define políticas de copia, mutabilidad interna o representación del snapshot.
 
 **Motivo:** evitar que la implementación confunda identidad de entidades del dominio con igualdad o identidad de instancias Java.
+
+### VD-T06-125 — Inmutabilidad observable del snapshot y prevención de aliasing mutable
+
+Se acepta establecer que el snapshot sea inmutable desde la perspectiva de sus consumidores:
+
+1. El Reducer no modifica objetos ni colecciones pertenecientes al snapshot recibido.
+2. El snapshot resultante no comparte estructuras mutables que permitan modificar indirectamente el snapshot anterior mediante aliasing.
+3. Las colecciones expuestas por el snapshot no permiten modificaciones externas.
+4. Las entidades y referencias conservan su identidad lógica aunque cambie su representación interna.
+5. La estrategia técnica concreta para garantizar estas propiedades —copia defensiva, copia estructural, estructuras persistentes u otra alternativa— permanece pendiente del diseño técnico.
+
+**Motivo:** evitar que una transición aparentemente pura produzca efectos secundarios sobre snapshots anteriores y reforzar las garantías de pureza, atomicidad y determinismo de VD-T06-111.
