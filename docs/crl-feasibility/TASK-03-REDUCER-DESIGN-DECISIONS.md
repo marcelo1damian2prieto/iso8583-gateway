@@ -1183,7 +1183,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-122 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-123 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
@@ -1767,3 +1767,15 @@ Se acepta que el Reducer valide los rangos numéricos y valores temporales confo
 Los rangos, unidades, precisiones y límites concretos permanecen pendientes de especificación formal.
 
 **Motivo:** evitar que representaciones numéricas o temporales inválidas, ambiguas o fuera de rango alteren la interpretación determinista del estado y de los eventos.
+
+### VD-T06-123 — Comparación y representación de identificadores
+
+Se acepta establecer los siguientes criterios para los identificadores procesados por el Reducer:
+
+1. Los identificadores se comparan por igualdad exacta, sin normalización implícita.
+2. No se admiten identificadores vacíos cuando el contrato exige una identidad.
+3. El Reducer no elimina espacios, no cambia capitalización ni transforma Unicode automáticamente.
+4. Dos identificadores distintos no se consideran equivalentes por similitud textual.
+5. La representación canónica y las restricciones de formato corresponden al contrato de identidad y al codec; el Reducer valida los valores recibidos conforme a ese contrato.
+
+**Motivo:** impedir que el Reducer altere o interprete identidades de manera diferente a los componentes responsables de identidad, canonicalización y Replay.
