@@ -1183,7 +1183,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-103 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-104 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
@@ -1488,3 +1488,18 @@ Se acepta separar las referencias conservadas por el evento central `ADMISSION_O
 5. Los nombres, tipos, cardinalidades y formato contractuales de los campos y referencias, así como las reglas exactas de validación de Replay, permanecen pendientes de definición formal.
 
 **Motivo:** mantener trazabilidad suficiente para validación histórica sin duplicar evidencia local en el snapshot ni trasladar al Reducer responsabilidades propias de Coordinator o Replay.
+
+### VD-T06-104 — Rechazo de transición UNKNOWN ante referencias inválidas
+
+Se acepta que el Reducer rechace la transición `ADMISSION_OUTCOME_UNKNOWN` cuando las referencias requeridas por el contrato formal estén ausentes, sean inválidas o resulten contradictorias:
+
+1. Si la referencia a la Admission no existe en el snapshot o no corresponde al evento, el Reducer rechaza la transición.
+2. Si la identidad Member o `processBootId` contradice la identidad/correlación de la Admission, el Reducer rechaza la transición.
+3. Si falta una referencia a la declaración local Member que el contrato exige para el evento, el Reducer rechaza la transición. El Reducer no consulta el ledger Member para suplirla.
+4. Si las referencias presentes son inconsistentes entre sí o con el estado lógico del snapshot, el Reducer rechaza la transición.
+5. El rechazo no produce un snapshot nuevo ni modifica el snapshot anterior.
+6. La capa superior clasifica la situación como `RECOVERY_REQUIRED` cuando la información requerida falta, es inaccesible o no puede verificarse suficientemente; clasifica como `FAILED_CLOSED` cuando se demuestra una contradicción de identidad o integridad.
+7. Replay conserva la responsabilidad de verificar existencia durable, secuencia, integridad y correlación histórica de las referencias. La validación del Reducer sobre el snapshot no sustituye esa verificación.
+8. Los campos contractuales, las reglas exhaustivas de obligatoriedad y los errores tipados permanecen pendientes de definición formal.
+
+**Motivo:** impedir que una transición a UNKNOWN se aplique sobre referencias incompletas o contradictorias, sin trasladar al Reducer la consulta del ledger Member ni la verificación histórica propia de Replay.
