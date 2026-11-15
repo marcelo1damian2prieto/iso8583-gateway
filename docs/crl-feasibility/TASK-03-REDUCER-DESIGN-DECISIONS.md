@@ -989,6 +989,20 @@ Se establecen los siguientes criterios para eliminar una observación Member:
 **Motivo:** complementar VD-T06-76 con una regla explícita de integridad referencial y mantener la atomicidad lógica establecida en VD-T06-30.
 
 
+### VD-T06-78 — Cierre de consistencia del ciclo de vida de observaciones
+
+Se consolidan los siguientes criterios para toda transición de alta, actualización o eliminación de observaciones Member:
+
+1. La transición respeta la identidad lógica `(membershipVersion, memberId, processBootId)`.
+2. La observación corresponde a un Member perteneciente al `MembershipManifest` asociado al rollout.
+3. La transición preserva las referencias obligatorias del snapshot.
+4. La transición cumple las invariantes globales aplicables, conforme a VD-T06-36 y VD-T06-40.
+5. El Reducer produce un nuevo snapshot lógico completo o un rechazo tipado, sin estados parciales.
+6. Esta decisión consolida las reglas anteriores; no cierra el catálogo de eventos ni la cardinalidad histórica de observaciones.
+
+**Motivo:** establecer una garantía común de consistencia para el ciclo de vida de observaciones Member, sin anticipar detalles todavía abiertos del modelo formal.
+
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -1016,7 +1030,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-77 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-78 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
