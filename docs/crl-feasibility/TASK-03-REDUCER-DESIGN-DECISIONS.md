@@ -2040,3 +2040,17 @@ Se acepta la opción D: distinguir los rechazos contractuales del dominio de los
 10. Esta decisión no define códigos definitivos de error, clases Java de excepciones, catálogo de diagnósticos ni mecanismos técnicos de propagación.
 
 **Motivo:** preservar la distinción entre rechazos deterministas del dominio y fallos técnicos inesperados, mantener el Reducer puro y atómico, y permitir diagnóstico suficiente sin acoplar el contrato de dominio a los mecanismos internos de indexación.
+
+### VD-T06-140 — Equivalencia semántica verificable entre actualización incremental y reconstrucción completa
+
+Se acepta la opción D: exigir equivalencia semántica completa entre los resultados construidos mediante actualización incremental y reconstrucción completa, con validación global independiente de la estrategia utilizada.
+
+1. Para las mismas entidades canónicas resultantes de una transición válida, la actualización incremental y la reconstrucción completa deben producir snapshots semánticamente equivalentes.
+2. La equivalencia comprende las entidades canónicas, sus relaciones, las asociaciones representadas por los índices derivados y los resultados observables de las consultas soportadas por el contrato.
+3. La equivalencia no exige identidad de objetos Java, igualdad de referencias en memoria, igualdad de distribución interna ni identidad de representación física.
+4. La validación global del snapshot resultante continúa siendo obligatoria conforme a VD-T06-133, independientemente del mecanismo de construcción utilizado.
+5. La coherencia de los índices derivados debe poder contrastarse con las entidades canónicas, que permanecen como única fuente de verdad. La validación no puede confiar exclusivamente en que el mecanismo constructor haya producido un resultado correcto.
+6. Toda diferencia semántica o inconsistencia detectada provoca rechazo tipado; no se expone el snapshot candidato ni se modifica el snapshot de entrada.
+7. La estrategia concreta de comparación, los algoritmos de validación y las pruebas diferenciales para demostrar equivalencia permanecen pendientes del diseño técnico y del contrato de testing.
+
+**Motivo:** establecer una garantía de corrección independiente de la estrategia interna de construcción de índices, preservando la fuente de verdad canónica, la validación global, la inmutabilidad observable y la libertad de implementación.
