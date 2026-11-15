@@ -1438,7 +1438,7 @@ Los cuatro controles fijan el alcance conceptual, no sus mecanismos concretos. L
 Se acepta que el evento central `ADMISSION_OUTCOME_UNKNOWN` —denominación de trabajo, pendiente de contrato definitivo— solo pueda establecer la transición `PENDING → UNKNOWN`:
 
 1. El único estado de origen válido para esta transición es `PENDING`.
-2. Una Admission en `ADMITTED` no puede pasar directamente a `UNKNOWN) mediante este evento. La autorización durable por sí sola no satisface el estado de origen.
+2. Una Admission en `ADMITTED` no puede pasar directamente a `UNKNOWN` mediante este evento. La autorización durable por sí sola no satisface el estado de origen.
 3. Una Admission en `COMPLETE` o `REJECTED_NOT_STARTED` tampoco puede pasar a `UNKNOWN` mediante este evento.
 4. La repetición de una operación ya confirmada debe resolverse conforme a la identidad idempotente y al contenido de la transición original, sin crear una segunda transición ni modificar el snapshot confirmado.
 5. Si el estado actual de la Admission no es compatible con `PENDING → UNKNOWN`, el Reducer rechaza la transición y no produce un snapshot nuevo ni modifica el anterior.
