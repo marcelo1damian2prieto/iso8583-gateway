@@ -202,6 +202,16 @@ Esta decisión no congela el CODEC.
 
 **Límite:** el Reducer garantiza la consistencia lógica del resultado. La persistencia durable y la confirmación del nuevo snapshot corresponden a la capa responsable del almacenamiento.
 
+
+### VD-T06-15 — Inmutabilidad del snapshot
+
+1. El Reducer trata el snapshot de entrada como inmutable.
+2. Una transición válida produce un nuevo snapshot lógico.
+3. No modifica estructuras compartidas del snapshot original.
+4. No conserva referencias mutables que permitan alterar posteriormente el snapshot de entrada.
+5. Una transición rechazada no deja modificaciones parciales.
+6. La estrategia concreta de implementación (copias, estructuras persistentes u otra alternativa) queda para el diseño técnico.
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -229,7 +239,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-14, VD-T06-32 y VD-T06-33 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-15, VD-T06-32 y VD-T06-33 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
