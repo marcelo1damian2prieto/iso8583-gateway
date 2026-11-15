@@ -2158,3 +2158,18 @@ Se acepta que el Reducer no resuelve conflictos de concurrencia entre resultados
 Esta decisión no prescribe un mecanismo concreto de concurrencia optimista o pesimista, control de versiones, compare-and-set, bloqueo, ordenamiento de eventos ni política de reintentos; esas alternativas quedan pendientes del diseño del Coordinator y la persistencia.
 
 **Motivo:** mantener separadas la transformación determinista del estado y la coordinación de transiciones concurrentes, evitando introducir en el Reducer responsabilidades de sincronización, confirmación o resolución de conflictos.
+
+### VD-T06-148 — Frontera de recepción y selección de eventos entre Coordinator y Reducer
+
+Se acepta que el Reducer recibe un único evento ya seleccionado para su procesamiento por la capa de coordinación. El Reducer no consume eventos directamente ni administra su recepción, selección u ordenamiento.
+
+1. El Coordinator o la capa de entrada responsable obtiene y selecciona el evento que corresponde procesar y lo entrega explícitamente al Reducer junto con el snapshot de entrada.
+2. El Reducer no consume colas, topics, streams, sockets ni otros mecanismos de transporte o recepción de eventos.
+3. El Reducer no selecciona eventos, no administra prioridades, no decide el orden de procesamiento y no mantiene buffers o colas pendientes.
+4. La capa de entrada es responsable de la decodificación y de las validaciones estructurales necesarias para entregar un evento representable conforme al contrato de entrada.
+5. La recepción de un evento estructuralmente válido no exime al Reducer de aplicar las validaciones de dominio, precondiciones, reglas de transición e invariantes que forman parte de su propio contrato. Los rechazos de dominio continúan siendo tipados conforme a las decisiones previas.
+6. El Reducer procesa exclusivamente el evento recibido en esa invocación; no consulta fuentes externas para completar, sustituir o seleccionar eventos.
+7. La entrega, ordenamiento, deduplicación, confirmación, reentrega y eventual reprocesamiento de eventos corresponden al Coordinator y/o a la infraestructura de mensajería y persistencia, no al Reducer.
+8. Esta decisión no prescribe protocolos, tecnologías de mensajería, semánticas de entrega ni políticas de ordenamiento; esos aspectos quedan pendientes del diseño de las capas responsables.
+
+**Motivo:** establecer una frontera explícita entre la recepción y coordinación de eventos y la transformación pura del estado, preservando las responsabilidades de validación de dominio que sí pertenecen al Reducer.
