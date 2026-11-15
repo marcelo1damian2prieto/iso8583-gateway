@@ -771,6 +771,20 @@ Se establecen los siguientes criterios para la evidencia asociada a `RECONCILED_
 **Motivo:** evitar que `RECONCILED_UNKNOWN` aparezca como un estado sin justificación trazable, respetando las responsabilidades de Reducer y Replay.
 
 
+### VD-T06-62 — Cardinalidad de RecoveryRecord y Admission
+
+Se establecen los siguientes criterios para la relación entre registros de recuperación y admisiones:
+
+1. Cada `RecoveryRecord` referencia un único evento original mediante `originalEventId` y conserva la correlación con la admisión definida en TASK-02.
+2. Una `Admission` puede tener cero o más `RecoveryRecord` asociados.
+3. Cada registro debe corresponder a una acción de recuperación explícita y válida.
+4. El Reducer no deduce cardinalidad a partir de eventos ausentes ni crea registros de recuperación.
+5. Replay conserva la responsabilidad de validar la unicidad de la clave de recuperación y la secuencia de registros.
+6. La relación exacta entre `RecoveryRecord`, `Admission` y `EventId` debe respetar el modelo de TASK-02; esta decisión no agrega una relación que lo contradiga.
+
+**Motivo:** explicitar la multiplicidad sin confundir la referencia lógica que valida Reducer con el control de unicidad durable de Replay.
+
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -798,7 +812,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-61 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-62 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
