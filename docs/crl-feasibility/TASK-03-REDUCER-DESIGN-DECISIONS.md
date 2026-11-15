@@ -1183,7 +1183,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-129 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-130 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
@@ -1861,3 +1861,20 @@ Se acepta establecer las siguientes reglas para el versionado del snapshot lógi
 La representación concreta del campo de versión, el catálogo de versiones soportadas y las reglas de compatibilidad/migración permanecen pendientes del contrato de versionado.
 
 **Motivo:** impedir que el Reducer aplique transiciones sobre modelos lógicos cuya semántica no reconoce y mantener separadas la evolución del dominio y la representación binaria.
+
+
+### VD-T06-130 — Política estricta de compatibilidad del snapshot lógico
+
+Se acepta la opción A: el Reducer procesa exclusivamente snapshots cuya versión de esquema lógico coincide con la única versión vigente que declara soportar su contrato.
+
+1. Un snapshot cuya versión lógica coincide con la versión vigente soportada puede continuar con las validaciones ordinarias del Reducer.
+2. Un snapshot de una versión lógica anterior se rechaza; no se migra ni adapta automáticamente.
+3. Un snapshot con una versión desconocida o no soportada se rechaza.
+4. El Reducer no mantiene compatibilidad simultánea con versiones lógicas anteriores.
+5. El Reducer no incorpora mecanismos de migración ni adaptación entre versiones.
+6. Esta política se refiere exclusivamente a la versión del esquema lógico del snapshot y no determina la compatibilidad de versiones del codec binario.
+7. La reconstrucción, recuperación o eventual tratamiento operativo de un snapshot rechazado queda fuera del Reducer y no se resuelve mediante esta decisión.
+
+La identificación concreta de la versión vigente, su representación y los errores tipados asociados al rechazo permanecen pendientes del contrato formal de versionado y errores.
+
+**Motivo:** mantener un único modelo lógico soportado por el Reducer, evitando compatibilidad implícita, migraciones internas y coexistencia de semánticas de versiones diferentes.
