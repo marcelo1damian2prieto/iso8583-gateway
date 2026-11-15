@@ -328,6 +328,18 @@ Esta decisión complementa VD-T06-05 y VD-T06-09 y establece el determinismo com
 
 **Límite:** el Reducer informa el resultado lógico de la aplicación; Replay y almacenamiento determinan persistencia, checkpoint y confirmación durable.
 
+
+### VD-T06-25 — Validación de pertenencia del evento al contexto de operación
+
+1. El Reducer verifica que el evento corresponda al contexto de operación representado por el snapshot.
+2. Debe validar las referencias de contexto requeridas, incluyendo `rolloutId`, `epoch` y las identificaciones de operación que el modelo defina.
+3. Un evento de otro rollout, epoch u operación se rechaza mediante error tipado.
+4. No debe adaptar el snapshot para aceptar un evento de contexto ajeno.
+5. No debe inferir pertenencia por similitud de identificadores ni por orden temporal.
+6. El conjunto exacto de campos de contexto obligatorios queda sujeto al modelo formal de eventos y snapshot.
+
+**Límite:** Reducer valida consistencia contextual de dominio. Replay conserva la validación de secuencia y procedencia física del registro.
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -355,7 +367,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-24, VD-T06-32 y VD-T06-33 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-25, VD-T06-32 y VD-T06-33 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
