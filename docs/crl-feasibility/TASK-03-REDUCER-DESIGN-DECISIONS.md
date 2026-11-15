@@ -415,6 +415,16 @@ Esta decisión complementa VD-T06-05 y VD-T06-09 y establece el determinismo com
 
 **Límite:** Reducer valida consistencia de dominio; CODEC valida la representación y decodificación, y Replay controla la identidad y deduplicación de eventos del journal.
 
+
+### VD-T06-34 — Frontera de validación del evento
+
+1. CODEC valida estructura binaria, versión y decodificación.
+2. Replay valida integridad del journal, secuencia y condición de evento confirmado.
+3. Reducer valida payload semántico, referencias de dominio, precondiciones e invariantes.
+4. La expresión «evento previamente validado» en VD-T06-05 se refiere exclusivamente a las validaciones correspondientes a CODEC y Replay.
+5. Reducer no delega ni omite sus propias validaciones semánticas por el hecho de recibir un evento confirmado.
+6. Ningún componente debe asumir que las validaciones de otro componente sustituyen las propias.
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -442,7 +452,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-31, VD-T06-32 y VD-T06-33 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-34 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
