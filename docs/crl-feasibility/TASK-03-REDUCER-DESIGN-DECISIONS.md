@@ -909,6 +909,19 @@ Se establecen los siguientes criterios para la identidad de las observaciones Me
 La cardinalidad histórica de observaciones por Member permanece abierta y no queda determinada por esta decisión.
 
 
+### VD-T06-72 — Reemplazo de observaciones ante reinicio de Member
+
+Se establecen los siguientes criterios para observaciones Member asociadas a distintos procesos:
+
+1. Una observación con un nuevo `processBootId` no reemplaza automáticamente la observación anterior.
+2. La transición que incorpora la nueva observación debe estar explícitamente definida en el catálogo de eventos.
+3. El Reducer conserva las observaciones anteriores mientras formen parte del estado lógico definido por el modelo.
+4. El Reducer no infiere que un proceso anterior terminó únicamente porque aparece otro `processBootId`.
+5. La política de retención o eliminación de observaciones anteriores requiere un contrato explícito.
+
+**Motivo:** evitar confundir la identidad de proceso con el ciclo de vida del Member.
+
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -936,7 +949,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-71 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-72 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
