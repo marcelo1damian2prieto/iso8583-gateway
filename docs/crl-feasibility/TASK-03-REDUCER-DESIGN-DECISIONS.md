@@ -1786,7 +1786,7 @@ Se acepta establecer los siguientes criterios para la identidad de entidades rep
 
 1. Dos referencias que identifican el mismo identificador de dominio representan la misma entidad lógica, no dos entidades distintas.
 2. El snapshot no puede contener dos objetos Admission con el mismo `AdmissionId`.
-3. El snapshot no puede contener dos `RecoveryRecord` distintos con la misma clave `(originalEventId, recoveryAction)).
+3. El snapshot no puede contener dos `RecoveryRecord` distintos con la misma clave `(originalEventId, recoveryAction)`.
 4. El Reducer valida identidad lógica conforme a las claves de dominio; no utiliza identidad de referencia en memoria (`object identity`) como criterio de identidad de entidades.
 5. Compartir internamente una referencia de objeto Java no modifica la semántica del dominio ni convierte una misma entidad lógica en entidades distintas.
 
