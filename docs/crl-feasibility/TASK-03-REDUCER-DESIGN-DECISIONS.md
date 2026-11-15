@@ -2054,3 +2054,18 @@ Se acepta la opción D: exigir equivalencia semántica completa entre los result
 7. La estrategia concreta de comparación, los algoritmos de validación y las pruebas diferenciales para demostrar equivalencia permanecen pendientes del diseño técnico y del contrato de testing.
 
 **Motivo:** establecer una garantía de corrección independiente de la estrategia interna de construcción de índices, preservando la fuente de verdad canónica, la validación global, la inmutabilidad observable y la libertad de implementación.
+
+### VD-T06-141 — Estrategia de pruebas para verificar la equivalencia semántica de índices derivados
+
+Se acepta una estrategia combinada de pruebas, con pruebas diferenciales como mecanismo central para verificar la equivalencia semántica entre la actualización incremental y la reconstrucción completa, complementadas por pruebas unitarias y pruebas basadas en propiedades e invariantes.
+
+1. **Pruebas unitarias:** verifican de manera independiente el comportamiento de la actualización incremental y de la reconstrucción completa, incluyendo los casos válidos, inválidos y límites definidos por sus contratos.
+2. **Pruebas diferenciales:** aplican ambos mecanismos sobre las mismas entidades canónicas resultantes y comparan sus resultados conforme al criterio de equivalencia semántica establecido en VD-T06-140.
+3. **Pruebas basadas en propiedades e invariantes:** verifican que los índices derivados sean coherentes con las entidades canónicas, que se preserven las invariantes globales y que el resultado no dependa de la estrategia de construcción.
+4. La cobertura debe incluir transiciones que no afecten índices, que afecten una o varias estructuras, altas, modificaciones y bajas de asociaciones cuando estén contempladas por el modelo, además de casos límite y rechazos contractuales aplicables.
+5. Las pruebas deben verificar que las estructuras del snapshot de entrada permanecen inalteradas y que los resultados no presentan aliasing mutable observable, conforme a VD-T06-125 y VD-T06-136.
+6. Las pruebas deben comprobar que los fallos de construcción o validación no exponen snapshots parciales y que se mantiene la distinción entre rechazos de dominio y fallos técnicos inesperados, conforme a VD-T06-139.
+7. La estrategia será selectiva y proporcional al riesgo: se priorizan las invariantes, transiciones y mecanismos cuya falla pueda comprometer la coherencia del snapshot. No se impone una metodología de testing exhaustiva ni una duplicación innecesaria de casos.
+8. La selección de frameworks, herramientas, organización de suites, generación de datos, cobertura cuantitativa y automatización concreta permanece pendiente del diseño de testing.
+
+**Motivo:** verificar la equivalencia de ambos mecanismos desde perspectivas complementarias, detectar errores de actualización y preservar las garantías de coherencia, inmutabilidad, aislamiento concurrente y atomicidad sin introducir complejidad de testing innecesaria.
