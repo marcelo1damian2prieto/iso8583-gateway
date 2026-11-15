@@ -17,7 +17,7 @@ Reemplazar el estado de §2 y del bloque T03-00 que indicaba `BLOCKED — WORKSP
 
 **T03-00: `COMPLETED — STATIC READ-ONLY BASELINE WITH ACCESS LIMITATION`.**
 
-Workspace: `%TEMP%\<redacted>sibility-009a1\project`. Origen: `%TEMP%\<redacted>sibility-009a\project`. Manifiesto: `WORKSPACE-PROVISIONING-MANIFEST.json`. El inventario contiene 31 archivos (1 POM, 21 Java en `src/test/java/lab/crl`, 9 PEM públicos), 70 exclusiones y no incluye `.git`. Los 31 archivos del manifiesto coincidieron en tamaño y SHA-256 con las entradas del `project.zip` subido. No hay hashes históricos individuales en TASK-01 para una comparación hash-by-hash. El usuario inspeccionó y aceptó `T03-00-BASELINE-INSPECTION.md`.
+Workspace: `%TEMP%\crl-feasibility-009a1\project`. Origen: `%TEMP%\crl-feasibility-009a\project`. Manifiesto: `WORKSPACE-PROVISIONING-MANIFEST.json`. El inventario contiene 31 archivos (1 POM, 21 Java en `src/test/java/lab/crl`, 9 PEM públicos), 70 exclusiones y no incluye `.git`. Los 31 archivos del manifiesto coincidieron en tamaño y SHA-256 con las entradas del `project.zip` subido. No hay hashes históricos individuales en TASK-01 para una comparación hash-by-hash. El usuario inspeccionó y aceptó `T03-00-BASELINE-INSPECTION.md`.
 
 La inspección fue estática y read-only. No se ejecutó Maven/build/tests/experimentos. El informe conserva la limitación de que no se recalcularon los 31 hashes leyendo directamente el disco C: desde esta sesión. El POM conserva `artifactId=crl-feasibility-009a`, versión 1.0.0, Java 21 y Spring Boot 3.5.16 declarado; no se verificó el árbol efectivo de dependencias. No hay `src/main/java` en el inventario. No se detectó Git.
 
