@@ -1,0 +1,489 @@
+{
+  "schemaVersion": 1,
+  "project": "CRL-FEASIBILITY-009A.1",
+  "provisionedAtLocal": "2026-11-15T02:31:03.3018537-03:00",
+  "sourcePath": "%TEMP%\\crl-feasibility-009a\\project",
+  "destinationPath": "%TEMP%\\crl-feasibility-009a1\\project",
+  "sourcePOM": {
+    "artifactId": "crl-feasibility-009a",
+    "version": "1.0.0"
+  },
+  "sourceGit": {
+    "available": true,
+    "repositoryDetected": false,
+    "branch": null,
+    "head": null,
+    "status": [],
+    "note": "No se detectó metadata .git en la raíz del proyecto."
+  },
+  "gitMetadataCopied": false,
+  "generatedDirectoriesExcluded": [
+    ".git",
+    "target",
+    ".idea",
+    ".vscode",
+    "node_modules",
+    ".gradle",
+    "build",
+    "out",
+    ".cache",
+    "evidence",
+    "evidence-stage",
+    "logs",
+    "private",
+    "secrets",
+    "credentials"
+  ],
+  "includedFiles": [
+    {
+      "path": "pom.xml",
+      "sizeBytes": 1113,
+      "sha256": "4317f7b1adc42d04f4038860c1d14188a67a2b6d8863949051ede747f4c497d0"
+    },
+    {
+      "path": "src/test/java/lab/crl/BootMtlsApplication.java",
+      "sizeBytes": 3728,
+      "sha256": "a7f9b97973de099499751171d1c2211fef0393b3249c1b829dcabd327142900d"
+    },
+    {
+      "path": "src/test/java/lab/crl/ControlledCrlManager.java",
+      "sizeBytes": 10143,
+      "sha256": "ebcbdde8866a8f85f6fb2c5bd2bee02eac73fec7728e84f112d87ceece43e177"
+    },
+    {
+      "path": "src/test/java/lab/crl/ControlledLoadTest.java",
+      "sizeBytes": 3743,
+      "sha256": "b8701f4ff61e62a0510995829f29e442f746c9efb08c844fd6903ddbb3346b54"
+    },
+    {
+      "path": "src/test/java/lab/crl/CrlHttpFixture.java",
+      "sizeBytes": 1669,
+      "sha256": "1a10cd49bba87bb049d3fee113386d48e882f89d1fd61d3923b85e30f5a45263"
+    },
+    {
+      "path": "src/test/java/lab/crl/CrlSnapshot.java",
+      "sizeBytes": 622,
+      "sha256": "0a77ec3115eb01c04bff1870e2988a6004d292d1aadaad7f0a07af9df0cf2b12"
+    },
+    {
+      "path": "src/test/java/lab/crl/DistributedRotation009ATest.java",
+      "sizeBytes": 17960,
+      "sha256": "da60f81854cbc939c295a1bb7a8a940c2d7bda861c95a8262c04e8b4c0b842ab"
+    },
+    {
+      "path": "src/test/java/lab/crl/DistributedTlsInstance009A.java",
+      "sizeBytes": 13151,
+      "sha256": "06158f3102b0c0bde82b6fd2b5ccc49595d7ad278382f06773ec880b5bf8cfa7"
+    },
+    {
+      "path": "src/test/java/lab/crl/FreshnessHardeningTest.java",
+      "sizeBytes": 19891,
+      "sha256": "c764b32af155a8b823b28f568ed1001c74cda47f48deba8d610bb81bd57c2481"
+    },
+    {
+      "path": "src/test/java/lab/crl/FreshnessTrustManager.java",
+      "sizeBytes": 4291,
+      "sha256": "56a643924eb106b0e8c20ccc89fbd154807ffdc17fadff0d1080e2caa21c2e93"
+    },
+    {
+      "path": "src/test/java/lab/crl/GateATest.java",
+      "sizeBytes": 9198,
+      "sha256": "0912bc8173716856a3d349cf6d9ef0dd60c879a81bab47a48c16ed39664d65a6"
+    },
+    {
+      "path": "src/test/java/lab/crl/MultiInstance008Test.java",
+      "sizeBytes": 5767,
+      "sha256": "1e988f492fee1e764aeab8e5fce36c3ceba8c0b570e88fea6dc0dc7fe038a6b7"
+    },
+    {
+      "path": "src/test/java/lab/crl/PersistentMtlServer.java",
+      "sizeBytes": 1731,
+      "sha256": "1d481e3d52dc972b66c1534e64fe14e8a888114b9c1e0623077f5d87ced9d86b"
+    },
+    {
+      "path": "src/test/java/lab/crl/ReactorHandshake.java",
+      "sizeBytes": 2144,
+      "sha256": "e44e0de29bb9d863a4c198a51e2c207127facbac892f4c011773dd4f70c103e6"
+    },
+    {
+      "path": "src/test/java/lab/crl/RestartJvmTest.java",
+      "sizeBytes": 2381,
+      "sha256": "25927bd856d66ea6e31ce8be769dc4a7178c872cf435d05e810550ff02be56b9"
+    },
+    {
+      "path": "src/test/java/lab/crl/RestartProbeMain.java",
+      "sizeBytes": 1230,
+      "sha256": "656e5142bef2e797f1d86c6ab770da9f3d1de3268339f4bcc46b2ed24d50158c"
+    },
+    {
+      "path": "src/test/java/lab/crl/RevocationResumption008Test.java",
+      "sizeBytes": 7134,
+      "sha256": "6bbe8e61141f905c650f271fe7102518c0f8aade40c3015d58d55700927bab21"
+    },
+    {
+      "path": "src/test/java/lab/crl/RotationCoordinator009A.java",
+      "sizeBytes": 5101,
+      "sha256": "2e1270f0c52e1c2f41bc391d03541368210d3ca48a6b422ea7f995f83f31f795"
+    },
+    {
+      "path": "src/test/java/lab/crl/SessionInvalidation008Test.java",
+      "sizeBytes": 10976,
+      "sha256": "240f874d6f6c9e34c0df4a6b66c00f0a544367eca849b606bd61470e10fd62c3"
+    },
+    {
+      "path": "src/test/java/lab/crl/SessionResumptionProbeTest.java",
+      "sizeBytes": 6875,
+      "sha256": "143378072c182af219054d86d23f47982e7322c14767ad00026535c60fc4af60"
+    },
+    {
+      "path": "src/test/java/lab/crl/SpringBootWebClientTest.java",
+      "sizeBytes": 14586,
+      "sha256": "521c662fca8840c87eb68bd2cf3b8b2eecc9cab82c83cbc3e5dfe9ac29666b8a"
+    },
+    {
+      "path": "src/test/java/lab/crl/SyntheticTransactionDrain008Test.java",
+      "sizeBytes": 6556,
+      "sha256": "2ac7f015687b3013bc279af05fed927a41fac7c708729515af950f85d301e236"
+    },
+    {
+      "path": "fixtures/public/008-client.pem",
+      "sizeBytes": 1155,
+      "sha256": "e5b4c98046d353871bce72d082378ef30c10882af553c0c6ec95fec18e5df482"
+    },
+    {
+      "path": "fixtures/public/008-crl-client-revoked.pem",
+      "sizeBytes": 629,
+      "sha256": "8ebf7e1be85ae1baddcf2b90d2475bbbfc77a0ce1bc8defdf4e57ffe1ac998e4"
+    },
+    {
+      "path": "fixtures/public/008-crl-server-revoked.pem",
+      "sizeBytes": 629,
+      "sha256": "d86996b8e8ef7694054a08ce1ba29dff5a352183945bee8b8f2001bd31b780cc"
+    },
+    {
+      "path": "fixtures/public/008-root-ca.pem",
+      "sizeBytes": 1066,
+      "sha256": "f1d6916bb2b1fe22d0a8c58bcddf76f7784c85ec590794df02836b74f87b33f6"
+    },
+    {
+      "path": "fixtures/public/008-server.pem",
+      "sizeBytes": 1180,
+      "sha256": "9be7353e9dbc39fbcda688b7d78170d9d79d3dec0445d5226904add5f2390b85"
+    },
+    {
+      "path": "fixtures/public/lab-client.pem",
+      "sizeBytes": 1147,
+      "sha256": "7ebf871fdbfb896dd23fb958b7146ebc002b8247ce5a5f5fafe240f4830c2641"
+    },
+    {
+      "path": "fixtures/public/lab-root-ca.pem",
+      "sizeBytes": 1066,
+      "sha256": "59d3818feff87f98423d7c2ad593c95a76e4e95fe54e6b1851e657d2a1e8f129"
+    },
+    {
+      "path": "fixtures/public/lab-server-revoked.crl.pem",
+      "sizeBytes": 629,
+      "sha256": "38553b13a0e6620ab3e938d935c365671720348984416e670873ffdf09108c37"
+    },
+    {
+      "path": "fixtures/public/lab-server.pem",
+      "sizeBytes": 1172,
+      "sha256": "8251ed269306205b018022a7bb49f513f7f463be31e7ab7842b825c0f148c22d"
+    }
+  ],
+  "excludedPaths": [
+    {
+      "path": "boot-client-resumption-008.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "boot-generation-rotation-008.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "boot-integrated-008.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "compile.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "core-008.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "core-tests.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "dependency-tree-008.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "dependency-tree-009a.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "dependency-tree-all.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "dependency-tree.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "hardening.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "invalid-crls.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "invalidation-008.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "load-test.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "maven-009a-default.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "maven-009a-sessionid.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "maven-clean-verify-007.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "maven-clean-verify-008.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "maven-clean-verify-009a.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "maven-clean-verify.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "multi-instance-008.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "no-stateless-tickets.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "protocol-invalidation-multi-008.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "race-test.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "restart.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "revocation-resumption-default.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "revocation-resumption-sessionid.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "runtime-versions-008.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "runtime-versions-009a.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "session-invalidation-details.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "session-probe.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "sessionid-revocation-008.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "sessionid-run.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "single-flight.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "spring-session.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "spring-webclient.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "strategy-comparison.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "target/",
+      "reason": "generated-or-sensitive-directory-excluded"
+    },
+    {
+      "path": "runs/ALT-A-direct.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "runs/ALT-B-direct.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "runs/ALT-C-direct.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "runs/CRLDP-delay1.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "runs/CRLDP-delay10.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "runs/CRLDP-delay11.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "runs/CRLDP-delay12.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "runs/CRLDP-delay13.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "runs/CRLDP-delay14.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "runs/CRLDP-delay15.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "runs/CRLDP-delay16.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "runs/CRLDP-delay17.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "runs/CRLDP-delay18.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "runs/CRLDP-delay19.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "runs/CRLDP-delay2.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "runs/CRLDP-delay20.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "runs/CRLDP-delay25.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "runs/CRLDP-delay29.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "runs/CRLDP-delay3.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "runs/CRLDP-delay30.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "runs/CRLDP-delay31.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "runs/CRLDP-delay32.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "runs/CRLDP-delay35.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "runs/CRLDP-delay4.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "runs/CRLDP-delay40.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "runs/CRLDP-delay45.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "runs/CRLDP-delay5.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "runs/CRLDP-delay6.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "runs/CRLDP-delay60.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "runs/CRLDP-delay7.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "runs/CRLDP-delay8.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    },
+    {
+      "path": "runs/CRLDP-delay9.log",
+      "reason": "archive-or-generated-runtime-artifact-excluded"
+    }
+  ],
+  "validation": {
+    "sourceFilesUnchangedDuringCopy": true,
+    "allCopiedSha256MatchSource": true,
+    "sourceWasNotMovedOrDeleted": true,
+    "mavenJavaTestsBuildsOrExperimentsRun": false
+  },
+  "limitations": [
+    "La copia no incluye .git; branch/HEAD/status se conservan como metadata del manifiesto.",
+    "Se excluyen target, logs, archives, stores/keys y material sensible por nombre/ruta.",
+    "Solo se incluyen archivos PEM ubicados directamente bajo fixtures/public; otros PEM se excluyen.",
+    "El manifiesto no demuestra que el filesystem tenga capacidades de durabilidad para FileLock/ATOMIC_MOVE/directory force."
+  ],
+  "publicationNote": "Public repository copy. Absolute local Windows paths were anonymized; file inventory, sizes, SHA-256 values, and validation declarations were preserved."
+}
