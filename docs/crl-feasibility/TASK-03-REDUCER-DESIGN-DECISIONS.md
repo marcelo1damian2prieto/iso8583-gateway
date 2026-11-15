@@ -1183,7 +1183,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-93 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-94 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
@@ -1297,4 +1297,42 @@ Se acepta la fila T-01 de la matriz formal de transiciones del Reducer, con los 
 - Contrato definitivo de errores y respuestas.
 
 **Motivo:** aceptar la semántica de creación durable de Admission sin anticipar decisiones de outcome, bloqueo global, estructura del snapshot ni errores que requieren definición específica en el contrato formal.
+
+### VD-T06-94 — Matriz de transición T-02: ADMITTED a PENDING mediante HANDLER_START_INTENT
+
+Se acepta la fila T-02 de la matriz formal de transiciones del Reducer, con las siguientes reglas y reservas:
+
+1. **Estado origen:** `ADMITTED`, que representa una autorización durable concedida por Coordinator.
+2. **Operación/evento:** `HANDLER_START_INTENT`, solicitado por Member y confirmado como evento central durable por Coordinator.
+3. **Identidad:** `TransitionKey=(admissionId, HANDLER_START_INTENT)`.
+4. **Precondiciones:** ADMIT correspondiente confirmado; Admission identificada; Permit no consumido; receipt `PERMIT_RECEIVED` persistido durablemente en el ledger local del Member; identidad de Member y boot correlacionada; ausencia de rechazo previo o consumo anterior.
+5. **Serialización:** validación de vigencia y persistencia de START_INTENT constituyen una sola operación lógica serializada con `ADMIT` y `FENCE`, conforme a D-01 y H-01.
+6. **Vigencia:** el Permit debe estar vigente en el instante de confirmación durable de START_INTENT. Ese commit es el punto de consumo del Permit.
+7. **Estado destino:** la confirmación durable de START_INTENT establece `Admission.state=PENDING`.
+8. **Outcome:** el resultado de ejecución continúa sin resolverse. Esta transición no deriva `COMPLETE` ni `UNKNOWN`.
+9. **Persistencia:** se requiere append completo y `force(true)` del journal, escritura/force/close del temporal de checkpoint y sustitución mediante `ATOMIC_MOVE`; la confirmación central requiere el checkpoint que referencia la secuencia/hash del evento nuevo, conforme al protocolo de persistencia aprobado. No se publica ACK antes de esa confirmación.
+10. **Efecto:** consume el Permit y registra que existe una ejecución autorizada cuyo resultado todavía no está resuelto.
+11. **Respuesta:** Coordinator envía ACK al Member solo después de la confirmación durable.
+12. **COMMIT_GLOBAL:** `PENDING` bloquea `COMMIT_GLOBAL`, conforme a D-02.
+13. **Evidencia local:** `PERMIT_RECEIVED` permanece evidencia del Member. Su persistencia local precede a continuar y solicitar START_INTENT; no se agrega una escritura central redundante. `HANDLER_ENTERED` y `HANDLER_RETURNED` también permanecen evidencias locales y no se convierten en eventos/estados centrales.
+14. **Frontera de ejecución:** START_INTENT no acredita que el handler haya comenzado. La ausencia de `HANDLER_ENTERED` no permite inferir que el handler no comenzó.
+15. **Expiración posterior:** si el Permit estaba vigente al commit durable de START_INTENT, una expiración posterior no cancela la ejecución ni habilita una nueva validación temporal en HANDLER_ENTERED o al invocar el body.
+16. **Expiración previa:** si el Permit venció antes del commit, no se establece PENDING mediante START_INTENT. Coordinator persiste `ADMISSION_REJECTED_EXPIRED`; solo tras confirmar durablemente ese evento deriva `REJECTED_NOT_STARTED` y puede retirar la Admission del conjunto bloqueante. La entrega del ACK comunica el resultado ya persistido y no es condición adicional de la transición.
+17. **Fallo/ambigüedad:** si la persistencia de START_INTENT falla o queda ambigua, no se confirma PENDING ni se habilita una rama alternativa; se conserva el tratamiento bloqueante y fail-closed. Para rechazo por expiración, fallo/ambigüedad de su persistencia también conserva el bloqueo.
+18. **ACK perdido:** STATUS consulta la misma clave idempotente; no se crea otra transición ni se consume un Permit distinto.
+19. **FENCE concurrente:** ADMIT, FENCE y START_INTENT respetan el orden lógico serializado H-01. Un FENCE no revoca una admisión cuyo START_INTENT ya fue confirmado durablemente.
+20. **Replay:** valida identidad, secuencia, referencias, integridad y consistencia de la transición con la Admission. No ejecuta el handler ni fabrica evidencia Member.
+21. **Tail:** un HANDLER_START_INTENT encontrado en tail sin checkpoint queda en `RECOVERY_REQUIRED`; no se confirma por analogía, no se envía ACK y no se reejecuta el handler automáticamente.
+
+**Escenarios cubiertos:** Permit vigente con commit durable; expiración previa al commit; expiración posterior; ACK perdido y consulta STATUS; persistencia fallida/ambigua; ausencia de receipt local; ausencia de HANDLER_ENTERED; concurrencia con FENCE; HANDLER_START_INTENT en tail sin checkpoint.
+
+**Reservas que permanecen abiertas y no quedan decididas por esta aceptación:**
+
+- Representación exacta de la referencia a START_INTENT en el snapshot.
+- Campos y payload contractual definitivo del evento.
+- Valor formal de `outcome` mientras la Admission está `PENDING`, si corresponde a un campo explícito.
+- Contrato definitivo de errores y clasificación de escrituras ambiguas.
+- Evidencia y validación exactas del ledger Member, correspondientes a TASK-04.
+
+**Motivo:** fijar la transición lógica a PENDING en el commit durable que consume el Permit, preservando la distinción entre autorización, intención durable y evidencia local de ejecución, sin anticipar el contrato del snapshot ni los detalles de TASK-04.
 
