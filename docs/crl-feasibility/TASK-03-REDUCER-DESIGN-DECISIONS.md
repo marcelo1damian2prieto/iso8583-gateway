@@ -1183,7 +1183,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-91 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-92 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
@@ -1252,4 +1252,20 @@ Se acepta la alternativa C para el tratamiento de una repetición de `RECONCILE_
 7. Esta decisión no amplía el conjunto de acciones permitidas ni autoriza recuperación automática adicional. El catálogo formal debe definir las acciones, estados de origen/resultantes, payloads, referencias y precondiciones.
 
 **Motivo:** preservar la identidad `(originalEventId, recoveryAction)`, asegurar idempotencia frente a repeticiones y permitir únicamente acciones adicionales independientes que el dominio haya autorizado explícitamente.
+
+### VD-T06-92 — Rechazo de RecoveryRecord con acción no catalogada o incompatible
+
+Se acepta una política de rechazo estricto en el Reducer y clasificación del incidente en la capa superior:
+
+1. Si un evento intenta aplicar un `RecoveryRecord` cuya `recoveryAction` no figura en el catálogo vigente, el Reducer rechaza la operación y no produce un snapshot nuevo ni modifica el snapshot anterior.
+2. Si la acción figura en el catálogo, pero es incompatible con el estado de origen, la Admission, el evento original o el efecto declarado, el Reducer también rechaza la operación.
+3. El rechazo del Reducer no determina por sí solo que exista corrupción ni asigna automáticamente un estado operativo global. La capa superior clasifica la situación conforme a la evidencia:
+   - `RECOVERY_REQUIRED` cuando la situación requiere resolución explícita y no se ha demostrado una violación de integridad.
+   - `FAILED_CLOSED` cuando se detecta corrupción, conflicto de identidad, digest inconsistente o contradicción de integridad, conforme a los criterios formales aplicables.
+4. No se permite ignorar, eliminar, reemplazar ni reinterpretar el `RecoveryRecord` como otra acción para continuar el Replay.
+5. Mientras la inconsistencia no esté resuelta mediante un procedimiento explícito y válido, no se habilita `COMMIT_GLOBAL` ni se deriva un estado nuevo a partir del registro rechazado.
+6. El Reducer conserva la responsabilidad de validar compatibilidad de dominio y rechazar la transición. Replay conserva la validación de identidad, secuencia, canonicalización, digest, integridad y correspondencia durable. La capa superior aplica la clasificación y mantiene el comportamiento cerrado.
+7. Los nombres de errores tipados, la clasificación exhaustiva y el procedimiento de resolución quedan pendientes del contrato formal; esta decisión no los inventa ni autoriza recuperación automática.
+
+**Motivo:** evitar tanto la aceptación de estados cuya evidencia de recuperación el Reducer no comprende como la clasificación automática de toda incompatibilidad de catálogo como corrupción, manteniendo la separación de responsabilidades entre Reducer, Replay y Coordinator.
 
