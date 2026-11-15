@@ -2100,3 +2100,16 @@ Se acepta la recomendación: la permanencia en memoria de snapshots y estructura
 7. La liberación de memoria no altera la inmutabilidad ni la semántica de snapshots que continúen siendo alcanzables y válidos para sus consumidores.
 
 **Motivo:** mantener al Reducer libre de gestión de recursos y estado compartido, permitiendo que el runtime gestione la memoria según la alcanzabilidad de los objetos y dejando la política de retención de snapshots bajo responsabilidad de la capa que administra su ciclo de vida.
+
+### VD-T06-144 — Límites de retención y presión de memoria fuera del contrato del Reducer
+
+Se acepta mantener completamente fuera del contrato del Reducer la definición y aplicación de límites de retención de snapshots y las políticas de gestión de presión de memoria.
+
+1. El Reducer no establece límites de cantidad, antigüedad o tamaño de snapshots retenidos.
+2. El Reducer no decide qué snapshots pueden descartarse, cuándo liberar referencias ni cómo priorizar la retención de snapshots vigentes o históricos.
+3. Las políticas de retención, descarte, backpressure, límites de memoria y respuesta ante presión de memoria corresponden a Coordinator, persistencia y/o infraestructura, según las responsabilidades de cada componente.
+4. Ninguna política externa de retención puede modificar la semántica, inmutabilidad o coherencia de un snapshot que todavía deba estar disponible para sus consumidores.
+5. El Reducer no incorpora mecanismos de monitorización de memoria, alertas, tuning del garbage collector ni estrategias de recuperación ante presión de memoria.
+6. Esta decisión no prescribe una política concreta de retención ni un mecanismo de infraestructura; esos aspectos quedan pendientes de su diseño específico y fuera del alcance de TASK-03.
+
+**Motivo:** preservar la responsabilidad acotada del Reducer como transformación pura y determinista, evitando introducir en su contrato políticas operativas de ciclo de vida, capacidad o gestión de recursos.
