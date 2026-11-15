@@ -1183,7 +1183,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-100 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-101 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
@@ -1445,3 +1445,16 @@ Se acepta que el evento central `ADMISSION_OUTCOME_UNKNOWN` —denominación de 
 6. Esta decisión no define la clave idempotente ni los campos contractuales del evento; permanecen pendientes del contrato formal.
 
 **Motivo:** preservar la secuencia de estados aprobada, distinguiendo la autorización `ADMITTED` de la ejecución autorizada aún no resuelta `PENDING` y del resultado indeterminado `UNKNOWN`.
+
+### VD-T06-101 — Clasificación de fallos en la validación de evidencia UNKNOWN por Coordinator
+
+Se acepta distinguir los fallos de validación de la evidencia local Member según la naturaleza de la insuficiencia o contradicción detectada:
+
+1. **Evidencia ausente, inaccesible, incompleta o insuficiente para decidir:** se clasifica como `RECOVERY_REQUIRED`. No se confirma el evento central `ADMISSION_OUTCOME_UNKNOWN`, no se deriva `UNKNOWN` y se conserva el tratamiento bloqueante.
+2. **Evidencia corrupta, identidad contradictoria, digest inconsistente o violación de integridad demostrada:** se clasifica como `FAILED_CLOSED`. No se confirma el evento central `ADMISSION_OUTCOME_UNKNOWN`, no se deriva `UNKNOWN` y se conserva el tratamiento bloqueante.
+3. En ambos casos, el Reducer no produce un snapshot nuevo a partir de la evidencia rechazada ni modifica el snapshot anterior.
+4. Ninguno de estos resultados autoriza liberar la Admission del conjunto bloqueante, reintentar el handler, descartar o corregir automáticamente la evidencia, ni inferir un resultado de ejecución.
+5. La resolución requiere el procedimiento explícito aplicable. La clasificación debe respetar las reglas ya aceptadas en VD-T06-85, VD-T06-86 y VD-T06-92, sin sustituirlas ni duplicar sus procedimientos.
+6. Esta decisión establece la distinción conceptual de clasificación; los errores tipados, criterios exhaustivos y procedimientos operativos permanecen sujetos al contrato formal y a las tareas responsables.
+
+**Motivo:** diferenciar la falta de evidencia suficiente para resolver de una violación de integridad demostrada, manteniendo en ambos casos el comportamiento fail-closed y la prohibición de establecer UNKNOWN sin validación satisfactoria y confirmación durable del evento central.
