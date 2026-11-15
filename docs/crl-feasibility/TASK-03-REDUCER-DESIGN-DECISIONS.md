@@ -137,10 +137,11 @@ Esta decisión no congela el CODEC.
 
 1. El snapshot contiene entidades canónicas que representan el estado del dominio.
 2. Contadores e índices derivados no pueden contradecir las entidades canónicas.
-3. Ante una contradicción, prevalecen las entidades canónicas.
-4. El Reducer no repara silenciosamente datos derivados inconsistentes en el snapshot de entrada.
-5. Una inconsistencia de entrada provoca rechazo tipado.
-6. La definición exhaustiva de campos canónicos y derivados queda pendiente del modelo formal del snapshot.
+3. Ante una contradicción, las entidades canónicas prevalecen como fuente de verdad.
+4. Esa precedencia no autoriza al Reducer a descartar la inconsistencia ni a continuar con la transición.
+5. El Reducer no repara silenciosamente datos derivados inconsistentes en el snapshot de entrada.
+6. Una inconsistencia de entrada provoca rechazo tipado y el snapshot original permanece inalterado.
+7. La definición exhaustiva de campos canónicos y derivados queda pendiente del modelo formal del snapshot.
 
 ### VD-T06-33 — Consistencia de relaciones entre entidades
 
