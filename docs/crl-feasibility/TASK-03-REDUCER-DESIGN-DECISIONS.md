@@ -1021,6 +1021,26 @@ Se establecen los siguientes criterios para representar la evidencia de recupera
 La estructura concreta de la referencia dentro de `Admission`, los datos adicionales que eventualmente requiera la validación de dominio, la representación Java, la serialización CODEC y la reconstrucción durante Replay permanecen abiertos.
 
 
+### VD-T06-80 — Alcance de las referencias EventId en el snapshot y responsabilidad de Replay
+
+Se establecen los siguientes criterios para delimitar las referencias a eventos en el snapshot:
+
+1. `EventId` como identidad de un evento durable pertenece al journal; la conservación y validación de su historial corresponden a Replay.
+2. El snapshot no considera `EventId` una entidad canónica por sí misma.
+3. El snapshot no mantiene una colección histórica genérica de todos los `EventId` asociados a una `Admission`.
+4. El snapshot conserva referencias a identificadores de eventos únicamente cuando sean necesarias para representar o justificar un estado lógico durable definido por el modelo.
+5. Para la evidencia de reconciliación, se conservan las referencias `originalEventId` y `recoveryEventId`, junto con `recoveryAction`, conforme a VD-T06-79.
+6. La relación `AdmissionId 1—N EventId` definida en TASK-02 se mantiene como relación del modelo durable. Su historial completo y su correspondencia efectiva con los eventos del journal son responsabilidad de Replay; no se reproduce automáticamente como una colección en el snapshot.
+7. El Reducer valida la presencia y coherencia contextual de las referencias de eventos que formen parte del estado lógico recibido. No consulta el journal ni determina si un evento existió históricamente.
+8. Replay valida la existencia efectiva de los eventos, sus asociaciones con Admission, la secuencia, unicidad, integridad y aplicación previa.
+9. El Reducer no genera, sustituye ni elimina identificadores de eventos por inferencia.
+10. Esta decisión no modifica la identidad ni la cardinalidad de `RecoveryRecord` definidas en TASK-02 y VD-T06-63.
+
+**Motivo:** distinguir la referencia lógica necesaria para representar el estado durable del historial completo de eventos, evitando convertir el snapshot en un segundo journal o acoplar el Reducer al almacenamiento.
+
+La estructura Java de las referencias, la determinación de si otros estados de Admission requieren referencias adicionales, la representación CODEC y la reconstrucción durante Replay permanecen abiertas. También queda pendiente la matriz definitiva de referencias obligatorias por tipo de evento.
+
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -1048,7 +1068,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-79 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-80 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
