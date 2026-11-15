@@ -255,6 +255,18 @@ Esta decisión complementa VD-T06-05 y VD-T06-09 y establece el determinismo com
 
 **Motivo:** mantener el Reducer como componente determinista de dominio y evitar que incorpore decisiones operativas de recuperación.
 
+
+### VD-T06-19 — Trazabilidad de la transición aplicada
+
+1. La transición debe quedar asociada al `eventId` que la originó.
+2. Debe conservarse la referencia al tipo de evento aplicado.
+3. La trazabilidad no debe generar identificadores nuevos ni depender del reloj.
+4. No debe duplicar ni sustituir el registro durable del journal.
+5. La información de trazabilidad debe ser determinista y coherente con el evento de entrada.
+6. La representación concreta en el snapshot queda pendiente del modelo formal y del CODEC.
+
+**Límite:** el Reducer mantiene la relación lógica entre evento y transición; Replay conserva la trazabilidad física y durable del journal.
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -282,7 +294,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-18, VD-T06-32 y VD-T06-33 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-19, VD-T06-32 y VD-T06-33 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
