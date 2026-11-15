@@ -799,6 +799,20 @@ Se establecen los siguientes criterios para la identidad y consistencia de los r
 **Motivo:** separar la identidad lógica de la recuperación de la identidad del evento durable que la registra.
 
 
+### VD-T06-64 — Compatibilidad entre RecoveryRecord y RECONCILED_UNKNOWN
+
+Se establecen los siguientes criterios para la compatibilidad de la evidencia de recuperación:
+
+1. Una transición a `RECONCILED_UNKNOWN` debe referenciar un `RecoveryRecord` cuya `recoveryAction` sea compatible con la reconciliación aplicada.
+2. El `originalEventId` del registro debe corresponder al evento que originó el estado `UNKNOWN` de esa admisión.
+3. Un `RecoveryRecord` asociado a otra admisión o a otro evento original no puede justificar esa transición.
+4. El Reducer valida esas correspondencias mediante las referencias presentes en el snapshot.
+5. Replay conserva la validación de unicidad, secuencia y persistencia del registro.
+6. La enumeración exacta de acciones de recuperación compatibles queda sujeta al catálogo formal de acciones.
+
+**Motivo:** impedir que una reconciliación válida para una admisión o evento se reutilice para justificar otra.
+
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -826,7 +840,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-63 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-64 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
