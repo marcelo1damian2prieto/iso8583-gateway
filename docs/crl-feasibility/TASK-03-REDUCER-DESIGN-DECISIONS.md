@@ -729,6 +729,20 @@ Se establecen los siguientes criterios para el estado de cada admisión en el sn
 **Motivo:** mantener el estado de admisión gobernado por eventos explícitos, sin inferencias temporales ni transiciones implícitas.
 
 
+### VD-T06-59 — Tratamiento de PENDING, UNKNOWN y RECONCILED_UNKNOWN
+
+Se establecen los siguientes criterios para representar estos estados de admisión:
+
+1. `PENDING` representa una admisión cuyo resultado todavía no está resuelto y que continúa bloqueando `COMMIT_GLOBAL`.
+2. `UNKNOWN` representa un resultado desconocido aún no reconciliado y también bloquea `COMMIT_GLOBAL`.
+3. `RECONCILED_UNKNOWN` representa un UNKNOWN reconciliado con evidencia suficiente para dejar de bloquear `COMMIT_GLOBAL`, pero su outcome continúa siendo `UNKNOWN`.
+4. El Reducer no convierte `UNKNOWN` en `COMPLETE`, ni interpreta `RECONCILED_UNKNOWN` como éxito.
+5. La transición a `RECONCILED_UNKNOWN` requiere el evento explícito y las referencias de reconciliación válidas.
+6. Se mantienen las responsabilidades de D-02 y las fronteras de evidencia establecidas para Replay.
+
+**Motivo:** reflejar en el snapshot la diferencia entre estado de reconciliación y resultado de negocio, sin alterar las garantías de D-02.
+
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -756,7 +770,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-58 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-59 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
