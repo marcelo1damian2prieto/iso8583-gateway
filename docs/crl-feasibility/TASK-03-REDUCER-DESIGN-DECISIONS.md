@@ -1183,7 +1183,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-89 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-90 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
@@ -1219,4 +1219,23 @@ Se acepta que el Reducer solo admita un `RecoveryRecord` como justificación de 
 7. La validación de compatibilidad de dominio corresponde al Reducer; Replay conserva la validación de identidad durable, unicidad, secuencia, integridad y correspondencia histórica del RecoveryRecord.
 
 **Motivo:** impedir que cualquier RecoveryRecord válido pueda reutilizarse indistintamente para justificar una transición a RECONCILED_UNKNOWN.
+
+### VD-T06-90 — Acciones de recuperación adicionales sobre RECONCILED_UNKNOWN
+
+Se acepta que una Admission en estado `RECONCILED_UNKNOWN` pueda recibir acciones de recuperación adicionales, únicamente bajo un contrato explícito para cada acción:
+
+1. La acción adicional debe estar catalogada expresamente como compatible con el estado `RECONCILED_UNKNOWN` y con la Admission involucrada.
+2. Cada acción adicional debe conservar su identidad lógica propia `(originalEventId, recoveryAction)` y su correspondiente `recoveryEventId`, conforme al modelo de TASK-02 y VD-T06-63.
+3. Todo `RecoveryRecord` confirmado es inmutable. Una acción posterior no puede modificarlo, reemplazarlo ni reutilizar su identidad para un payload diferente.
+4. El Reducer valida que la acción adicional sea compatible con `RECONCILED_UNKNOWN`, con la Admission y con el evento original correspondiente.
+5. Una acción adicional no puede, por inferencia:
+   - Convertir el outcome `UNKNOWN` en `COMPLETE`.
+   - Convertir la Admission en `NOT_STARTED` o `REJECTED_NOT_STARTED`.
+   - Habilitar un nuevo intento o reejecución del handler.
+   - Habilitar `REBIND_UNSTARTED_ADMISSION`.
+6. La acción adicional solo puede conservar `RECONCILED_UNKNOWN` como estado resultante cuando su contrato declare expresamente esa transición sin cambio de estado. No se admiten transiciones sin cambio por defecto.
+7. Replay conserva la validación de unicidad, secuencia, integridad, persistencia y correspondencia histórica de cada registro adicional.
+8. Esta decisión no enumera ni habilita por sí misma acciones concretas; el catálogo formal debe declarar para cada acción sus estados de origen/resultantes, referencias, payload y compatibilidad.
+
+**Motivo:** permitir trazabilidad durable de acciones posteriores legítimas sin alterar reconciliaciones confirmadas, reutilizar identidades ni reabrir ejecución a partir de un resultado que continúa siendo UNKNOWN.
 
