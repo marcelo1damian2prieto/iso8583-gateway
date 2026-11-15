@@ -688,6 +688,20 @@ Se establecen los siguientes criterios respecto de `EventId` y el snapshot:
 **Motivo:** evitar duplicar en el snapshot el historial que pertenece al journal y mantener coherencia con las decisiones de trazabilidad ya aceptadas.
 
 
+### VD-T06-56 — Consistencia entre Admission y estado de Rollout
+
+Se establecen los siguientes criterios de consistencia para las admisiones:
+
+1. Una `Admission` solo puede pertenecer a un `Rollout` existente en el snapshot.
+2. El `rolloutId` de la admisión debe coincidir con el del `MembershipManifest` asociado.
+3. El Member de la admisión debe estar incluido en ese manifest.
+4. El `coordinatorEpoch` de la admisión debe ser coherente con el contexto de epoch que el contrato de dominio permita para esa transición.
+5. El Reducer rechaza referencias o contextos contradictorios mediante error tipado; no corrige la admisión ni cambia su rollout.
+6. Las reglas que determinan qué epochs siguen siendo válidos para cada estado de admisión quedan pendientes del contrato de transición correspondiente.
+
+**Motivo:** asegurar consistencia referencial sin introducir una regla de vigencia de epochs que todavía no está definida.
+
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -715,7 +729,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-55 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-56 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
