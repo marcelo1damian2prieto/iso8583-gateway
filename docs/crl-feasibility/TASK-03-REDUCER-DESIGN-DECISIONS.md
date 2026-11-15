@@ -2086,3 +2086,17 @@ Se acepta la opción C: permitir que varias invocaciones construyan concurrentem
 La implementación de estructuras inmutables, la estrategia concreta de *structural sharing*, la gestión de memoria, las optimizaciones de asignación y cualquier evaluación de rendimiento permanecen pendientes del diseño técnico. No se autoriza introducir cachés compartidas mediante esta decisión.
 
 **Motivo:** permitir concurrencia segura y determinista en la construcción de snapshots derivados, reutilizando datos inmutables sin introducir estado mutable compartido, locks ni coordinación operativa dentro del Reducer.
+
+### VD-T06-143 — Ciclo de vida y liberación de memoria de snapshots e índices derivados
+
+Se acepta la recomendación: la permanencia en memoria de snapshots y estructuras derivadas se determina por su alcanzabilidad mediante referencias; la gestión de memoria corresponde al runtime y no al Reducer.
+
+1. El Reducer no administra manualmente la liberación de memoria de snapshots, índices ni estructuras auxiliares.
+2. Los snapshots y sus estructuras derivadas permanecen disponibles mientras existan referencias activas que los mantengan alcanzables; cuando dejan de ser alcanzables, su memoria queda sujeta a la gestión automática del runtime.
+3. La reutilización (*structural sharing*) de estructuras inmutables es válida, pero una referencia compartida prolonga la vida útil de esa estructura mientras siga siendo alcanzable desde cualquier snapshot o componente que la retenga.
+4. El Reducer no mantiene referencias globales, cachés mutables, pools ni registros de snapshots que prolonguen artificialmente su ciclo de vida.
+5. La retención, publicación y descarte de referencias a snapshots vigentes o históricos corresponden a los componentes externos responsables del ciclo de vida del estado, como Coordinator y persistencia, según sus propias políticas.
+6. Esta decisión no prescribe políticas de retención histórica, límites de snapshots en memoria, frecuencia de recolección, tuning del garbage collector ni mecanismos concretos de diagnóstico de memoria; esos aspectos quedan fuera del contrato del Reducer y pendientes del diseño de infraestructura.
+7. La liberación de memoria no altera la inmutabilidad ni la semántica de snapshots que continúen siendo alcanzables y válidos para sus consumidores.
+
+**Motivo:** mantener al Reducer libre de gestión de recursos y estado compartido, permitiendo que el runtime gestione la memoria según la alcanzabilidad de los objetos y dejando la política de retención de snapshots bajo responsabilidad de la capa que administra su ciclo de vida.
