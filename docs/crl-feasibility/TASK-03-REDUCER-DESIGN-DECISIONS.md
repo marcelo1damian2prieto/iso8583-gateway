@@ -1091,6 +1091,23 @@ Se acepta que el estado `UNKNOWN` se establece mediante una transición explíci
 
 **Motivo:** mantener separadas la producción de evidencia local y la autoridad central de transición, permitiendo representar explícitamente un resultado indeterminado sin convertir timeout o ausencia de observaciones en hechos de dominio, ni relajar el bloqueo establecido por D-02.
 
+
+
+### VD-T06-84 — UNKNOWN originado por declaración durable del Member y confirmado por el Coordinator
+
+Se acepta la opción A como dirección de diseño para establecer `UNKNOWN`: el Member registra durablemente una declaración local de resultado indeterminado y el Coordinator, como autoridad de las transiciones centrales, valida esa evidencia y confirma durablemente la transición central correspondiente.
+
+1. La declaración de resultado indeterminado es evidencia local producida y persistida por el Member. No constituye por sí misma una transición central de Admission.
+2. El Coordinator valida la integridad y correlación de la evidencia Member con la Admission correspondiente antes de confirmar durablemente `UNKNOWN`.
+3. La transición central a `UNKNOWN` se registra mediante un evento explícito del Coordinator. El nombre `ADMISSION_OUTCOME_UNKNOWN` permanece como denominación de trabajo, no como nombre contractual congelado.
+4. La declaración local del Member expresa que el resultado de ejecución es indeterminado; no requiere demostrar que el proceso murió ni que la ejecución dejó de ser posible.
+5. `UNKNOWN` conserva el bloqueo de `COMMIT_GLOBAL` conforme a D-02. No equivale a `COMPLETE`, no establece éxito y no habilita reintento ni nueva ejecución del handler.
+6. `RECONCILED_UNKNOWN` sigue siendo una transición posterior y distinta, sujeta a evidencia durable de muerte o no continuidad y a las condiciones de reconciliación aprobadas. La declaración local que habilita `UNKNOWN` no satisface por sí sola esos requisitos ni libera el bloqueo.
+7. El contrato detallado de la declaración local —tipo/nombre definitivo, payload, identidad, referencias, secuencia, integridad, garantías de persistencia y condiciones en que el Member puede emitirla— queda para TASK-04. También quedan pendientes el payload y las precondiciones contractuales completas del evento central y la validación correspondiente en Replay.
+8. Esta decisión no autoriza inferir `UNKNOWN` por timeout, ausencia de mensajes o ausencia de `HANDLER_ENTERED`/`HANDLER_RETURNED`; tampoco modifica las responsabilidades de Member, Coordinator y Replay establecidas en las decisiones anteriores.
+
+**Motivo:** hacer explícita la frontera de responsabilidades: el Member aporta evidencia durable sobre su propia ejecución y el Coordinator decide y persiste el estado central. Separar `UNKNOWN` de `RECONCILED_UNKNOWN` evita exigir prueba de muerte del proceso para declarar un resultado indeterminado y evita liberar el bloqueo sin la reconciliación requerida.
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
