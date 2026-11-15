@@ -868,6 +868,20 @@ Se establecen los siguientes criterios para transiciones que afectan varios Memb
 **Motivo:** mantener la garantía de atomicidad lógica multiMember ya aceptada en VD-T06-29 y VD-T06-30, extendiéndola a la validación de referencias.
 
 
+### VD-T06-69 — Consistencia de MembershipManifest
+
+Se establecen los siguientes criterios para el `MembershipManifest`:
+
+1. El `MembershipManifest` asociado a un `Rollout` es la referencia canónica del conjunto esperado de Members.
+2. Su identidad se mantiene mediante `(membershipVersion, digest)`.
+3. El manifest es inmutable durante el rollout.
+4. Las observaciones y admisiones deben referenciar Members pertenecientes a ese manifest.
+5. Un manifest vacío, con IDs duplicados o incompatible con el contexto del rollout se rechaza.
+6. El Reducer valida la coherencia lógica; la verificación criptográfica del digest y la integridad de su representación corresponden a CODEC/Replay según sus respectivas fronteras.
+
+**Motivo:** consolidar la función del manifest como referencia canónica de membership y evitar que las transiciones alteren implícitamente el conjunto esperado.
+
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -895,7 +909,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-68 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-69 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
