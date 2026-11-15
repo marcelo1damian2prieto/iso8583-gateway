@@ -1183,7 +1183,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-113 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-114 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
@@ -1626,3 +1626,20 @@ Se acepta establecer los siguientes criterios para las colecciones contenidas en
 5. Esta decisión no selecciona estructuras Java (`List`, `Set`, `Map`) ni define representación, canonicalización o codec.
 
 **Motivo:** preservar el significado de dominio de cada colección, evitando que el orden incidental afecte la igualdad y que identidades duplicadas o contradictorias queden representadas en el snapshot.
+
+### VD-T06-114 — Validación de invariantes globales del snapshot después de cada transición
+
+Se acepta que el Reducer valide las invariantes globales del snapshot resultante después de cada transición válida, además de las precondiciones y reglas específicas del evento:
+
+1. Unicidad de las identidades de Admission.
+2. Consistencia entre estado y outcome de cada Admission.
+3. Integridad y coherencia de las referencias a eventos y `RecoveryRecord`.
+4. Ausencia de referencias huérfanas o contradictorias.
+5. Consistencia del conjunto de Admissions que bloquean `COMMIT_GLOBAL`.
+6. Cumplimiento de las cardinalidades y relaciones de dominio aprobadas.
+
+Si alguna invariante global queda violada, el Reducer rechaza el resultado completo, devuelve un error tipado y no produce ni expone un snapshot nuevo. El snapshot de entrada permanece sin modificaciones.
+
+Esta decisión no sustituye las verificaciones históricas de Replay ni amplía las responsabilidades del Reducer definidas en VD-T06-110. La definición exhaustiva y formal de cada invariante y sus errores tipados permanece sujeta al contrato de dominio.
+
+**Motivo:** evitar que una transición localmente válida produzca un snapshot globalmente inconsistente, preservando la atomicidad, pureza y determinismo establecidos en VD-T06-111.
