@@ -1183,7 +1183,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-88 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-89 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
@@ -1205,4 +1205,18 @@ Se acepta que la transición de una Admission desde `UNKNOWN` hacia `RECONCILED_
 8. Los nombres/campos contractuales definitivos y la forma Java/CODEC permanecen abiertos. La referencia `unknownEventId` es una etiqueta descriptiva de esta decisión, no una congelación del esquema.
 
 **Motivo:** preservar la trazabilidad desde el evento central que estableció UNKNOWN hasta la acción durable que justificó su reconciliación, sin duplicar el journal ni trasladar al Reducer responsabilidades de Replay.
+
+### VD-T06-89 — Compatibilidad de recoveryAction con RECONCILED_UNKNOWN
+
+Se acepta que el Reducer solo admita un `RecoveryRecord` como justificación de una transición a `RECONCILED_UNKNOWN` cuando su `recoveryAction` identifique una acción explícitamente habilitada para reconciliar `UNKNOWN`:
+
+1. La acción debe estar incluida en el catálogo formal de acciones de recuperación compatibles con la reconciliación de `UNKNOWN`.
+2. La acción debe declarar como estado esperado de origen `UNKNOWN` y como estado resultante `RECONCILED_UNKNOWN`.
+3. El Reducer rechaza una acción no catalogada o incompatible, aunque las referencias del `RecoveryRecord` sean estructuralmente válidas.
+4. No se aceptan para esta transición acciones destinadas a otros propósitos, incluida `REBIND_UNSTARTED_ADMISSION`.
+5. `RECONCILE_UNKNOWN` continúa identificando la operación/evento central del Coordinator. Esta decisión no establece que ese nombre sea el valor literal de `recoveryAction`.
+6. La enumeración definitiva de valores de `recoveryAction`, sus payloads y sus referencias queda pendiente del catálogo formal de acciones y de TASK-04.
+7. La validación de compatibilidad de dominio corresponde al Reducer; Replay conserva la validación de identidad durable, unicidad, secuencia, integridad y correspondencia histórica del RecoveryRecord.
+
+**Motivo:** impedir que cualquier RecoveryRecord válido pueda reutilizarse indistintamente para justificar una transición a RECONCILED_UNKNOWN.
 
