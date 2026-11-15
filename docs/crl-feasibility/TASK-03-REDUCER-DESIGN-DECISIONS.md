@@ -1073,6 +1073,24 @@ Se acepta que la confirmación durable de `HANDLER_START_INTENT` establece la tr
 **Motivo:** al confirmarse durablemente el consumo del Permit existe una admisión autorizada cuyo resultado aún no se conoce. Establecer `PENDING` en ese punto preserva D-02 sin confundir la intención durable con evidencia de entrada efectiva al handler.
 
 
+
+
+### VD-T06-83 — Establecimiento explícito de UNKNOWN por el Coordinator
+
+Se acepta que el estado `UNKNOWN` se establece mediante una transición explícita y durable del Coordinator, después de evaluar evidencia Member íntegra y correlacionada que, aun siendo válida, no permite determinar un resultado definitivo de ejecución:
+
+1. La autoridad para establecer la transición central a `UNKNOWN` corresponde al Coordinator. La evidencia que permite evaluarla pertenece al Member y no puede ser fabricada por Replay del Coordinator.
+2. El Coordinator solo puede confirmar `UNKNOWN` después de validar la integridad y correlación de la evidencia Member disponible con la Admission y el `processBootId` correspondientes, y de persistir durablemente la transición.
+3. El nombre de trabajo propuesto para el evento central es `ADMISSION_OUTCOME_UNKNOWN`. Su nombre contractual definitivo, payload, referencias de evidencia, precondiciones exhaustivas y ubicación en el catálogo de eventos quedan pendientes de especificación.
+4. La transición no se produce por timeout, falta de respuesta, ausencia de mensajes, vencimiento de un plazo ni resultado de `STATUS`. Tampoco puede inferirse por la mera ausencia de `HANDLER_ENTERED` o `HANDLER_RETURNED`.
+5. La transición a `UNKNOWN` no equivale a `COMPLETE`, no modifica el outcome a éxito y mantiene el bloqueo de `COMMIT_GLOBAL` conforme a D-02.
+6. La transición no autoriza reintentar ni volver a ejecutar el handler para esa Admission.
+7. `RECONCILED_UNKNOWN` continúa siendo un estado distinto: requiere la evidencia durable de muerte o no continuidad y las condiciones de reconciliación aprobadas. La transición a `UNKNOWN` no satisface por sí sola esos requisitos ni libera el bloqueo.
+8. Si la evidencia necesaria no está disponible, no es íntegra, no está correlacionada o resulta contradictoria, el Coordinator no confirma esta transición; conserva el tratamiento cerrado que corresponda según la clasificación de recuperación/fallo aprobada.
+9. La decisión no define cómo el Member produce, fuerza ni expone la evidencia; tampoco congela el contrato de Replay, la matriz completa de transiciones ni el schema del evento. Esos detalles deben resolverse en las tareas y contratos responsables, en particular TASK-04 para la evidencia Member.
+
+**Motivo:** mantener separadas la producción de evidencia local y la autoridad central de transición, permitiendo representar explícitamente un resultado indeterminado sin convertir timeout o ausencia de observaciones en hechos de dominio, ni relajar el bloqueo establecido por D-02.
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
