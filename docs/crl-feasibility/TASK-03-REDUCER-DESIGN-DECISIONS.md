@@ -1183,7 +1183,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-90 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-91 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
@@ -1238,4 +1238,18 @@ Se acepta que una Admission en estado `RECONCILED_UNKNOWN` pueda recibir accione
 8. Esta decisión no enumera ni habilita por sí misma acciones concretas; el catálogo formal debe declarar para cada acción sus estados de origen/resultantes, referencias, payload y compatibilidad.
 
 **Motivo:** permitir trazabilidad durable de acciones posteriores legítimas sin alterar reconciliaciones confirmadas, reutilizar identidades ni reabrir ejecución a partir de un resultado que continúa siendo UNKNOWN.
+
+### VD-T06-91 — Idempotencia de acciones de recuperación y nuevas acciones independientes
+
+Se acepta la alternativa C para el tratamiento de una repetición de `RECONCILE_UNKNOWN` y de acciones posteriores sobre una misma Admission:
+
+1. La repetición de una acción de recuperación con la misma `recoveryKey=(originalEventId,recoveryAction)` y el mismo contenido canónico es idempotente: conserva la identidad y el resultado durable originales; no crea un segundo `RecoveryRecord`.
+2. La misma `recoveryKey` presentada con contenido canónico diferente constituye un conflicto. Debe rechazarse; no se sobrescribe ni reemplaza el registro confirmado. Replay conserva la validación durable de canonicalización, digest, unicidad y conflicto, aplicando el tratamiento de integridad correspondiente, incluido `FAILED_CLOSED` cuando corresponda según TASK-02/R3.1.
+3. Una acción distinta puede producir un `RecoveryRecord` independiente únicamente si esa acción está expresamente catalogada como válida para el estado de origen y la Admission involucrada. Su clave lógica es distinta por el valor de `recoveryAction`.
+4. Cada acción adicional conserva su propio `recoveryEventId`, derivado conforme al contrato de identidad/canonicalización aprobado. No se introduce un identificador de intento para eludir la clave lógica vigente.
+5. Una repetición idempotente no provoca una nueva transición ni modifica el estado `RECONCILED_UNKNOWN`, el outcome `UNKNOWN` ni las referencias ya confirmadas.
+6. Una acción distinta solo puede producir el efecto de estado expresamente declarado en su contrato y validado por el Reducer. No habilita por sí misma reejecución del handler ni convierte `UNKNOWN` en `COMPLETE`.
+7. Esta decisión no amplía el conjunto de acciones permitidas ni autoriza recuperación automática adicional. El catálogo formal debe definir las acciones, estados de origen/resultantes, payloads, referencias y precondiciones.
+
+**Motivo:** preservar la identidad `(originalEventId, recoveryAction)`, asegurar idempotencia frente a repeticiones y permitir únicamente acciones adicionales independientes que el dominio haya autorizado explícitamente.
 
