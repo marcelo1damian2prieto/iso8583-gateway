@@ -463,6 +463,18 @@ Esta decisión complementa VD-T06-05 y VD-T06-09 y establece el determinismo com
 
 **Motivo:** separar la trazabilidad de una invocación de la mutación del estado de dominio y de la deduplicación del journal.
 
+
+### VD-T06-38 — Frontera de validación de referencias a eventos
+
+1. Reducer valida la presencia y consistencia contextual del `eventId` asociado al evento que recibe.
+2. Reducer solo valida referencias a eventos previos cuando esas referencias formen parte explícita del snapshot lógico y estén definidas por el modelo de dominio.
+3. Reducer no consulta, recorre ni reconstruye el journal para validar referencias o determinar el historial de aplicación.
+4. Reducer no determina si un evento ya fue aplicado ni administra la deduplicación de eventos.
+5. Replay conserva la responsabilidad de validar el historial, la secuencia del journal y la condición de evento ya aplicado.
+6. La validación de referencias de dominio por Reducer no sustituye ni duplica las validaciones de historial y deduplicación correspondientes a Replay.
+
+**Motivo:** delimitar la validación de referencias de dominio y evitar trasladar al Reducer responsabilidades de historial y deduplicación del journal.
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -490,7 +502,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-37 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-38 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
