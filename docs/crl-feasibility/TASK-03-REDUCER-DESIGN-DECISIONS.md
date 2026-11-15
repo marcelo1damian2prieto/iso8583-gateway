@@ -604,11 +604,26 @@ Criterios:
 **Motivo:** identificar las unidades de estado que el snapshot debe representar sin anticipar detalles que todavía no están definidos en el modelo formal.
 
 
+### VD-T06-50 — Identidad y referencias entre entidades del snapshot
+
+Se fijan las siguientes identidades y referencias iniciales, conforme al modelo de dominio aprobado en TASK-02:
+
+1. `CoordinatorEpoch` representa el fencing epoch monotónico del Coordinator único. Es estado del Coordinator y se asocia a eventos y permisos; no se modela como una entidad subordinada a cada Member.
+2. `Rollout` se identifica por `rolloutId`.
+3. `MembershipManifest` se identifica por `(membershipVersion, digest)` y se asocia a `rolloutId`.
+4. `MemberObservation` representa la observación de un Member dentro del rollout. La identidad del Member es `(membershipVersion, memberId, processBootId)`. El nombre `MemberObservation` es una unidad lógica de representación del snapshot; no agrega una nueva entidad de dominio al catálogo de TASK-02.
+5. `Admission` se identifica por `admissionId`. Conserva las referencias de contexto definidas para la admisión: `requestId`, `memberId`, `processBootId`, epoch, generación/hash, `rolloutId` y transición ADMIT, según el contrato aplicable.
+6. Las referencias deben apuntar a entidades existentes y compatibles. No se crean relaciones implícitas ni se infiere identidad por similitud.
+7. Esta decisión no fija cardinalidades globales entre rollouts, manifests, Members y admissions, más allá de las relaciones expresamente definidas en TASK-02.
+
+**Motivo:** establecer identidades y referencias para el snapshot sin ampliar el modelo de dominio aprobado ni inventar multiplicidades no definidas.
+
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
 
-- Estructura exacta del snapshot: entidades, campos, cardinalidades, relaciones y enumeración exhaustiva de datos canónicos y derivados; VD-T06-48 fija únicamente su alcance lógico.
+- Estructura exacta del snapshot: campos, cardinalidades globales y relaciones adicionales; VD-T06-49 fija un inventario inicial y VD-T06-50 identidades/referencias, sin establecer un esquema exhaustivo.
 - Catálogo completo de eventos, payloads, precondiciones y efectos por transición.
 - Matriz exhaustiva de transiciones y errores tipados/códigos definitivos.
 - CODEC: tags, anchos, byte order, domain separators, nullability, límites, unknown fields y compatibilidad/versionado.
@@ -631,7 +646,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-49 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-50 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
