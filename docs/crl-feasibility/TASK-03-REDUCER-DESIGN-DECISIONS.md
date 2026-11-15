@@ -1183,7 +1183,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-98 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-99 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
@@ -1417,3 +1417,18 @@ Se acepta que la validación de la evidencia local por Coordinator sea una condi
 8. Esta decisión no define todavía el algoritmo exhaustivo de validación, el payload/campos del evento, sus referencias contractuales, su clave idempotente ni los errores tipados. Esos detalles permanecen sujetos al contrato formal y a las dependencias de TASK-04.
 
 **Motivo:** preservar la autoridad exclusiva del Coordinator sobre los cambios centrales y hacer que el evento central durable, no la evidencia local ni la validación aislada, sea el punto de transición del Reducer.
+
+### VD-T06-99 — Alcance conceptual de validación de evidencia UNKNOWN por Coordinator
+
+Se acepta que la validación que realiza Coordinator sobre la declaración local Member, antes de confirmar el evento central que establece `UNKNOWN`, cubra conceptualmente los siguientes cuatro controles:
+
+1. **Identidad:** verificar que la declaración se atribuye al `memberId`, `processBootId` y `admissionId` esperados para la Admission involucrada.
+2. **Integridad:** verificar que la evidencia presentada es íntegra y que sus referencias pueden validarse conforme al contrato de evidencia aplicable.
+3. **Correlación:** verificar que la declaración corresponde a la misma Admission y a la ejecución autorizada asociada, sin trasladarla a otra solicitud, boot o admisión.
+4. **Consistencia:** verificar que la declaración no contradice eventos centrales ya confirmados ni el estado actual de la Admission.
+
+Esta validación no debe demostrar que el proceso haya muerto ni que la ejecución haya dejado de ser posible. Esas condiciones pertenecen a la reconciliación posterior `UNKNOWN → RECONCILED_UNKNOWN`, no a la declaración ni al establecimiento inicial de `UNKNOWN`.
+
+Los cuatro controles fijan el alcance conceptual, no sus mecanismos concretos. La estructura e identidad de la evidencia local, sus secuencias, referencias, canonicalización, digest y garantías de persistencia corresponden a TASK-04; los campos contractuales del evento central, las reglas formales de transición y los errores tipados permanecen sujetos al contrato formal de TASK-03. Esta decisión no inventa algoritmos ni criterios técnicos todavía no aprobados.
+
+**Motivo:** asegurar que el Coordinator solo establezca `UNKNOWN` para evidencia íntegra y atribuible a la ejecución correcta, sin confundir incertidumbre de resultado con prueba de terminación del proceso.
