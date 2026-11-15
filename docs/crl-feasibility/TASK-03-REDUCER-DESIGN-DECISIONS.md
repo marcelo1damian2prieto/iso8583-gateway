@@ -1055,6 +1055,24 @@ Se acepta que `ADMITTED` y `PENDING` representan situaciones distintas de una `A
 **Motivo:** distinguir la concesión durable de autorización del estado de resolución del resultado, sin inferir transiciones que las fuentes aún no especifican.
 
 
+
+### VD-T06-82 — Transición de ADMITTED a PENDING al confirmar HANDLER_START_INTENT
+
+Se acepta que la confirmación durable de `HANDLER_START_INTENT` establece la transición lógica de `ADMITTED` a `PENDING` para la Admission correspondiente:
+
+1. `ADMITTED` representa la autorización durable concedida por Coordinator.
+2. Cuando `HANDLER_START_INTENT` queda confirmado durablemente conforme a D-01 y al protocolo de persistencia de TASK-03, la Admission pasa a `PENDING`.
+3. `PENDING` representa que existe una ejecución autorizada cuyo resultado todavía no está resuelto y, conforme a D-02, bloquea `COMMIT_GLOBAL`.
+4. Esta transición no afirma que el handler haya comenzado efectivamente a ejecutarse. `HANDLER_ENTERED) permanece como evidencia local del Member y no se convierte en evento ni estado central.
+5. La transición no depende de recibir `PERMIT_RECEIVED`, `HANDLER_ENTERED` ni otra evidencia local adicional para establecer `PENDING`.
+6. La confirmación durable de `HANDLER_START_INTENT` sigue siendo el punto de consumo del Permit. La validación de vigencia y la persistencia permanecen dentro de la operación lógica serializada definida por D-01 y §11 de TASK-03 SPEC.
+7. Si el intento vence antes del commit durable, no se establece `PENDING`: se aplica la rama `ADMISSION_REJECTED_EXPIRED` conforme a D-VD03-5 y sus condiciones de confirmación.
+8. Si la persistencia de `HANDLER_START_INTENT` falla o queda ambigua, no se deriva `PENDING` como transición confirmada ni se habilita una rama alternativa; se conserva el tratamiento bloqueante y fail-closed definido por TASK-03.
+9. Esta decisión no define el origen ni la transición que establece `UNKNOWN), ni la matriz completa de estados y eventos. Tampoco modifica la política de tail: un `HANDLER_START_INTENT` encontrado en tail sin checkpoint continúa en `RECOVERY_REQUIRED` hasta decisión explícita.
+
+**Motivo:** al confirmarse durablemente el consumo del Permit existe una admisión autorizada cuyo resultado aún no se conoce. Establecer `PENDING` en ese punto preserva D-02 sin confundir la intención durable con evidencia de entrada efectiva al handler.
+
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -1082,7 +1100,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-81 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-82 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
