@@ -1183,7 +1183,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-87 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-88 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
@@ -1196,7 +1196,7 @@ La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpret
 Se acepta que la transición de una Admission desde `UNKNOWN` hacia `RECONCILED_UNKNOWN` conserve en el snapshot ambas referencias necesarias para mantener la trazabilidad de la reconciliación:
 
 1. La referencia al evento central del Coordinator que estableció `UNKNOWN` (`unknownEventId` como nombre descriptivo provisional, no como nombre contractual de campo).
-2. La referencia lógica al `RecoveryRecord` de reconciliación, conservando `originalEventId`, `recoveryEventId` y `recoveryAction), conforme a VD-T06-63 y VD-T06-79.
+2. La referencia lógica al `RecoveryRecord` de reconciliación, conservando `originalEventId`, `recoveryEventId` y `recoveryAction`, conforme a VD-T06-63 y VD-T06-79.
 3. El `originalEventId` del `RecoveryRecord` debe corresponder al mismo evento central que estableció `UNKNOWN` para esa Admission. Las referencias deben ser coherentes entre sí y con la Admission.
 4. Tras la transición, el snapshot representa `Admission.state = RECONCILED_UNKNOWN` y mantiene `Admission.outcome = UNKNOWN`.
 5. El Reducer valida la presencia y consistencia lógica de ambas referencias con las entidades del snapshot y la transición aplicada. No consulta el journal ni verifica la existencia histórica de los eventos.
