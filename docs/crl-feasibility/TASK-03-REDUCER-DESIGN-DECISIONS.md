@@ -743,6 +743,20 @@ Se establecen los siguientes criterios para representar estos estados de admisi�
 **Motivo:** reflejar en el snapshot la diferencia entre estado de reconciliación y resultado de negocio, sin alterar las garantías de D-02.
 
 
+### VD-T06-60 — Consistencia entre estado y outcome de Admission
+
+Se establecen los siguientes criterios para separar el estado de admisión de su outcome:
+
+1. El estado de `Admission` representa su situación dentro del protocolo de coordinación.
+2. El outcome representa el resultado conocido de la ejecución asociada.
+3. `COMPLETE` es un estado de admisión y outcome confirmado, conforme al contrato aprobado.
+4. `RECONCILED_UNKNOWN` es un estado de reconciliación cuyo outcome permanece `UNKNOWN`.
+5. El Reducer no deriva el outcome exclusivamente del estado ni modifica uno para hacerlo coincidir con el otro.
+6. Las combinaciones válidas entre estados y outcomes deben quedar definidas por la matriz formal de transiciones.
+
+**Motivo:** impedir que la representación del estado de coordinación o reconciliación se confunda con el resultado de ejecución.
+
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -770,7 +784,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-59 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-60 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
