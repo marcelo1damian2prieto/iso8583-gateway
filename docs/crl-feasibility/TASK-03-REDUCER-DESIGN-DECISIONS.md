@@ -212,6 +212,19 @@ Esta decisión no congela el CODEC.
 5. Una transición rechazada no deja modificaciones parciales.
 6. La estrategia concreta de implementación (copias, estructuras persistentes u otra alternativa) queda para el diseño técnico.
 
+
+### VD-T06-16 — Determinismo del Reducer
+
+1. El mismo snapshot lógico y el mismo evento producen el mismo resultado lógico.
+2. El resultado no depende del horario, la zona horaria ni el reloj del sistema.
+3. No depende de UUID, números aleatorios ni identificadores generados internamente.
+4. No depende del orden accidental de iteración de colecciones.
+5. No depende de estado global, variables estáticas mutables ni configuración externa cambiante.
+6. No realiza I/O ni invoca servicios externos.
+7. Cualquier dato externo necesario debe llegar explícitamente en el evento o snapshot.
+
+Esta decisión complementa VD-T06-05 y VD-T06-09 y establece el determinismo como propiedad contractual verificable.
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -239,7 +252,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-15, VD-T06-32 y VD-T06-33 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-16, VD-T06-32 y VD-T06-33 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
