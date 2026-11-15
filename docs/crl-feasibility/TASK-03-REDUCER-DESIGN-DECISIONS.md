@@ -882,6 +882,18 @@ Se establecen los siguientes criterios para el `MembershipManifest`:
 **Motivo:** consolidar la función del manifest como referencia canónica de membership y evitar que las transiciones alteren implícitamente el conjunto esperado.
 
 
+### VD-T06-70 — Inmutabilidad de membership durante el rollout
+
+Se establecen los siguientes criterios para la membership de un rollout existente:
+
+1. El Reducer rechaza cualquier transición que intente modificar `membershipVersion`, `digest` o el conjunto de Members del `MembershipManifest` asociado al rollout.
+2. La membership permanece inmutable durante la vida del rollout.
+3. Un cambio de membership requiere un contrato explícito que defina su alcance y sus efectos.
+4. Ninguna transición puede introducir un cambio de membership como efecto lateral de otra operación.
+
+**Motivo:** hacer efectiva la inmutabilidad establecida en VD-T06-69 y evitar cambios implícitos en el conjunto de Members esperado.
+
+
 ## 3. Contratos y aspectos que permanecen abiertos
 
 La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
@@ -909,7 +921,7 @@ Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No 
 
 ## 5. Trazabilidad
 
-Este documento consolida las decisiones VD-T06-01 a VD-T06-69 aceptadas durante la conversación de validación de diseño de T03-06.
+Este documento consolida las decisiones VD-T06-01 a VD-T06-70 aceptadas durante la conversación de validación de diseño de T03-06.
 
 La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
 
