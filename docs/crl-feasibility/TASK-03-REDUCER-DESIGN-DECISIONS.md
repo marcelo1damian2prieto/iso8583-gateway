@@ -2173,3 +2173,57 @@ Se acepta que el Reducer recibe un único evento ya seleccionado para su procesa
 8. Esta decisión no prescribe protocolos, tecnologías de mensajería, semánticas de entrega ni políticas de ordenamiento; esos aspectos quedan pendientes del diseño de las capas responsables.
 
 **Motivo:** establecer una frontera explícita entre la recepción y coordinación de eventos y la transformación pura del estado, preservando las responsabilidades de validación de dominio que sí pertenecen al Reducer.
+
+### VD-T06-149 — Prevalencia de la validación exhaustiva sobre la validación selectiva
+
+Se aclara la relación entre VD-T06-40 y VD-T06-133, sin modificar el contenido ni la aceptación original de ninguna de ellas.
+
+1. La garantía contractual vigente es la validación exhaustiva del snapshot de entrada y del snapshot resultante en cada transición, conforme a VD-T06-133.
+2. La posibilidad de validación selectiva contemplada en VD-T06-40 no autoriza a omitir invariantes globales ni a reducir el alcance de esa garantía.
+3. Los índices y estructuras auxiliares pueden optimizar la ejecución de las comprobaciones, siempre que el resultado sea equivalente a la validación exhaustiva y las entidades canónicas continúen siendo la fuente de verdad.
+4. La validación selectiva solo puede utilizarse como técnica interna de optimización de comprobaciones cuando permita demostrar que se preserva íntegramente la garantía exhaustiva; no constituye una reducción del conjunto de invariantes que deben quedar verificadas.
+5. Ante cualquier incertidumbre sobre la equivalencia o la cobertura de una optimización, debe prevalecer la comprobación exhaustiva.
+6. Esta aclaración establece la prevalencia contractual de VD-T06-133 y no selecciona algoritmos, estructuras ni mecanismos concretos de validación.
+
+**Motivo:** eliminar la posible interpretación de que VD-T06-40 permite debilitar la garantía de validación exhaustiva posteriormente precisada en VD-T06-133.
+
+### VD-T06-150 — Distinción entre versión de esquema lógico y versión o revisión de estado
+
+Se aclara la relación entre VD-T06-129, VD-T06-130, VD-T06-145 y VD-T06-146, manteniendo sus decisiones originales.
+
+1. La **versión del esquema lógico** identifica la estructura y semántica del modelo de snapshot que el Reducer debe interpretar. El snapshot debe contener esta versión conforme a VD-T06-129.
+2. El Reducer valida que la versión del esquema lógico corresponda a la única versión vigente que declara soportar, conforme a VD-T06-130. No genera, incrementa ni migra esa versión.
+3. La **versión o revisión de estado**, si el diseño de coordinación y persistencia la requiere, identifica una revisión o progresión del estado administrado. Su asignación y administración corresponden al Coordinator o al componente responsable del estado durable.
+4. La identidad de una instancia de snapshot, si se requiere, es un concepto distinto tanto de la versión del esquema como de la revisión del estado. Su mecanismo y responsabilidad se definirán fuera del Reducer.
+5. VD-T06-146 excluye que el Reducer genere o asigne identificadores y revisiones de estado; no excluye que valide la versión de esquema lógico presente en el snapshot.
+6. Ninguno de estos identificadores o versiones sustituye la validación de invariantes ni determina por sí solo la equivalencia semántica entre snapshots.
+7. Esta aclaración no prescribe formatos, campos concretos adicionales, algoritmos de versionado ni mecanismos de identidad.
+
+**Motivo:** evitar que la prohibición de asignar versiones e identificadores de estado se interprete como una prohibición de validar la versión de esquema lógico que el propio contrato exige.
+
+### VD-T06-151 — Separación entre validación de representación de entrada y validación del modelo lógico
+
+Se aclara la frontera entre CODEC/capa de entrada y Reducer establecida en VD-T06-12, VD-T06-132 y VD-T06-148, sin modificar sus decisiones originales.
+
+1. **CODEC y capa de entrada:** validan el transporte y la representación externa del evento, incluida la decodificación, la versión del formato, la sintaxis y las restricciones estructurales propias de esa representación.
+2. **Reducer:** valida defensivamente el evento ya decodificado como modelo lógico, incluyendo la presencia de campos obligatorios, tipos y valores admitidos por el contrato lógico, nulabilidad, consistencia entre campos, referencias, restricciones semánticas, precondiciones e invariantes de dominio.
+3. La validación estructural realizada por CODEC o por la capa de entrada no certifica que el evento sea semánticamente válido ni reemplaza las validaciones del Reducer.
+4. El Reducer no vuelve a validar el transporte ni la representación binaria, ni asume responsabilidades de decodificación o compatibilidad del formato externo.
+5. La ausencia de campos obligatorios o una estructura lógica inválida en el evento recibido provoca el rechazo tipado correspondiente, sin mutación parcial, conforme al contrato de errores.
+6. Esta separación se aplica también a la validación del snapshot lógico: la integridad de su representación durable corresponde a CODEC/Replay, mientras que el Reducer valida su estructura lógica e invariantes antes de aplicar la transición.
+7. Esta aclaración no define formatos, esquemas de serialización ni catálogos de errores concretos.
+
+**Motivo:** evitar duplicaciones o vacíos de validación, distinguiendo la validez de la representación externa de la validez estructural y semántica del modelo lógico que procesa el Reducer.
+
+### VD-T06-152 — Delimitación de Replay, Coordinator y Reducer en la selección y orden de eventos
+
+Se aclara la distribución de responsabilidades entre Replay, Coordinator y Reducer respecto de la secuencia de eventos, conforme a VD-T06-08, VD-T06-23 y VD-T06-148, sin modificar sus decisiones originales.
+
+1. **Replay:** valida la secuencia física y lógica del journal, determina qué eventos confirmados son aplicables y establece el siguiente evento habilitado para la reconstrucción o progresión del estado.
+2. **Coordinator:** coordina el flujo de procesamiento y la invocación del Reducer con el snapshot y el evento que Replay determinó como aplicable. No sustituye la validación de secuencia ni la determinación de aplicabilidad que corresponden a Replay.
+3. **Reducer:** recibe un único evento ya seleccionado y habilitado, junto con el snapshot de entrada, y aplica exclusivamente la transición de dominio correspondiente. No consume el journal, selecciona eventos, reordena secuencias ni determina cuál evento debe procesarse a continuación.
+4. La selección del evento por Coordinator debe respetar la secuencia y la decisión de aplicabilidad establecidas por Replay; no constituye una autoridad independiente para alterar el orden lógico del journal.
+5. La coordinación de invocaciones, la confirmación durable y la resolución de conflictos de concurrencia permanecen fuera del Reducer, conforme a VD-T06-147.
+6. Esta aclaración no prescribe protocolos de comunicación, mecanismos de entrega, tecnologías de mensajería ni implementación de Replay o Coordinator.
+
+**Motivo:** eliminar la ambigüedad sobre quién determina el siguiente evento aplicable y preservar la responsabilidad de Replay sobre la secuencia del journal, la de Coordinator sobre la coordinación del procesamiento y la del Reducer sobre la transición individual de dominio.
