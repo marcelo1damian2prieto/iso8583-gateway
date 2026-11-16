@@ -1156,41 +1156,6 @@ Se acepta la opción B para representar en el snapshot una declaración Member d
 
 **Motivo:** mantener el snapshot centrado en el estado durable conocido por Coordinator, conservar trazabilidad hacia la transición central y evitar acoplar el Reducer al formato interno del ledger Member o duplicar el historial durable.
 
-## 3. Contratos y aspectos que permanecen abiertos
-
-La aceptación de las decisiones anteriores no resuelve ni congela los siguientes puntos:
-
-- Estructura exacta del snapshot: campos, cardinalidades globales y relaciones adicionales; VD-T06-49 fija un inventario inicial y VD-T06-50 identidades/referencias, sin establecer un esquema exhaustivo.
-- Catálogo completo de eventos, payloads, precondiciones y efectos por transición.
-- Matriz exhaustiva de transiciones y errores tipados/códigos definitivos.
-- CODEC: tags, anchos, byte order, domain separators, nullability, límites, unknown fields y compatibilidad/versionado.
-- Representación final de la confirmación de `HANDLER_START_INTENT` en evento/snapshot.
-- Contrato detallado de la declaración local Member para `UNKNOWN` (tipo/nombre, payload, identidad, referencias, secuencia, integridad, garantías de persistencia y condiciones de emisión); idempotencia, consulta por identidad, prefijo durable, checkpoints, detección de escrituras pendientes y resolución de escrituras ambiguas; condiciones de reintento; payload y precondiciones completas del evento central y validación en Replay; campo/referencia exactos del snapshot. La dirección de responsabilidades queda decidida en VD-T06-83 y VD-T06-84; el tratamiento ante fallos de producción/persistencia, en VD-T06-85; la dirección para resolver escrituras ambiguas, en VD-T06-86; la representación lógica en snapshot, en VD-T06-87.
-- Contratos completos de Replay y recuperación.
-- Evidencia Member y terminación que corresponden a TASK-04.
-- Clasificación exhaustiva de estados de recuperación y fallos.
-
-Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No se deben completar por inferencia durante la implementación.
-
-## 4. Límites de alcance y autorización
-
-- Este addendum registra decisiones de diseño aceptadas para T03-06.
-- No declara completada ni aprobada integralmente TASK-03.
-- No autoriza implementación del Reducer, Replay, CODEC ni almacenamiento durable.
-- No autoriza ejecutar Maven, builds, tests, benchmarks ni experimentos.
-- No modifica la autorización previa relativa a otras tareas.
-- Las decisiones de producción y el production gate CRL permanecen fuera del alcance de este documento y continúan sujetos a sus criterios y evidencias específicas.
-
-## 5. Trazabilidad
-
-Este documento consolida las decisiones VD-T06-01 a VD-T06-135 aceptadas durante la conversación de validación de diseño de T03-06.
-
-La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas.
-
----
-
-**Estado final:** addendum documental de decisiones aceptadas. No constituye autorización de implementación ni freeze integral del diseño.
-
 ### VD-T06-88 — Conservación de referencias al reconciliar UNKNOWN
 
 Se acepta que la transición de una Admission desde `UNKNOWN` hacia `RECONCILED_UNKNOWN` conserve en el snapshot ambas referencias necesarias para mantener la trazabilidad de la reconciliación:
@@ -2227,3 +2192,71 @@ Se aclara la distribución de responsabilidades entre Replay, Coordinator y Redu
 6. Esta aclaración no prescribe protocolos de comunicación, mecanismos de entrega, tecnologías de mensajería ni implementación de Replay o Coordinator.
 
 **Motivo:** eliminar la ambigüedad sobre quién determina el siguiente evento aplicable y preservar la responsabilidad de Replay sobre la secuencia del journal, la de Coordinator sobre la coordinación del procesamiento y la del Reducer sobre la transición individual de dominio.
+
+## 3. Contratos y aspectos que permanecen abiertos
+
+Las decisiones VD-T06-01 a VD-T06-152 establecen el marco conceptual y las responsabilidades del Reducer, pero no equivalen a una especificación técnica completa ni autorizan por sí solas la implementación. Permanecen abiertos los siguientes contratos y entregables:
+
+### 3.1 Modelo lógico y snapshot
+
+- Esquema exhaustivo del snapshot: campos, tipos, cardinalidades, nulabilidad, relaciones y reglas de identidad.
+- Catálogo completo y verificable de invariantes locales y globales, incluyendo las condiciones del snapshot genesis.
+- Matriz de referencias obligatorias y reglas de integridad referencial.
+- Delimitación definitiva entre campos canónicos, referencias y datos derivados.
+- Contrato completo de igualdad semántica del snapshot y de las colecciones admitidas.
+
+### 3.2 Eventos, transiciones y errores
+
+- Catálogo definitivo de eventos y payloads, con campos obligatorios/opcionales, tipos, rangos y nulabilidad.
+- Matriz exhaustiva de transiciones: estado de origen, evento, precondiciones, estado/outcome resultante, efectos sobre entidades e índices y rechazos.
+- Consolidación de transiciones UNKNOWN y RECONCILED_UNKNOWN, incluidas las acciones de recuperación.
+- Catálogo definitivo de errores tipados, códigos, diagnósticos y correspondencia con las reglas contractuales.
+- Representación final en evento y snapshot de la confirmación de HANDLER_START_INTENT.
+
+### 3.3 Índices derivados e idempotencia
+
+- Inventario definitivo de índices, sus claves, cardinalidades, dependencias y consultas soportadas.
+- Algoritmos de construcción, actualización incremental y reconstrucción completa.
+- Estructuras Java, estrategia concreta de inmutabilidad y *structural sharing*.
+- Demostración técnica de equivalencia semántica y validación exhaustiva independiente.
+- Contrato de TransitionKey e índices de idempotencia: identidad, ámbito de unicidad, canonicalización, repetición, conflictos y reconstrucción. VD-T06-049 mantiene este detalle sujeto a T03-10.
+- Criterios técnicos y evidencia de pruebas diferenciales, unitarias y basadas en propiedades, incluyendo concurrencia y ausencia de aliasing mutable.
+
+### 3.4 CODEC, Replay y persistencia
+
+- CODEC: tags, anchos, byte order, domain separators, límites, representación de null/ausencia, unknown fields y compatibilidad del formato.
+- Contrato completo de Replay: integridad del journal, secuencia, aplicabilidad, checkpoints, reconstrucción y tratamiento de tail.
+- Contrato de persistencia y confirmación durable, incluyendo control de concurrencia y conflictos entre resultados candidatos.
+- Políticas de recuperación, reanudación y clasificación de estados de recuperación/fallos.
+
+### 3.5 Dependencias con otras tareas
+
+- **TASK-02:** confirmar compatibilidad del modelo de dominio, identidades y reglas canónicas con el snapshot y las transiciones de T03-06.
+- **TASK-03-07 / Replay:** completar y validar el contrato de secuencia, aplicabilidad, reconstrucción y recuperación.
+- **T03-10:** completar TransitionKey, idempotencia y los índices asociados.
+- **CODEC:** acordar la representación externa y su correspondencia con el modelo lógico.
+- **TASK-04 / Member:** completar evidencia local, identidad, secuencia, integridad, persistencia, checkpoints, escrituras ambiguas y terminación.
+
+Estas dependencias se deben contrastar con sus entregables vigentes antes de declarar cerrado el contrato. La referencia a una tarea no implica que su contenido haya sido verificado en esta revisión.
+
+Los puntos abiertos deben resolverse en sus tareas/entregables responsables. No se deben completar por inferencia durante la implementación.
+
+## 4. Límites de alcance y autorización
+
+- Este documento registra decisiones de diseño aceptadas para T03-06.
+- La reorganización documental no modifica, reabre ni reinterpreta las decisiones aceptadas.
+- No declara completada ni aprobada integralmente TASK-03.
+- No autoriza implementación del Reducer, Replay, CODEC ni almacenamiento durable.
+- No autoriza ejecutar Maven, builds, tests, benchmarks ni experimentos.
+- No modifica la autorización previa relativa a otras tareas.
+- Las decisiones de producción y el production gate CRL permanecen fuera del alcance de este documento y continúan sujetos a sus criterios y evidencias específicas.
+
+## 5. Trazabilidad
+
+Este documento consolida las decisiones VD-T06-01 a VD-T06-152 aceptadas durante la validación de diseño de T03-06.
+
+La numeración se conserva tal como fue aceptada; no se renumeran ni reinterpretan decisiones previas. Las decisiones VD-T06-149 a VD-T06-152 son aclaraciones complementarias y no modifican el contenido de las decisiones originales a las que hacen referencia.
+
+---
+
+**Estado final:** addendum documental de decisiones aceptadas. No constituye autorización de implementación ni freeze integral del diseño.
